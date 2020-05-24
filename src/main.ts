@@ -1,5 +1,5 @@
 import * as core from '@actions/core'
-import {wait} from './wait'
+import {parseArray} from './parseArray'
 
 async function run(): Promise<void> {
   try {
@@ -12,18 +12,10 @@ async function run(): Promise<void> {
     const protectedBranches: string = core.getInput('protected-branches')
     core.debug(`protected-branches: ${protectedBranches}`)
 
-    for (const branch of JSON.parse(protectedBranches)) {
-      core.debug(`${branch}`)
+    const branches = await parseArray(protectedBranches)
+    for (const branch of branches) {
+      core.debug(branch)
     }
-
-    const ms = '1000'
-    core.debug(`Waiting ${ms} milliseconds ...`)
-
-    core.debug(new Date().toTimeString())
-    await wait(parseInt(ms, 10))
-    core.debug(new Date().toTimeString())
-
-    core.setOutput('time', new Date().toTimeString())
   } catch (error) {
     core.setFailed(error.message)
   }

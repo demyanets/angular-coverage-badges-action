@@ -95,6 +95,9 @@ function run() {
             core.debug(`badges-directory: ${badgesDirectory}`);
             const protectedBranches = core.getInput('protected-branches');
             core.debug(`protected-branches: ${protectedBranches}`);
+            for (const branch of JSON.parse(protectedBranches)) {
+                core.debug(`${branch}`);
+            }
             const ms = '1000';
             core.debug(`Waiting ${ms} milliseconds ...`);
             core.debug(new Date().toTimeString());
