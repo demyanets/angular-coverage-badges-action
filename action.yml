@@ -5,12 +5,15 @@ inputs:
   coverage-summary-path:
     description: 'Path to a "coverage-summary.json" file. Defaults to "./coverage/coverage-summary.json"'
     default: './coverage/coverage-summary.json'
+    required: false
   badges-directory:
     description: 'Writes the coverage badges to the given directory. Defaults to "./badges"'
     default: './badges'
+    required: false
   protected-branches:
     description: 'List of protected branches that require review for commit. Defaults to empty list ([])'
     default: '[]'
+    required: false
 runs:
   using: 'node12'
   main: 'dist/index.js'
