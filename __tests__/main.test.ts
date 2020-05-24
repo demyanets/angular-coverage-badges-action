@@ -8,9 +8,12 @@ test('test runs', () => {
     './coverage/coverage-summary.json'
   process.env['BADGES-DIRECTORY'] = './badges'
   process.env['INPUT_PROTECTED-BRANCHES'] = '["master", "develop"]'
-  const ip = path.join(__dirname, '..', 'lib', 'main.js')
   const options: cp.ExecSyncOptions = {
     env: process.env
   }
-  console.log(cp.execSync(`node ${ip}`, options).toString())
+  const ip = path.join(__dirname, '..', 'lib', 'main.js')
+  const cmd = `node "${ip}"`
+  console.log(cmd)
+  var output = cp.execSync(cmd, options)
+  console.log(output.toString())
 })
