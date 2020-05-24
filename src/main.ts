@@ -12,6 +12,10 @@ async function run(): Promise<void> {
     const protectedBranches: string = core.getInput('protected-branches')
     core.debug(`protected-branches: ${protectedBranches}`)
 
+    for (const branch of JSON.parse(protectedBranches)) {
+      core.debug(`${branch}`)
+    }
+
     const ms = '1000'
     core.debug(`Waiting ${ms} milliseconds ...`)
 
