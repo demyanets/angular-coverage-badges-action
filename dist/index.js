@@ -95,13 +95,7 @@ function run() {
             core.debug(`badges-directory: ${badgesDirectory}`);
             const protectedBranches = core.getInput('protected-branches');
             core.debug(`protected-branches: ${protectedBranches}`);
-            /*
-                
-                const protectedBranchesArray: unknown = JSON.parse(protectedBranches)
-                const typeName = typeof protectedBranchesArray
-                core.debug(`protectedBranchesArray type: ${typeName}`)
-            */
-            const ms = core.getInput('milliseconds');
+            const ms = '1000';
             core.debug(`Waiting ${ms} milliseconds ...`);
             core.debug(new Date().toTimeString());
             yield wait_1.wait(parseInt(ms, 10));
