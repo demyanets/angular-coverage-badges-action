@@ -1,8 +1,8 @@
 {
-  "name": "typescript-action",
+  "name": "angular-coverage-badges-action",
   "version": "0.0.0",
   "private": true,
-  "description": "TypeScript template action",
+  "description": "GitHub action that generates coverage badges for Angular projects without external providers and updates a GitHub repository automatically",
   "main": "lib/main.js",
   "scripts": {
     "build": "tsc",
@@ -15,14 +15,21 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/actions/typescript-action.git"
+    "url": "git+https://github.com/demyanets/angular-coverage-badges-action.git"
   },
   "keywords": [
-    "actions",
+    "github",
+    "action",
     "node",
-    "setup"
+    "angular",
+    "karma",
+    "istanbul",
+    "coverage",
+    "badge",
+    "generate",
+    "standalone"
   ],
-  "author": "YourNameOrOrganization",
+  "author": "Taras Demyanets",
   "license": "MIT",
   "dependencies": {
     "@actions/core": "^1.2.0"
@@ -40,6 +47,6 @@
     "js-yaml": "^3.13.1",
     "prettier": "^1.19.1",
     "ts-jest": "^24.2.0",
-    "typescript": "^3.6.4"
+    "typescript": "^3.9.3"
   }
 }
