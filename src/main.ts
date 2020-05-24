@@ -15,6 +15,7 @@ async function run(): Promise<void> {
     const branches = await parseArray(protectedBranches)
     for (const branch of branches) {
       core.debug(branch)
+      core.info(branch)
     }
   } catch (error) {
     core.setFailed(error.message)
