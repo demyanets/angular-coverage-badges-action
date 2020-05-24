@@ -1,10 +1,16 @@
-name: 'Your name here'
-description: 'Provide a description here'
-author: 'Your name or organization here'
+name: 'Angular coverage badges'
+description: 'GitHub action that generates coverage badges for Angular projects without external providers and updates a GitHub repository automatically'
+author: 'Taras Demyanets'
 inputs:
-  myInput:              # change this
-    description: 'input description here'
-    default: 'default value if applicable'
+  coverage-summary-path:
+    description: 'Path to a "coverage-summary.json" file. Defaults to "./coverage/coverage-summary.json"'
+    default: './coverage/coverage-summary.json'
+  badges-directory:
+    description: 'Writes the coverage badges to the given directory. Defaults to "./badges"'
+    default: './badges'
+  protected-branches:
+    description: 'List of protected branches that require review for commit. Defaults to empty list ([])'
+    default: '[]'
 runs:
   using: 'node12'
   main: 'dist/index.js'
