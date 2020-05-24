@@ -1,19 +1,19 @@
 import {parseArray} from '../src/parseArray'
 
-test('should parse', async () => {
+test('should parse', () => {
   const input = '["master", "develop"]'
-  const result = await parseArray(input)
+  const result = parseArray(input)
   expect(result.length).toEqual(2)
   expect(result[0]).toEqual('master')
   expect(result[1]).toEqual('develop')
 })
 
-test('should parse empty array', async () => {
+test('should parse empty array', () => {
   const input = '[]'
-  const result = await parseArray(input)
+  const result = parseArray(input)
   expect(result.length).toEqual(0)
 })
 
-test('throws invalid array', async () => {
-  await expect(parseArray('test')).rejects.toThrow()
+test('throws invalid array', () => {
+  expect(() => parseArray('test')).toThrow()
 })

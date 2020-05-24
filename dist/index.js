@@ -98,6 +98,7 @@ function run() {
             const branches = yield parseArray_1.parseArray(protectedBranches);
             for (const branch of branches) {
                 core.debug(branch);
+                core.info(branch);
             }
         }
         catch (error) {
