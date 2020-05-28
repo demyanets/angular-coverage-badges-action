@@ -1,4 +1,4 @@
-import {parseArray} from '../src/parseArray'
+import {parseArray} from '../src/parse-array'
 
 test('should parse', () => {
   const input = '["master", "develop"]'

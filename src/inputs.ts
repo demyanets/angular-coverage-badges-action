@@ -1,5 +1,5 @@
 import * as core from '@actions/core'
-import {parseArray} from './parseArray'
+import {parseArray} from './parse-array'
 
 export class Inputs {
   readonly coverageSummaryPath: string
