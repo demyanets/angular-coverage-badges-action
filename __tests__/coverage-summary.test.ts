@@ -2,7 +2,7 @@ import {CoverageSummary} from '../src/coverage-summary'
 
 describe('Coverage summary tests', () => {
   test('should parse', () => {
-    const summary = CoverageSummary.readCoverageSummary(
+    const summary = CoverageSummary.read(
       './__tests__/assets/coverage-summary.json'
     )
     expect(summary).toBeDefined()
@@ -13,7 +13,7 @@ describe('Coverage summary tests', () => {
   })
 
   test('should parse extended', () => {
-    const summary = CoverageSummary.readCoverageSummary(
+    const summary = CoverageSummary.read(
       './__tests__/assets/extended-summary.json'
     )
     expect(summary).toBeDefined()
@@ -24,14 +24,12 @@ describe('Coverage summary tests', () => {
   })
 
   test('throws if wrong path', () => {
-    expect(() => CoverageSummary.readCoverageSummary('wrong')).toThrow()
+    expect(() => CoverageSummary.read('wrong')).toThrow()
   })
 
   test('throws if broken file', () => {
     expect(() =>
-      CoverageSummary.readCoverageSummary(
-        './__tests__/assets/broken-summary.json'
-      )
+      CoverageSummary.read('./__tests__/assets/broken-summary.json')
     ).toThrow()
   })
 })
