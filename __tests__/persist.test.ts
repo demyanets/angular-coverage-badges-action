@@ -7,9 +7,9 @@ describe('Persist tests', () => {
     const name = 'badge'
     const content =
       '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="106" height="20"></svg>'
-    const expectedFilePath = './__tests__/temp/badge.svg'
+    const expectedFilePath = './__tests__/temp/coverage-badge.svg'
     expect(existsSync(expectedFilePath)).toBeFalsy()
-    await persist(path, name, content)
+    await persist(content, path, name)
     expect(existsSync(expectedFilePath)).toBeTruthy()
     unlinkSync(expectedFilePath)
   })
