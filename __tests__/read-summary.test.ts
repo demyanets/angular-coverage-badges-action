@@ -1,8 +1,8 @@
-import {CoverageSummary} from '../src/coverage-summary'
+import {readSummary} from '../src/read-summary'
 
 describe('Coverage summary tests', () => {
-  test('should parse', () => {
-    const summary = CoverageSummary.read(
+  test('should parse', async () => {
+    const summary = await readSummary(
       './__tests__/assets/coverage-summary.json'
     )
     expect(summary).toBeDefined()
@@ -12,8 +12,8 @@ describe('Coverage summary tests', () => {
     expect(total.lines.pct).toEqual(80)
   })
 
-  test('should parse extended', () => {
-    const summary = CoverageSummary.read(
+  test('should parse extended', async () => {
+    const summary = await readSummary(
       './__tests__/assets/extended-summary.json'
     )
     expect(summary).toBeDefined()
@@ -23,13 +23,13 @@ describe('Coverage summary tests', () => {
     expect(total.lines.pct).toEqual(80)
   })
 
-  test('throws if wrong path', () => {
-    expect(() => CoverageSummary.read('wrong')).toThrow()
+  test('throws if wrong path', async () => {
+    expect(readSummary('wrong')).rejects.toThrow()
   })
 
-  test('throws if broken file', () => {
-    expect(() =>
-      CoverageSummary.read('./__tests__/assets/broken-summary.json')
-    ).toThrow()
+  test('throws if broken file', async () => {
+    expect(
+      readSummary('./__tests__/assets/broken-summary.json')
+    ).rejects.toThrow()
   })
 })
