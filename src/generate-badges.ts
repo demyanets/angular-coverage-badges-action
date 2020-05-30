@@ -29,8 +29,8 @@ export async function generateBadges(
         generateBadge(total.statements.pct, badgesDirectory)
       ])
       resolve()
-    } catch (err) {
-      reject(err)
+    } catch (error) {
+      reject(error)
     }
   })
 }
