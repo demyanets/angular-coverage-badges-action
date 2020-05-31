@@ -28,9 +28,10 @@ describe('Main tests', () => {
 
   // shows how the runner will run a javascript action with env / stdout protocol
   test('test runs', () => {
-    env['INPUT_COVERAGE-SUMMARY-PATH'] =
-      './__tests__/assets/coverage-summary.json'
-    env['INPUT_BADGES-DIRECTORY'] = './__tests__/temp/'
+    env['INPUT_COVERAGE-SUMMARY-PATH'] = normalize(
+      '__tests__/assets/coverage-summary.json'
+    )
+    env['INPUT_BADGES-DIRECTORY'] = normalize('__tests__/temp/')
     env['INPUT_PROTECTED-BRANCHES'] = '["master", "develop"]'
     const options: ExecSyncOptions = {
       env: env

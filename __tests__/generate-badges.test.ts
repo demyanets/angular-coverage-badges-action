@@ -21,8 +21,8 @@ describe('Generate badges tests', () => {
       }
     })
 
-    const badgesPath = './__tests__/temp'
-    const summaryPath = './__tests__/assets/coverage-summary.json'
+    const badgesPath = normalize('__tests__/temp')
+    const summaryPath = normalize('__tests__/assets/coverage-summary.json')
     await generateBadges(summaryPath, badgesPath)
   })
 })

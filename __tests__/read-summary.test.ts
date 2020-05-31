@@ -1,9 +1,10 @@
 import {readSummary} from '../src/read-summary'
+import {normalize} from 'path'
 
 describe('Coverage summary tests', () => {
   test('should parse', async () => {
     const summary = await readSummary(
-      './__tests__/assets/coverage-summary.json'
+      normalize('__tests__/assets/coverage-summary.json')
     )
     expect(summary).toBeDefined()
     const total = summary['total']
@@ -14,7 +15,7 @@ describe('Coverage summary tests', () => {
 
   test('should parse extended', async () => {
     const summary = await readSummary(
-      './__tests__/assets/extended-summary.json'
+      normalize('__tests__/assets/extended-summary.json')
     )
     expect(summary).toBeDefined()
     const total = summary['total']
@@ -29,7 +30,7 @@ describe('Coverage summary tests', () => {
 
   test('throws if broken file', async () => {
     expect(
-      readSummary('./__tests__/assets/broken-summary.json')
+      readSummary(normalize('__tests__/assets/broken-summary.json'))
     ).rejects.toThrow()
   })
 })
