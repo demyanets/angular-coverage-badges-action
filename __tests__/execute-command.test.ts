@@ -4,7 +4,7 @@ describe('Execute command tests', () => {
   test('should execute', async () => {
     const cmd = 'echo Hello world'
     const result = await executeCommand(cmd)
-    expect(result).toBeDefined
+    expect(result).toBeDefined()
     console.log(JSON.stringify(result))
     expect(result.length).toBe(2)
     expect(result[0].startsWith('Hello world')).toBeTruthy()
