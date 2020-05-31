@@ -1,4 +1,4 @@
-import { getBadgeColor } from "./get-badge-color"
+import {getBadgeColor} from './get-badge-color'
 
 export function getBadgePath(coverage: number, label?: string): string {
   const color = getBadgeColor(coverage)

@@ -1,28 +1,28 @@
 import {env} from 'process'
 import {ExecSyncOptions, execSync} from 'child_process'
-import {join} from 'path'
-import { existsSync, unlinkSync } from 'fs'
+import {join, normalize} from 'path'
+import {unlinkSync, existsSync} from 'fs'
 
 describe('Main tests', () => {
   const expected = [
-    './__tests__/temp/coverage.svg',
-    './__tests__/temp/coverage-lines.svg',
-    './__tests__/temp/coverage-statements.svg',
-    './__tests__/temp/coverage-branches.svg',
-    './__tests__/temp/coverage-functions.svg'
+    normalize('__tests__/temp/coverage.svg'),
+    normalize('__tests__/temp/coverage-lines.svg'),
+    normalize('__tests__/temp/coverage-statements.svg'),
+    normalize('__tests__/temp/coverage-branches.svg'),
+    normalize('__tests__/temp/coverage-functions.svg')
   ]
 
-  beforeEach(()=>{
+  beforeEach(() => {
     for (let file of expected) {
-      expect(existsSync(file)).toBeFalsy()
+      if (existsSync(file)) {
+        unlinkSync(file)
+      }
     }
-    
   })
 
-  afterEach(()=>{
+  afterEach(() => {
     for (let file of expected) {
       expect(existsSync(file)).toBeTruthy()
-      unlinkSync(file)
     }
   })
 

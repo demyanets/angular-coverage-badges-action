@@ -9,7 +9,7 @@ export async function persist(
   return new Promise<void>((resolve, reject) => {
     const fileName = label ? `coverage-${label}.svg` : `coverage.svg`
     const fullPath = path.join(directory, fileName)
-    writeFile(fullPath, content, 'utf8', error => {
+    writeFile(fullPath, content, error => {
       if (error === null) {
         resolve()
       } else {
