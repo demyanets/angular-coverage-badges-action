@@ -21,7 +21,7 @@ export async function generateBadges(
   return new Promise<void>(async (resolve, reject) => {
     try {
       if (!existsSync(badgesDirectory)) {
-        reject(new Error(`Badges directory does not exist: ${path}`))
+        reject(new Error(`Badges directory does not exist: ${badgesDirectory}`))
       }
       const summary = await readSummary(coverageSummaryPath)
       const total = summary['total']
