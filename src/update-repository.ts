@@ -26,10 +26,10 @@ export async function updateRepository(
       settings.repositoryPath,
       false
     )
-    const out = await git.diff()
+    const badgeDir = join(settings.repositoryPath, badgesDirectory)
+    const out = await git.diff(badgeDir)
     // eslint-disable-next-line no-console
     console.log(`Out: ${out}`)
-    const badgeDir = join(settings.repositoryPath, badgesDirectory)
     let result = await getDiffs(badgeDir)
     const matches = (result[0].match(/\.svg/g) || []).length
     // eslint-disable-next-line no-console

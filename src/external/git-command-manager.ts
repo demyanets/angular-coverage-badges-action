@@ -13,7 +13,7 @@ import {GitVersion} from './git-version'
 export const MinimumGitVersion = new GitVersion('2.18')
 
 export interface IGitCommandManager {
-  diff(): Promise<string>
+  diff(path: string): Promise<string>
   branchDelete(remote: boolean, branch: string): Promise<void>
   branchExists(remote: boolean, pattern: string): Promise<boolean>
   branchList(remote: boolean): Promise<string[]>
@@ -67,8 +67,8 @@ class GitCommandManager {
   // Private constructor; use createCommandManager()
   private constructor() {}
 
-  async diff(): Promise<string> {
-    const args = ['diff', '@{upstream}', '--numstat']
+  async diff(dir: string): Promise<string> {
+    const args = ['diff', '@{upstream}', '--numstat', dir]
     const output = await this.execGit(args)
     return output.stdout.trim()
   }
