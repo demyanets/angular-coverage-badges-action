@@ -2,6 +2,7 @@ import {readSummary} from './read-summary'
 import {getBadgePath} from './get-badge-path'
 import {download} from './download'
 import {persist} from './persist'
+import {existsSync} from 'fs'
 
 async function generateBadge(
   coverage: number,
@@ -19,6 +20,9 @@ export async function generateBadges(
 ): Promise<void> {
   return new Promise<void>(async (resolve, reject) => {
     try {
+      if (!existsSync(badgesDirectory)) {
+        reject(new Error(`Badges directory does not exist: ${path}`))
+      }
       const summary = await readSummary(coverageSummaryPath)
       const total = summary['total']
       await Promise.all([
