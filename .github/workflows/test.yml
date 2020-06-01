@@ -22,4 +22,4 @@ jobs:
       with: 
         coverage-summary-path: __tests__/assets/coverage-summary.json
         badges-directory: __tests__/temp
-        protected-branches: '["master", "develop"]'
+        protected-branches: '[]'
