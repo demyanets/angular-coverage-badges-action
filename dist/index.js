@@ -60,11 +60,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.executeCommand = void 0;
 const child_process_1 = __webpack_require__(129);
-const core_1 = __webpack_require__(470);
 function executeCommand(cmd, options) {
     return __awaiter(this, void 0, void 0, function* () {
         return new Promise((resolve, reject) => {
-            core_1.debug(cmd);
+            // eslint-disable-next-line no-console
+            console.log(cmd);
             child_process_1.exec(cmd, options, (error, stdout, stderr) => {
                 if (error === null) {
                     resolve([stdout.toString(), stderr.toString()]);
@@ -208,16 +208,17 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.updateRepository = void 0;
 const git_utilities_1 = __webpack_require__(741);
-const core_1 = __webpack_require__(470);
 function updateRepository(badgesDirectory, protectedBranches) {
     return __awaiter(this, void 0, void 0, function* () {
         let result = yield git_utilities_1.getCurrentBranch();
         const branch = result[0].trim();
-        core_1.debug(`Branch: ${branch}`);
+        // eslint-disable-next-line no-console
+        console.log(`Branch: ${branch}`);
         if (!protectedBranches.includes(branch) && !branch.startsWith('pull/')) {
             result = yield git_utilities_1.getDiffs(badgesDirectory);
             const matches = (result[0].match(/\.svg/g) || []).length;
-            core_1.debug(`SVG matches: ${matches}`);
+            // eslint-disable-next-line no-console
+            console.log(`SVG matches: ${matches}`);
             if (matches > 0) {
                 result = yield git_utilities_1.commitAsAction(badgesDirectory);
                 result = yield git_utilities_1.push();
