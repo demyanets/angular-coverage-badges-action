@@ -1,5 +1,5 @@
 import {CoverageRecord} from './coverage-record'
 
-export class CoverageSummary {
+export interface CoverageSummary {
   [index: string]: CoverageRecord
 }

@@ -1,9 +1,9 @@
-import {GitHelper} from '../src/git-helper'
 import {normalize} from 'path'
+import {getCurrentBranch, getDiffs} from '../src/git-utilities'
 
 describe('Git helper tests', () => {
   test('should return current branch', async () => {
-    const result = await GitHelper.getCurrentBranch()
+    const result = await getCurrentBranch()
     expect(result).toBeDefined()
     console.log(JSON.stringify(result))
     expect(result.length).toBe(2)
@@ -15,7 +15,7 @@ describe('Git helper tests', () => {
 
   test('should return current branch', async () => {
     const dir = normalize('__tests__/assets')
-    const result = await GitHelper.getDiffs(dir)
+    const result = await getDiffs(dir)
     expect(result).toBeDefined()
     console.log(JSON.stringify(result))
     expect(result[0]).toEqual('')
