@@ -1,10 +1,5 @@
 import {executeCommand} from './execute-command'
 
-export async function getCurrentBranch(): Promise<[string, string]> {
-  const cmd = 'git rev-parse --abbrev-ref HEAD'
-  return executeCommand(cmd)
-}
-
 export async function getDiffs(dir: string): Promise<[string, string]> {
   const cmd = `git diff @{upstream} --numstat "${dir}"`
   return executeCommand(cmd)

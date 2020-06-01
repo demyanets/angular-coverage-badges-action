@@ -20075,14 +20075,16 @@ exports.updateRepository = void 0;
 const git_utilities_1 = __webpack_require__(741);
 function updateRepository(badgesDirectory, protectedBranches, ref) {
     return __awaiter(this, void 0, void 0, function* () {
-        let result = yield git_utilities_1.getCurrentBranch();
-        const branch = result[0].trim();
-        // eslint-disable-next-line no-console
-        console.log(`Branch: ${branch}`);
         // eslint-disable-next-line no-console
         console.log(`Ref: ${ref}`);
-        if (!protectedBranches.includes(branch) && !branch.startsWith('pull/')) {
-            result = yield git_utilities_1.getDiffs(badgesDirectory);
+        let isProtected = false;
+        for (const branch of protectedBranches) {
+            if (ref.endsWith(branch)) {
+                isProtected = true;
+            }
+        }
+        if (!isProtected && !ref.startsWith('refs/pull/')) {
+            let result = yield git_utilities_1.getDiffs(badgesDirectory);
             const matches = (result[0].match(/\.svg/g) || []).length;
             // eslint-disable-next-line no-console
             console.log(`SVG matches: ${matches}`);
@@ -22321,15 +22323,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.push = exports.commitAsAction = exports.getDiffs = exports.getCurrentBranch = void 0;
+exports.push = exports.commitAsAction = exports.getDiffs = void 0;
 const execute_command_1 = __webpack_require__(33);
-function getCurrentBranch() {
-    return __awaiter(this, void 0, void 0, function* () {
-        const cmd = 'git rev-parse --abbrev-ref HEAD';
-        return execute_command_1.executeCommand(cmd);
-    });
-}
-exports.getCurrentBranch = getCurrentBranch;
 function getDiffs(dir) {
     return __awaiter(this, void 0, void 0, function* () {
         const cmd = `git diff @{upstream} --numstat "${dir}"`;
