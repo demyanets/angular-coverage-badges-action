@@ -13,6 +13,9 @@ export async function updateRepository(
       isProtected = true
     }
   }
+  // eslint-disable-next-line no-console
+  console.log(`Is protected?: ${isProtected}`)
+
   if (!isProtected && !ref.startsWith('refs/pull/')) {
     let result = await getDiffs(badgesDirectory)
     const matches = (result[0].match(/\.svg/g) || []).length

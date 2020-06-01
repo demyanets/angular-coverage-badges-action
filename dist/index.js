@@ -20083,6 +20083,8 @@ function updateRepository(badgesDirectory, protectedBranches, ref) {
                 isProtected = true;
             }
         }
+        // eslint-disable-next-line no-console
+        console.log(`Is protected?: ${isProtected}`);
         if (!isProtected && !ref.startsWith('refs/pull/')) {
             let result = yield git_utilities_1.getDiffs(badgesDirectory);
             const matches = (result[0].match(/\.svg/g) || []).length;
