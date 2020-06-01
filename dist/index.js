@@ -158,10 +158,14 @@ function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const inputs = new inputs_1.Inputs();
-            core_1.debug(`coverageSummaryPath: ${inputs.coverageSummaryPath}`);
-            core_1.debug(`badgesDirectory: ${inputs.badgesDirectory}`);
+            /* eslint-disable no-console */
+            console.log(`coverageSummaryPath: ${inputs.coverageSummaryPath}`);
+            console.log(`badgesDirectory: ${inputs.badgesDirectory}`);
+            /* eslint-enable no-console */
             yield generate_badges_1.generateBadges(inputs.coverageSummaryPath, inputs.badgesDirectory);
-            yield update_repository_1.updateRepository(inputs.badgesDirectory, inputs.protectedBranches);
+            if (inputs.prodRun) {
+                yield update_repository_1.updateRepository(inputs.badgesDirectory, inputs.protectedBranches);
+            }
         }
         catch (error) {
             core_1.setFailed(error.message);
@@ -765,6 +769,8 @@ const core = __importStar(__webpack_require__(470));
 const parse_array_1 = __webpack_require__(82);
 class Inputs {
     constructor() {
+        this.prodRun =
+            core.getInput('angular-coverage-badges-ci-run') === 'true' ? false : true;
         this.coverageSummaryPath = core.getInput('coverage-summary-path');
         this.badgesDirectory = core.getInput('badges-directory');
         const branches = core.getInput('protected-branches');

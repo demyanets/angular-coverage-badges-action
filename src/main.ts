@@ -1,4 +1,4 @@
-import {debug, setFailed} from '@actions/core'
+import {setFailed} from '@actions/core'
 import {Inputs} from './inputs'
 import {generateBadges} from './generate-badges'
 import {updateRepository} from './update-repository'
@@ -6,10 +6,14 @@ import {updateRepository} from './update-repository'
 async function run(): Promise<void> {
   try {
     const inputs = new Inputs()
-    debug(`coverageSummaryPath: ${inputs.coverageSummaryPath}`)
-    debug(`badgesDirectory: ${inputs.badgesDirectory}`)
+    /* eslint-disable no-console */
+    console.log(`coverageSummaryPath: ${inputs.coverageSummaryPath}`)
+    console.log(`badgesDirectory: ${inputs.badgesDirectory}`)
+    /* eslint-enable no-console */
     await generateBadges(inputs.coverageSummaryPath, inputs.badgesDirectory)
-    await updateRepository(inputs.badgesDirectory, inputs.protectedBranches)
+    if (inputs.prodRun) {
+      await updateRepository(inputs.badgesDirectory, inputs.protectedBranches)
+    }
   } catch (error) {
     setFailed(error.message)
   }
