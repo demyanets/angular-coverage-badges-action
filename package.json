@@ -32,7 +32,8 @@
   "author": "Taras Demyanets",
   "license": "MIT",
   "dependencies": {
-    "@actions/core": "^1.2.0"
+    "@actions/core": "^1.2.0",
+    "@actions/github": "^2.2.0"
   },
   "devDependencies": {
     "@types/jest": "^24.0.23",

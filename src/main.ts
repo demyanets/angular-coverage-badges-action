@@ -11,8 +11,12 @@ async function run(): Promise<void> {
     console.log(`badgesDirectory: ${inputs.badgesDirectory}`)
     /* eslint-enable no-console */
     await generateBadges(inputs.coverageSummaryPath, inputs.badgesDirectory)
-    if (inputs.prodRun) {
-      await updateRepository(inputs.badgesDirectory, inputs.protectedBranches)
+    if (inputs.gitSourceSettings) {
+      await updateRepository(
+        inputs.badgesDirectory,
+        inputs.protectedBranches,
+        inputs.gitSourceSettings.ref
+      )
     }
   } catch (error) {
     setFailed(error.message)
