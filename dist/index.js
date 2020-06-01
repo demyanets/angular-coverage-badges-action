@@ -4491,6 +4491,13 @@ class GitCommandManager {
         this.lfs = false;
         this.workingDirectory = '';
     }
+    diff() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const args = ['diff', '@{upstream}', '--numstat'];
+            const output = yield this.execGit(args);
+            return output.stdout.trim();
+        });
+    }
     branchDelete(remote, branch) {
         return __awaiter(this, void 0, void 0, function* () {
             const args = ['branch', '--delete', '--force'];
@@ -21218,11 +21225,9 @@ function updateRepository(badgesDirectory, protectedBranches, settings) {
         if (!isProtected && !settings.ref.startsWith('refs/pull/')) {
             core_1.info(`Working directory is '${settings.repositoryPath}'`);
             const git = yield gitCommandManager.createCommandManager(settings.repositoryPath, false);
-            const list = yield git.branchList(true);
-            for (const l of list) {
-                // eslint-disable-next-line no-console
-                console.log(`Branch: ${l}`);
-            }
+            const out = yield git.diff();
+            // eslint-disable-next-line no-console
+            console.log(`Out: ${out}`);
             const badgeDir = path_1.join(settings.repositoryPath, badgesDirectory);
             let result = yield git_utilities_1.getDiffs(badgeDir);
             const matches = (result[0].match(/\.svg/g) || []).length;
