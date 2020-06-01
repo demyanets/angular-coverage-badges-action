@@ -21202,6 +21202,7 @@ exports.updateRepository = void 0;
 const git_utilities_1 = __webpack_require__(741);
 const gitCommandManager = __importStar(__webpack_require__(229));
 const core_1 = __webpack_require__(470);
+const path_1 = __webpack_require__(622);
 function updateRepository(badgesDirectory, protectedBranches, settings) {
     return __awaiter(this, void 0, void 0, function* () {
         // eslint-disable-next-line no-console
@@ -21217,12 +21218,13 @@ function updateRepository(badgesDirectory, protectedBranches, settings) {
         if (!isProtected && !settings.ref.startsWith('refs/pull/')) {
             core_1.info(`Working directory is '${settings.repositoryPath}'`);
             const git = yield gitCommandManager.createCommandManager(settings.repositoryPath, false);
-            const list = yield git.branchList(false);
+            const list = yield git.branchList(true);
             for (const l of list) {
                 // eslint-disable-next-line no-console
                 console.log(`Branch: ${l}`);
             }
-            let result = yield git_utilities_1.getDiffs(badgesDirectory);
+            const badgeDir = path_1.join(settings.repositoryPath, badgesDirectory);
+            let result = yield git_utilities_1.getDiffs(badgeDir);
             const matches = (result[0].match(/\.svg/g) || []).length;
             // eslint-disable-next-line no-console
             console.log(`SVG matches: ${matches}`);
