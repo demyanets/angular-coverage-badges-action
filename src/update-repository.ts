@@ -1,13 +1,14 @@
 import {getDiffs, commitAsAction, push} from './git-utilities'
-import * as gitCommandManager from './external/git-command-manager'
 import {IGitSourceSettings} from './external/git-source-settings'
-import {info} from '@actions/core'
+import {info, debug} from '@actions/core'
 import {join} from 'path'
+import {ExecOptions} from '@actions/exec'
 
 export async function updateRepository(
   badgesDirectory: string,
   protectedBranches: string[],
-  settings: IGitSourceSettings
+  settings: IGitSourceSettings,
+  githubWorkspacePath: string
 ): Promise<void> {
   // eslint-disable-next-line no-console
   console.log(`Ref: ${settings.ref}`)
@@ -22,21 +23,27 @@ export async function updateRepository(
 
   if (!isProtected && !settings.ref.startsWith('refs/pull/')) {
     info(`Working directory is '${settings.repositoryPath}'`)
-    const git = await gitCommandManager.createCommandManager(
-      settings.repositoryPath,
-      false
-    )
     const badgeDir = join(settings.repositoryPath, badgesDirectory)
-    const out = await git.diff(badgeDir)
-    // eslint-disable-next-line no-console
-    console.log(`Out: ${out}`)
-    let result = await getDiffs(badgeDir)
-    const matches = (result[0].match(/\.svg/g) || []).length
-    // eslint-disable-next-line no-console
-    console.log(`SVG matches: ${matches}`)
-    if (matches > 0) {
-      result = await commitAsAction(badgesDirectory)
-      result = await push()
+
+    let stdout = ''
+    let stderr = ''
+    const options: ExecOptions = {
+      cwd: githubWorkspacePath,
+      listeners: {
+        stdline: str => (stdout = str),
+        debug: str => (stderr = str)
+      }
+    }
+    const exitCode = await getDiffs(badgeDir, options)
+    debug(stderr)
+    if (exitCode === 0) {
+      const matches = (stdout.match(/\.svg/g) || []).length
+      // eslint-disable-next-line no-console
+      console.log(`SVG matches: ${matches}`)
+      if (matches > 0) {
+        await commitAsAction(badgesDirectory)
+        await push()
+      }
     }
   }
 }

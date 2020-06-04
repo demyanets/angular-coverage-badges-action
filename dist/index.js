@@ -685,97 +685,6 @@ module.exports._enoent = enoent;
 
 /***/ }),
 
-/***/ 23:
-/***/ (function(__unusedmodule, exports, __webpack_require__) {
-
-"use strict";
-
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.execute = exports.RetryHelper = void 0;
-const core = __importStar(__webpack_require__(470));
-const defaultMaxAttempts = 3;
-const defaultMinSeconds = 10;
-const defaultMaxSeconds = 20;
-class RetryHelper {
-    constructor(maxAttempts = defaultMaxAttempts, minSeconds = defaultMinSeconds, maxSeconds = defaultMaxSeconds) {
-        this.maxAttempts = maxAttempts;
-        this.minSeconds = Math.floor(minSeconds);
-        this.maxSeconds = Math.floor(maxSeconds);
-        if (this.minSeconds > this.maxSeconds) {
-            throw new Error('min seconds should be less than or equal to max seconds');
-        }
-    }
-    execute(action) {
-        return __awaiter(this, void 0, void 0, function* () {
-            let attempt = 1;
-            while (attempt < this.maxAttempts) {
-                // Try
-                try {
-                    return yield action();
-                }
-                catch (err) {
-                    core.info(err.message);
-                }
-                // Sleep
-                const seconds = this.getSleepAmount();
-                core.info(`Waiting ${seconds} seconds before trying again`);
-                yield this.sleep(seconds);
-                attempt++;
-            }
-            // Last attempt
-            return yield action();
-        });
-    }
-    getSleepAmount() {
-        return (Math.floor(Math.random() * (this.maxSeconds - this.minSeconds + 1)) +
-            this.minSeconds);
-    }
-    sleep(seconds) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return new Promise(resolve => setTimeout(resolve, seconds * 1000));
-        });
-    }
-}
-exports.RetryHelper = RetryHelper;
-function execute(action) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const retryHelper = new RetryHelper();
-        return yield retryHelper.execute(action);
-    });
-}
-exports.execute = execute;
-
-
-/***/ }),
-
 /***/ 33:
 /***/ (function(__unusedmodule, exports, __webpack_require__) {
 
@@ -2425,23 +2334,6 @@ module.exports = require("os");
 
 /***/ }),
 
-/***/ 92:
-/***/ (function(__unusedmodule, exports) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.escape = void 0;
-function escape(value) {
-    return value.replace(/[^a-zA-Z0-9_]/g, x => {
-        return `\\${x}`;
-    });
-}
-exports.escape = escape;
-
-
-/***/ }),
-
 /***/ 116:
 /***/ (function(__unusedmodule, exports, __webpack_require__) {
 
@@ -3839,281 +3731,6 @@ module.exports = opts => {
 
 /***/ }),
 
-/***/ 175:
-/***/ (function(__unusedmodule, exports, __webpack_require__) {
-
-"use strict";
-
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.checkCommitInfo = exports.testRef = exports.getRefSpec = exports.getRefSpecForAllHistory = exports.getCheckoutInfo = exports.tagsRefSpec = void 0;
-const url_1 = __webpack_require__(835);
-const core = __importStar(__webpack_require__(470));
-const github = __importStar(__webpack_require__(469));
-exports.tagsRefSpec = '+refs/tags/*:refs/tags/*';
-function getCheckoutInfo(git, ref, commit) {
-    return __awaiter(this, void 0, void 0, function* () {
-        if (!git) {
-            throw new Error('Arg git cannot be empty');
-        }
-        if (!ref && !commit) {
-            throw new Error('Args ref and commit cannot both be empty');
-        }
-        const result = {};
-        const upperRef = (ref || '').toUpperCase();
-        // SHA only
-        if (!ref) {
-            result.ref = commit;
-        }
-        // refs/heads/
-        else if (upperRef.startsWith('REFS/HEADS/')) {
-            const branch = ref.substring('refs/heads/'.length);
-            result.ref = branch;
-            result.startPoint = `refs/remotes/origin/${branch}`;
-        }
-        // refs/pull/
-        else if (upperRef.startsWith('REFS/PULL/')) {
-            const branch = ref.substring('refs/pull/'.length);
-            result.ref = `refs/remotes/pull/${branch}`;
-        }
-        // refs/tags/
-        else if (upperRef.startsWith('REFS/')) {
-            result.ref = ref;
-        }
-        // Unqualified ref, check for a matching branch or tag
-        else {
-            if (yield git.branchExists(true, `origin/${ref}`)) {
-                result.ref = ref;
-                result.startPoint = `refs/remotes/origin/${ref}`;
-            }
-            else if (yield git.tagExists(`${ref}`)) {
-                result.ref = `refs/tags/${ref}`;
-            }
-            else {
-                throw new Error(`A branch or tag with the name '${ref}' could not be found`);
-            }
-        }
-        return result;
-    });
-}
-exports.getCheckoutInfo = getCheckoutInfo;
-function getRefSpecForAllHistory(ref, commit) {
-    const result = ['+refs/heads/*:refs/remotes/origin/*', exports.tagsRefSpec];
-    if (ref && ref.toUpperCase().startsWith('REFS/PULL/')) {
-        const branch = ref.substring('refs/pull/'.length);
-        result.push(`+${commit || ref}:refs/remotes/pull/${branch}`);
-    }
-    return result;
-}
-exports.getRefSpecForAllHistory = getRefSpecForAllHistory;
-function getRefSpec(ref, commit) {
-    if (!ref && !commit) {
-        throw new Error('Args ref and commit cannot both be empty');
-    }
-    const upperRef = (ref || '').toUpperCase();
-    // SHA
-    if (commit) {
-        // refs/heads
-        if (upperRef.startsWith('REFS/HEADS/')) {
-            const branch = ref.substring('refs/heads/'.length);
-            return [`+${commit}:refs/remotes/origin/${branch}`];
-        }
-        // refs/pull/
-        else if (upperRef.startsWith('REFS/PULL/')) {
-            const branch = ref.substring('refs/pull/'.length);
-            return [`+${commit}:refs/remotes/pull/${branch}`];
-        }
-        // refs/tags/
-        else if (upperRef.startsWith('REFS/TAGS/')) {
-            return [`+${commit}:${ref}`];
-        }
-        // Otherwise no destination ref
-        else {
-            return [commit];
-        }
-    }
-    // Unqualified ref, check for a matching branch or tag
-    else if (!upperRef.startsWith('REFS/')) {
-        return [
-            `+refs/heads/${ref}*:refs/remotes/origin/${ref}*`,
-            `+refs/tags/${ref}*:refs/tags/${ref}*`
-        ];
-    }
-    // refs/heads/
-    else if (upperRef.startsWith('REFS/HEADS/')) {
-        const branch = ref.substring('refs/heads/'.length);
-        return [`+${ref}:refs/remotes/origin/${branch}`];
-    }
-    // refs/pull/
-    else if (upperRef.startsWith('REFS/PULL/')) {
-        const branch = ref.substring('refs/pull/'.length);
-        return [`+${ref}:refs/remotes/pull/${branch}`];
-    }
-    // refs/tags/
-    else {
-        return [`+${ref}:${ref}`];
-    }
-}
-exports.getRefSpec = getRefSpec;
-/**
- * Tests whether the initial fetch created the ref at the expected commit
- */
-function testRef(git, ref, commit) {
-    return __awaiter(this, void 0, void 0, function* () {
-        if (!git) {
-            throw new Error('Arg git cannot be empty');
-        }
-        if (!ref && !commit) {
-            throw new Error('Args ref and commit cannot both be empty');
-        }
-        // No SHA? Nothing to test
-        if (!commit) {
-            return true;
-        }
-        // SHA only?
-        else if (!ref) {
-            return yield git.shaExists(commit);
-        }
-        const upperRef = ref.toUpperCase();
-        // refs/heads/
-        if (upperRef.startsWith('REFS/HEADS/')) {
-            const branch = ref.substring('refs/heads/'.length);
-            return ((yield git.branchExists(true, `origin/${branch}`)) &&
-                commit === (yield git.revParse(`refs/remotes/origin/${branch}`)));
-        }
-        // refs/pull/
-        else if (upperRef.startsWith('REFS/PULL/')) {
-            // Assume matches because fetched using the commit
-            return true;
-        }
-        // refs/tags/
-        else if (upperRef.startsWith('REFS/TAGS/')) {
-            const tagName = ref.substring('refs/tags/'.length);
-            return ((yield git.tagExists(tagName)) && commit === (yield git.revParse(ref)));
-        }
-        // Unexpected
-        else {
-            core.debug(`Unexpected ref format '${ref}' when testing ref info`);
-            return true;
-        }
-    });
-}
-exports.testRef = testRef;
-function checkCommitInfo(token, commitInfo, repositoryOwner, repositoryName, ref, commit) {
-    return __awaiter(this, void 0, void 0, function* () {
-        try {
-            // GHES?
-            if (isGhes()) {
-                return;
-            }
-            // Auth token?
-            if (!token) {
-                return;
-            }
-            // Public PR synchronize, for workflow repo?
-            if (fromPayload('repository.private') !== false ||
-                github.context.eventName !== 'pull_request' ||
-                fromPayload('action') !== 'synchronize' ||
-                repositoryOwner !== github.context.repo.owner ||
-                repositoryName !== github.context.repo.repo ||
-                ref !== github.context.ref ||
-                !ref.startsWith('refs/pull/') ||
-                commit !== github.context.sha) {
-                return;
-            }
-            // Head SHA
-            const expectedHeadSha = fromPayload('after');
-            if (!expectedHeadSha) {
-                core.debug('Unable to determine head sha');
-                return;
-            }
-            // Base SHA
-            const expectedBaseSha = fromPayload('pull_request.base.sha');
-            if (!expectedBaseSha) {
-                core.debug('Unable to determine base sha');
-                return;
-            }
-            // Expected message?
-            const expectedMessage = `Merge ${expectedHeadSha} into ${expectedBaseSha}`;
-            // eslint-disable-next-line @typescript-eslint/prefer-includes
-            if (commitInfo.indexOf(expectedMessage) >= 0) {
-                return;
-            }
-            // Extract details from message
-            const match = commitInfo.match(/Merge ([0-9a-f]{40}) into ([0-9a-f]{40})/);
-            if (!match) {
-                core.debug('Unexpected message format');
-                return;
-            }
-            // Post telemetry
-            const actualHeadSha = match[1];
-            if (actualHeadSha !== expectedHeadSha) {
-                core.debug(`Expected head sha ${expectedHeadSha}; actual head sha ${actualHeadSha}`);
-                const octokit = new github.GitHub(token, {
-                    userAgent: `actions-checkout-tracepoint/1.0 (code=STALE_MERGE;owner=${repositoryOwner};repo=${repositoryName};pr=${fromPayload('number')};run_id=${process.env['GITHUB_RUN_ID']};expected_head_sha=${expectedHeadSha};actual_head_sha=${actualHeadSha})`
-                });
-                yield octokit.repos.get({ owner: repositoryOwner, repo: repositoryName });
-            }
-        }
-        catch (err) {
-            core.debug(`Error when validating commit info: ${err.stack}`);
-        }
-    });
-}
-exports.checkCommitInfo = checkCommitInfo;
-/* eslint-disable @typescript-eslint/no-explicit-any */
-// eslint-disable-next-line @typescript-eslint/promise-function-async
-function fromPayload(path) {
-    return select(github.context.payload, path);
-}
-// eslint-disable-next-line @typescript-eslint/promise-function-async
-function select(obj, path) {
-    if (!obj) {
-        return undefined;
-    }
-    const i = path.indexOf('.');
-    if (i < 0) {
-        return obj[path];
-    }
-    const key = path.substr(0, i);
-    return select(obj[key], path.substr(i + 1));
-}
-/* eslint-enable @typescript-eslint/no-explicit-any */
-function isGhes() {
-    const ghUrl = new url_1.URL(process.env['GITHUB_SERVER_URL'] || 'https://github.com');
-    return ghUrl.hostname.toUpperCase() !== 'GITHUB.COM';
-}
-
-
-/***/ }),
-
 /***/ 183:
 /***/ (function(__unusedmodule, exports, __webpack_require__) {
 
@@ -4400,7 +4017,7 @@ function run() {
             /* eslint-enable no-console */
             yield generate_badges_1.generateBadges(inputs.coverageSummaryPath, inputs.badgesDirectory);
             if (inputs.gitSourceSettings) {
-                yield update_repository_1.updateRepository(inputs.badgesDirectory, inputs.protectedBranches, inputs.gitSourceSettings);
+                yield update_repository_1.updateRepository(inputs.badgesDirectory, inputs.protectedBranches, inputs.gitSourceSettings, inputs.githubWorkspace);
             }
         }
         catch (error) {
@@ -4424,441 +4041,6 @@ module.exports = require("https");
 /***/ (function(module) {
 
 module.exports = {"_from":"@octokit/rest@^16.43.1","_id":"@octokit/rest@16.43.1","_inBundle":false,"_integrity":"sha512-gfFKwRT/wFxq5qlNjnW2dh+qh74XgTQ2B179UX5K1HYCluioWj8Ndbgqw2PVqa1NnVJkGHp2ovMpVn/DImlmkw==","_location":"/@octokit/rest","_phantomChildren":{"@types/node":"12.12.14","deprecation":"2.3.1","once":"1.4.0","os-name":"3.1.0"},"_requested":{"type":"range","registry":true,"raw":"@octokit/rest@^16.43.1","name":"@octokit/rest","escapedName":"@octokit%2frest","scope":"@octokit","rawSpec":"^16.43.1","saveSpec":null,"fetchSpec":"^16.43.1"},"_requiredBy":["/@actions/github"],"_resolved":"https://registry.npmjs.org/@octokit/rest/-/rest-16.43.1.tgz","_shasum":"3b11e7d1b1ac2bbeeb23b08a17df0b20947eda6b","_spec":"@octokit/rest@^16.43.1","_where":"C:\\Data\\GitHub\\angular-coverage-badges-action\\node_modules\\@actions\\github","author":{"name":"Gregor Martynus","url":"https://github.com/gr2m"},"bugs":{"url":"https://github.com/octokit/rest.js/issues"},"bundleDependencies":false,"bundlesize":[{"path":"./dist/octokit-rest.min.js.gz","maxSize":"33 kB"}],"contributors":[{"name":"Mike de Boer","email":"info@mikedeboer.nl"},{"name":"Fabian Jakobs","email":"fabian@c9.io"},{"name":"Joe Gallo","email":"joe@brassafrax.com"},{"name":"Gregor Martynus","url":"https://github.com/gr2m"}],"dependencies":{"@octokit/auth-token":"^2.4.0","@octokit/plugin-paginate-rest":"^1.1.1","@octokit/plugin-request-log":"^1.0.0","@octokit/plugin-rest-endpoint-methods":"2.4.0","@octokit/request":"^5.2.0","@octokit/request-error":"^1.0.2","atob-lite":"^2.0.0","before-after-hook":"^2.0.0","btoa-lite":"^1.0.0","deprecation":"^2.0.0","lodash.get":"^4.4.2","lodash.set":"^4.3.2","lodash.uniq":"^4.5.0","octokit-pagination-methods":"^1.1.0","once":"^1.4.0","universal-user-agent":"^4.0.0"},"deprecated":false,"description":"GitHub REST API client for Node.js","devDependencies":{"@gimenete/type-writer":"^0.1.3","@octokit/auth":"^1.1.1","@octokit/fixtures-server":"^5.0.6","@octokit/graphql":"^4.2.0","@types/node":"^13.1.0","bundlesize":"^0.18.0","chai":"^4.1.2","compression-webpack-plugin":"^3.1.0","cypress":"^3.0.0","glob":"^7.1.2","http-proxy-agent":"^4.0.0","lodash.camelcase":"^4.3.0","lodash.merge":"^4.6.1","lodash.upperfirst":"^4.3.1","lolex":"^5.1.2","mkdirp":"^1.0.0","mocha":"^7.0.1","mustache":"^4.0.0","nock":"^11.3.3","npm-run-all":"^4.1.2","nyc":"^15.0.0","prettier":"^1.14.2","proxy":"^1.0.0","semantic-release":"^17.0.0","sinon":"^8.0.0","sinon-chai":"^3.0.0","sort-keys":"^4.0.0","string-to-arraybuffer":"^1.0.0","string-to-jsdoc-comment":"^1.0.0","typescript":"^3.3.1","webpack":"^4.0.0","webpack-bundle-analyzer":"^3.0.0","webpack-cli":"^3.0.0"},"files":["index.js","index.d.ts","lib","plugins"],"homepage":"https://github.com/octokit/rest.js#readme","keywords":["octokit","github","rest","api-client"],"license":"MIT","name":"@octokit/rest","nyc":{"ignore":["test"]},"publishConfig":{"access":"public"},"release":{"publish":["@semantic-release/npm",{"path":"@semantic-release/github","assets":["dist/*","!dist/*.map.gz"]}]},"repository":{"type":"git","url":"git+https://github.com/octokit/rest.js.git"},"scripts":{"build":"npm-run-all build:*","build:browser":"npm-run-all build:browser:*","build:browser:development":"webpack --mode development --entry . --output-library=Octokit --output=./dist/octokit-rest.js --profile --json > dist/bundle-stats.json","build:browser:production":"webpack --mode production --entry . --plugin=compression-webpack-plugin --output-library=Octokit --output-path=./dist --output-filename=octokit-rest.min.js --devtool source-map","build:ts":"npm run -s update-endpoints:typescript","coverage":"nyc report --reporter=html && open coverage/index.html","generate-bundle-report":"webpack-bundle-analyzer dist/bundle-stats.json --mode=static --no-open --report dist/bundle-report.html","lint":"prettier --check '{lib,plugins,scripts,test}/**/*.{js,json,ts}' 'docs/*.{js,json}' 'docs/src/**/*' index.js README.md package.json","lint:fix":"prettier --write '{lib,plugins,scripts,test}/**/*.{js,json,ts}' 'docs/*.{js,json}' 'docs/src/**/*' index.js README.md package.json","postvalidate:ts":"tsc --noEmit --target es6 test/typescript-validate.ts","prebuild:browser":"mkdirp dist/","pretest":"npm run -s lint","prevalidate:ts":"npm run -s build:ts","start-fixtures-server":"octokit-fixtures-server","test":"nyc mocha test/mocha-node-setup.js \"test/*/**/*-test.js\"","test:browser":"cypress run --browser chrome","update-endpoints":"npm-run-all update-endpoints:*","update-endpoints:fetch-json":"node scripts/update-endpoints/fetch-json","update-endpoints:typescript":"node scripts/update-endpoints/typescript","validate:ts":"tsc --target es6 --noImplicitAny index.d.ts"},"types":"index.d.ts","version":"16.43.1"};
-
-/***/ }),
-
-/***/ 229:
-/***/ (function(__unusedmodule, exports, __webpack_require__) {
-
-"use strict";
-
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.createCommandManager = exports.MinimumGitVersion = void 0;
-const core = __importStar(__webpack_require__(470));
-const exec = __importStar(__webpack_require__(986));
-const fshelper = __importStar(__webpack_require__(275));
-const io = __importStar(__webpack_require__(1));
-const path = __importStar(__webpack_require__(622));
-const refHelper = __importStar(__webpack_require__(175));
-const regexpHelper = __importStar(__webpack_require__(92));
-const retryHelper = __importStar(__webpack_require__(23));
-const git_version_1 = __webpack_require__(432);
-// Auth header not supported before 2.9
-// Wire protocol v2 not supported before 2.18
-exports.MinimumGitVersion = new git_version_1.GitVersion('2.18');
-function createCommandManager(workingDirectory, lfs) {
-    return __awaiter(this, void 0, void 0, function* () {
-        return yield GitCommandManager.createCommandManager(workingDirectory, lfs);
-    });
-}
-exports.createCommandManager = createCommandManager;
-class GitCommandManager {
-    // Private constructor; use createCommandManager()
-    constructor() {
-        this.gitEnv = {
-            GIT_TERMINAL_PROMPT: '0',
-            GCM_INTERACTIVE: 'Never' // Disable prompting for git credential manager
-        };
-        this.gitPath = '';
-        this.lfs = false;
-        this.workingDirectory = '';
-    }
-    diff(dir) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const args = ['diff', '@{upstream}', '--numstat', dir];
-            const output = yield this.execGit(args);
-            return output.stdout.trim();
-        });
-    }
-    branchDelete(remote, branch) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const args = ['branch', '--delete', '--force'];
-            if (remote) {
-                args.push('--remote');
-            }
-            args.push(branch);
-            yield this.execGit(args);
-        });
-    }
-    branchExists(remote, pattern) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const args = ['branch', '--list'];
-            if (remote) {
-                args.push('--remote');
-            }
-            args.push(pattern);
-            const output = yield this.execGit(args);
-            return !!output.stdout.trim();
-        });
-    }
-    branchList(remote) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const result = [];
-            // Note, this implementation uses "rev-parse --symbolic-full-name" because the output from
-            // "branch --list" is more difficult when in a detached HEAD state.
-            // Note, this implementation uses "rev-parse --symbolic-full-name" because there is a bug
-            // in Git 2.18 that causes "rev-parse --symbolic" to output symbolic full names.
-            const args = ['rev-parse', '--symbolic-full-name'];
-            if (remote) {
-                args.push('--remotes=origin');
-            }
-            else {
-                args.push('--branches');
-            }
-            const output = yield this.execGit(args);
-            for (let branch of output.stdout.trim().split('\n')) {
-                branch = branch.trim();
-                if (branch) {
-                    if (branch.startsWith('refs/heads/')) {
-                        branch = branch.substr('refs/heads/'.length);
-                    }
-                    else if (branch.startsWith('refs/remotes/')) {
-                        branch = branch.substr('refs/remotes/'.length);
-                    }
-                    result.push(branch);
-                }
-            }
-            return result;
-        });
-    }
-    checkout(ref, startPoint) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const args = ['checkout', '--progress', '--force'];
-            if (startPoint) {
-                args.push('-B', ref, startPoint);
-            }
-            else {
-                args.push(ref);
-            }
-            yield this.execGit(args);
-        });
-    }
-    checkoutDetach() {
-        return __awaiter(this, void 0, void 0, function* () {
-            const args = ['checkout', '--detach'];
-            yield this.execGit(args);
-        });
-    }
-    config(configKey, configValue, globalConfig) {
-        return __awaiter(this, void 0, void 0, function* () {
-            yield this.execGit([
-                'config',
-                globalConfig ? '--global' : '--local',
-                configKey,
-                configValue
-            ]);
-        });
-    }
-    configExists(configKey, globalConfig) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const pattern = regexpHelper.escape(configKey);
-            const output = yield this.execGit([
-                'config',
-                globalConfig ? '--global' : '--local',
-                '--name-only',
-                '--get-regexp',
-                pattern
-            ], true);
-            return output.exitCode === 0;
-        });
-    }
-    fetch(refSpec, fetchDepth) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const args = ['-c', 'protocol.version=2', 'fetch'];
-            if (!refSpec.some(x => x === refHelper.tagsRefSpec)) {
-                args.push('--no-tags');
-            }
-            args.push('--prune', '--progress', '--no-recurse-submodules');
-            if (fetchDepth && fetchDepth > 0) {
-                args.push(`--depth=${fetchDepth}`);
-            }
-            else if (fshelper.fileExistsSync(path.join(this.workingDirectory, '.git', 'shallow'))) {
-                args.push('--unshallow');
-            }
-            args.push('origin');
-            for (const arg of refSpec) {
-                args.push(arg);
-            }
-            const that = this;
-            yield retryHelper.execute(() => __awaiter(this, void 0, void 0, function* () {
-                yield that.execGit(args);
-            }));
-        });
-    }
-    getWorkingDirectory() {
-        return this.workingDirectory;
-    }
-    init() {
-        return __awaiter(this, void 0, void 0, function* () {
-            yield this.execGit(['init', this.workingDirectory]);
-        });
-    }
-    isDetached() {
-        return __awaiter(this, void 0, void 0, function* () {
-            // Note, "branch --show-current" would be simpler but isn't available until Git 2.22
-            const output = yield this.execGit(['rev-parse', '--symbolic-full-name', '--verify', '--quiet', 'HEAD'], true);
-            return !output.stdout.trim().startsWith('refs/heads/');
-        });
-    }
-    lfsFetch(ref) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const args = ['lfs', 'fetch', 'origin', ref];
-            const that = this;
-            yield retryHelper.execute(() => __awaiter(this, void 0, void 0, function* () {
-                yield that.execGit(args);
-            }));
-        });
-    }
-    lfsInstall() {
-        return __awaiter(this, void 0, void 0, function* () {
-            yield this.execGit(['lfs', 'install', '--local']);
-        });
-    }
-    log1() {
-        return __awaiter(this, void 0, void 0, function* () {
-            const output = yield this.execGit(['log', '-1']);
-            return output.stdout;
-        });
-    }
-    remoteAdd(remoteName, remoteUrl) {
-        return __awaiter(this, void 0, void 0, function* () {
-            yield this.execGit(['remote', 'add', remoteName, remoteUrl]);
-        });
-    }
-    removeEnvironmentVariable(name) {
-        delete this.gitEnv[name];
-    }
-    /**
-     * Resolves a ref to a SHA. For a branch or lightweight tag, the commit SHA is returned.
-     * For an annotated tag, the tag SHA is returned.
-     * @param {string} ref  For example: 'refs/heads/master' or '/refs/tags/v1'
-     * @returns {Promise<string>}
-     */
-    revParse(ref) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const output = yield this.execGit(['rev-parse', ref]);
-            return output.stdout.trim();
-        });
-    }
-    setEnvironmentVariable(name, value) {
-        this.gitEnv[name] = value;
-    }
-    shaExists(sha) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const args = ['rev-parse', '--verify', '--quiet', `${sha}^{object}`];
-            const output = yield this.execGit(args, true);
-            return output.exitCode === 0;
-        });
-    }
-    submoduleForeach(command, recursive) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const args = ['submodule', 'foreach'];
-            if (recursive) {
-                args.push('--recursive');
-            }
-            args.push(command);
-            const output = yield this.execGit(args);
-            return output.stdout;
-        });
-    }
-    submoduleSync(recursive) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const args = ['submodule', 'sync'];
-            if (recursive) {
-                args.push('--recursive');
-            }
-            yield this.execGit(args);
-        });
-    }
-    submoduleUpdate(fetchDepth, recursive) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const args = ['-c', 'protocol.version=2'];
-            args.push('submodule', 'update', '--init', '--force');
-            if (fetchDepth > 0) {
-                args.push(`--depth=${fetchDepth}`);
-            }
-            if (recursive) {
-                args.push('--recursive');
-            }
-            yield this.execGit(args);
-        });
-    }
-    tagExists(pattern) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const output = yield this.execGit(['tag', '--list', pattern]);
-            return !!output.stdout.trim();
-        });
-    }
-    tryClean() {
-        return __awaiter(this, void 0, void 0, function* () {
-            const output = yield this.execGit(['clean', '-ffdx'], true);
-            return output.exitCode === 0;
-        });
-    }
-    tryConfigUnset(configKey, globalConfig) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const output = yield this.execGit([
-                'config',
-                globalConfig ? '--global' : '--local',
-                '--unset-all',
-                configKey
-            ], true);
-            return output.exitCode === 0;
-        });
-    }
-    tryDisableAutomaticGarbageCollection() {
-        return __awaiter(this, void 0, void 0, function* () {
-            const output = yield this.execGit(['config', '--local', 'gc.auto', '0'], true);
-            return output.exitCode === 0;
-        });
-    }
-    tryGetFetchUrl() {
-        return __awaiter(this, void 0, void 0, function* () {
-            const output = yield this.execGit(['config', '--local', '--get', 'remote.origin.url'], true);
-            if (output.exitCode !== 0) {
-                return '';
-            }
-            const stdout = output.stdout.trim();
-            if (stdout.includes('\n')) {
-                return '';
-            }
-            return stdout;
-        });
-    }
-    tryReset() {
-        return __awaiter(this, void 0, void 0, function* () {
-            const output = yield this.execGit(['reset', '--hard', 'HEAD'], true);
-            return output.exitCode === 0;
-        });
-    }
-    static createCommandManager(workingDirectory, lfs) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const result = new GitCommandManager();
-            yield result.initializeCommandManager(workingDirectory, lfs);
-            return result;
-        });
-    }
-    execGit(args, allowAllExitCodes = false) {
-        return __awaiter(this, void 0, void 0, function* () {
-            fshelper.directoryExistsSync(this.workingDirectory, true);
-            const result = new GitOutput();
-            const env = {};
-            for (const key of Object.keys(process.env)) {
-                env[key] = process.env[key];
-            }
-            for (const key of Object.keys(this.gitEnv)) {
-                env[key] = this.gitEnv[key];
-            }
-            const stdout = [];
-            const options = {
-                cwd: this.workingDirectory,
-                env,
-                ignoreReturnCode: allowAllExitCodes,
-                listeners: {
-                    stdout: (data) => {
-                        stdout.push(data.toString());
-                    }
-                }
-            };
-            result.exitCode = yield exec.exec(`"${this.gitPath}"`, args, options);
-            result.stdout = stdout.join('');
-            return result;
-        });
-    }
-    initializeCommandManager(workingDirectory, lfs) {
-        return __awaiter(this, void 0, void 0, function* () {
-            this.workingDirectory = workingDirectory;
-            // Git-lfs will try to pull down assets if any of the local/user/system setting exist.
-            // If the user didn't enable `LFS` in their pipeline definition, disable LFS fetch/checkout.
-            this.lfs = lfs;
-            if (!this.lfs) {
-                this.gitEnv['GIT_LFS_SKIP_SMUDGE'] = '1';
-            }
-            this.gitPath = yield io.which('git', true);
-            // Git version
-            core.debug('Getting git version');
-            let gitVersion = new git_version_1.GitVersion();
-            let gitOutput = yield this.execGit(['version']);
-            let stdout = gitOutput.stdout.trim();
-            if (!stdout.includes('\n')) {
-                const match = stdout.match(/\d+\.\d+(\.\d+)?/);
-                if (match) {
-                    gitVersion = new git_version_1.GitVersion(match[0]);
-                }
-            }
-            if (!gitVersion.isValid()) {
-                throw new Error('Unable to determine git version');
-            }
-            // Minimum git version
-            if (!gitVersion.checkMinimum(exports.MinimumGitVersion)) {
-                throw new Error(`Minimum required git version is ${exports.MinimumGitVersion}. Your git ('${this.gitPath}') is ${gitVersion}`);
-            }
-            if (this.lfs) {
-                // Git-lfs version
-                core.debug('Getting git-lfs version');
-                let gitLfsVersion = new git_version_1.GitVersion();
-                const gitLfsPath = yield io.which('git-lfs', true);
-                gitOutput = yield this.execGit(['lfs', 'version']);
-                stdout = gitOutput.stdout.trim();
-                if (!stdout.includes('\n')) {
-                    const match = stdout.match(/\d+\.\d+(\.\d+)?/);
-                    if (match) {
-                        gitLfsVersion = new git_version_1.GitVersion(match[0]);
-                    }
-                }
-                if (!gitLfsVersion.isValid()) {
-                    throw new Error('Unable to determine git-lfs version');
-                }
-                // Minimum git-lfs version
-                // Note:
-                // - Auth header not supported before 2.1
-                const minimumGitLfsVersion = new git_version_1.GitVersion('2.1');
-                if (!gitLfsVersion.checkMinimum(minimumGitLfsVersion)) {
-                    throw new Error(`Minimum required git-lfs version is ${minimumGitLfsVersion}. Your git-lfs ('${gitLfsPath}') is ${gitLfsVersion}`);
-                }
-            }
-            // Set the user agent
-            const gitHttpUserAgent = `git/${gitVersion} (github-actions-checkout)`;
-            core.debug(`Set git useragent to: ${gitHttpUserAgent}`);
-            this.gitEnv['GIT_HTTP_USER_AGENT'] = gitHttpUserAgent;
-        });
-    }
-}
-class GitOutput {
-    constructor() {
-        this.stdout = '';
-        this.exitCode = 0;
-    }
-}
-
 
 /***/ }),
 
@@ -21176,25 +20358,6 @@ module.exports = readShebang;
 
 "use strict";
 
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -21207,10 +20370,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.updateRepository = void 0;
 const git_utilities_1 = __webpack_require__(741);
-const gitCommandManager = __importStar(__webpack_require__(229));
 const core_1 = __webpack_require__(470);
 const path_1 = __webpack_require__(622);
-function updateRepository(badgesDirectory, protectedBranches, settings) {
+function updateRepository(badgesDirectory, protectedBranches, settings, githubWorkspacePath) {
     return __awaiter(this, void 0, void 0, function* () {
         // eslint-disable-next-line no-console
         console.log(`Ref: ${settings.ref}`);
@@ -21224,18 +20386,26 @@ function updateRepository(badgesDirectory, protectedBranches, settings) {
         console.log(`Is protected?: ${isProtected}`);
         if (!isProtected && !settings.ref.startsWith('refs/pull/')) {
             core_1.info(`Working directory is '${settings.repositoryPath}'`);
-            const git = yield gitCommandManager.createCommandManager(settings.repositoryPath, false);
             const badgeDir = path_1.join(settings.repositoryPath, badgesDirectory);
-            const out = yield git.diff(badgeDir);
-            // eslint-disable-next-line no-console
-            console.log(`Out: ${out}`);
-            let result = yield git_utilities_1.getDiffs(badgeDir);
-            const matches = (result[0].match(/\.svg/g) || []).length;
-            // eslint-disable-next-line no-console
-            console.log(`SVG matches: ${matches}`);
-            if (matches > 0) {
-                result = yield git_utilities_1.commitAsAction(badgesDirectory);
-                result = yield git_utilities_1.push();
+            let stdout = '';
+            let stderr = '';
+            const options = {
+                cwd: githubWorkspacePath,
+                listeners: {
+                    stdline: str => (stdout = str),
+                    debug: str => (stderr = str)
+                }
+            };
+            const exitCode = yield git_utilities_1.getDiffs(badgeDir, options);
+            core_1.debug(stderr);
+            if (exitCode === 0) {
+                const matches = (stdout.match(/\.svg/g) || []).length;
+                // eslint-disable-next-line no-console
+                console.log(`SVG matches: ${matches}`);
+                if (matches > 0) {
+                    yield git_utilities_1.commitAsAction(badgesDirectory);
+                    yield git_utilities_1.push();
+                }
             }
         }
     });
@@ -21419,86 +20589,6 @@ function escape(s) {
         .replace(/;/g, '%3B');
 }
 //# sourceMappingURL=command.js.map
-
-/***/ }),
-
-/***/ 432:
-/***/ (function(__unusedmodule, exports) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.GitVersion = void 0;
-class GitVersion {
-    /**
-     * Used for comparing the version of git and git-lfs against the minimum required version
-     * @param version the version string, e.g. 1.2 or 1.2.3
-     */
-    constructor(version) {
-        this.major = NaN;
-        this.minor = NaN;
-        this.patch = NaN;
-        if (version) {
-            const match = version.match(/^(\d+)\.(\d+)(\.(\d+))?$/);
-            if (match) {
-                this.major = Number(match[1]);
-                this.minor = Number(match[2]);
-                if (match[4]) {
-                    this.patch = Number(match[4]);
-                }
-            }
-        }
-    }
-    /**
-     * Compares the instance against a minimum required version
-     * @param minimum Minimum version
-     */
-    checkMinimum(minimum) {
-        if (!minimum.isValid()) {
-            throw new Error('Arg minimum is not a valid version');
-        }
-        // Major is insufficient
-        if (this.major < minimum.major) {
-            return false;
-        }
-        // Major is equal
-        if (this.major === minimum.major) {
-            // Minor is insufficient
-            if (this.minor < minimum.minor) {
-                return false;
-            }
-            // Minor is equal
-            if (this.minor === minimum.minor) {
-                // Patch is insufficient
-                if (this.patch && this.patch < (minimum.patch || 0)) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-    /**
-     * Indicates whether the instance was constructed from a valid version string
-     */
-    isValid() {
-        return !isNaN(this.major);
-    }
-    /**
-     * Returns the version as a string, e.g. 1.2 or 1.2.3
-     */
-    toString() {
-        let result = '';
-        if (this.isValid()) {
-            result = `${this.major}.${this.minor}`;
-            if (!isNaN(this.patch)) {
-                result += `.${this.patch}`;
-            }
-        }
-        return result;
-    }
-}
-exports.GitVersion = GitVersion;
-
 
 /***/ }),
 
@@ -24359,10 +23449,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.push = exports.commitAsAction = exports.getDiffs = void 0;
 const execute_command_1 = __webpack_require__(33);
-function getDiffs(dir) {
+const exec_1 = __webpack_require__(986);
+function getDiffs(dir, options) {
     return __awaiter(this, void 0, void 0, function* () {
-        const cmd = `git diff @{upstream} --numstat "${dir}"`;
-        return execute_command_1.executeCommand(cmd);
+        const args = ['diff', '@{upstream}', '--numstat', `"${dir}"`];
+        return exec_1.exec('git', args, options);
     });
 }
 exports.getDiffs = getDiffs;
@@ -25134,6 +24225,7 @@ const parse_array_1 = __webpack_require__(82);
 const input_helper_1 = __webpack_require__(183);
 class Inputs {
     constructor() {
+        this.githubWorkspace = '';
         const prodRun = core.getInput('angular-coverage-badges-ci-run') === 'true' ? false : true;
         if (prodRun) {
             this.gitSourceSettings = input_helper_1.getInputs();
@@ -25142,6 +24234,9 @@ class Inputs {
         this.badgesDirectory = core.getInput('badges-directory');
         const branches = core.getInput('protected-branches');
         this.protectedBranches = parse_array_1.parseArray(branches);
+        if (process.env['GITHUB_WORKSPACE']) {
+            this.githubWorkspace = process.env['GITHUB_WORKSPACE'];
+        }
     }
 }
 exports.Inputs = Inputs;

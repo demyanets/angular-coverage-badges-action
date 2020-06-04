@@ -8,6 +8,7 @@ export class Inputs {
   readonly badgesDirectory: string
   readonly protectedBranches: string[]
   readonly gitSourceSettings?: IGitSourceSettings
+  readonly githubWorkspace: string = ''
 
   constructor() {
     const prodRun =
@@ -20,5 +21,8 @@ export class Inputs {
     this.badgesDirectory = core.getInput('badges-directory')
     const branches = core.getInput('protected-branches')
     this.protectedBranches = parseArray(branches)
+    if (process.env['GITHUB_WORKSPACE']) {
+      this.githubWorkspace = process.env['GITHUB_WORKSPACE']
+    }
   }
 }

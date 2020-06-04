@@ -1,8 +1,12 @@
 import {executeCommand} from './execute-command'
+import {exec, ExecOptions} from '@actions/exec'
 
-export async function getDiffs(dir: string): Promise<[string, string]> {
-  const cmd = `git diff @{upstream} --numstat "${dir}"`
-  return executeCommand(cmd)
+export async function getDiffs(
+  dir: string,
+  options?: ExecOptions
+): Promise<number> {
+  const args = ['diff', '@{upstream}', '--numstat', `"${dir}"`]
+  return exec('git', args, options)
 }
 
 export async function commitAsAction(dir: string): Promise<[string, string]> {
