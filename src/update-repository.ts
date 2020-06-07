@@ -26,13 +26,13 @@ export async function updateRepository(
 
     const stub = new ExecOptionsStub('q')
     await getLog(stub.options)
-    debug(`Log stdout: ${stub.stdout}`)
-    debug(`Log stder: ${stub.stderr}`)
+    info(`Log stdout: ${stub.stdout}`)
+    info(`Log stder: ${stub.stderr}`)
 
     const stub2 = new ExecOptionsStub()
     const exitCode = await getDiffs(badgeDir, stub2.options)
-    debug(`Diff stdout: ${stub2.stdout}`)
-    debug(`Diff stder: ${stub2.stderr}`)
+    info(`Diff stdout: ${stub2.stdout}`)
+    info(`Diff stder: ${stub2.stderr}`)
     if (exitCode === 0) {
       const matches = (stub2.stdout.match(/\.svg/g) || []).length
       // eslint-disable-next-line no-console
