@@ -4017,7 +4017,7 @@ function run() {
             /* eslint-enable no-console */
             yield generate_badges_1.generateBadges(inputs.coverageSummaryPath, inputs.badgesDirectory);
             if (inputs.gitSourceSettings) {
-                yield update_repository_1.updateRepository(inputs.badgesDirectory, inputs.protectedBranches, inputs.gitSourceSettings, inputs.githubWorkspace);
+                yield update_repository_1.updateRepository(inputs.badgesDirectory, inputs.protectedBranches, inputs.gitSourceSettings);
             }
         }
         catch (error) {
@@ -20372,7 +20372,8 @@ exports.updateRepository = void 0;
 const git_utilities_1 = __webpack_require__(741);
 const core_1 = __webpack_require__(470);
 const path_1 = __webpack_require__(622);
-function updateRepository(badgesDirectory, protectedBranches, settings, githubWorkspacePath) {
+const exec_options_stub_1 = __webpack_require__(662);
+function updateRepository(badgesDirectory, protectedBranches, settings) {
     return __awaiter(this, void 0, void 0, function* () {
         // eslint-disable-next-line no-console
         console.log(`Ref: ${settings.ref}`);
@@ -20387,19 +20388,12 @@ function updateRepository(badgesDirectory, protectedBranches, settings, githubWo
         if (!isProtected && !settings.ref.startsWith('refs/pull/')) {
             core_1.info(`Working directory is '${settings.repositoryPath}'`);
             const badgeDir = path_1.join(settings.repositoryPath, badgesDirectory);
-            let stdout = '';
-            let stderr = '';
-            const options = {
-                cwd: githubWorkspacePath,
-                listeners: {
-                    stdline: str => (stdout = str),
-                    debug: str => (stderr = str)
-                }
-            };
-            const exitCode = yield git_utilities_1.getDiffs(badgeDir, options);
-            core_1.debug(stderr);
+            const stub = new exec_options_stub_1.ExecOptionsStub();
+            const exitCode = yield git_utilities_1.getDiffs(badgeDir, stub.options);
+            core_1.debug(`Diff stdout: ${stub.stdout}`);
+            core_1.debug(`Diff stder: ${stub.stderr}`);
             if (exitCode === 0) {
-                const matches = (stdout.match(/\.svg/g) || []).length;
+                const matches = (stub.stdout.match(/\.svg/g) || []).length;
                 // eslint-disable-next-line no-console
                 console.log(`SVG matches: ${matches}`);
                 if (matches > 0) {
@@ -22496,6 +22490,64 @@ if (process.platform === 'linux') {
 
 /***/ }),
 
+/***/ 662:
+/***/ (function(__unusedmodule, exports) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.ExecOptionsStub = void 0;
+class ExecOptionsStub {
+    constructor(inputText) {
+        this._stdout = '';
+        this._stderr = '';
+        this._stdline = '';
+        this._stdoutCalled = false;
+        this._stderrCalled = false;
+        this._stdlineCalled = false;
+        const inputBuffer = inputText ? Buffer.from(inputText) : undefined;
+        this.options = {
+            listeners: {
+                stdout: (data) => {
+                    this._stdout += data.toString();
+                    this._stdoutCalled = true;
+                },
+                stderr: (data) => {
+                    this._stderr += data.toString();
+                    this._stderrCalled = true;
+                },
+                stdline: (data) => {
+                    this._stdline = data;
+                    this._stdlineCalled = true;
+                }
+            },
+            input: inputBuffer
+        };
+    }
+    get stdout() {
+        return this._stdout;
+    }
+    get stderr() {
+        return this._stderr;
+    }
+    get stdline() {
+        return this._stdline;
+    }
+    get stdoutCalled() {
+        return this._stdoutCalled;
+    }
+    get stderrCalled() {
+        return this._stderrCalled;
+    }
+    get stdlineCalled() {
+        return this._stdlineCalled;
+    }
+}
+exports.ExecOptionsStub = ExecOptionsStub;
+
+
+/***/ }),
+
 /***/ 669:
 /***/ (function(module) {
 
@@ -23447,12 +23499,24 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.push = exports.commitAsAction = exports.getDiffs = void 0;
+exports.push = exports.commitAsAction = exports.getDiffs = exports.getLog = exports.getGitVersion = void 0;
 const execute_command_1 = __webpack_require__(33);
 const exec_1 = __webpack_require__(986);
+function getGitVersion(options) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return exec_1.exec('git', ['--version'], options);
+    });
+}
+exports.getGitVersion = getGitVersion;
+function getLog(options) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return exec_1.exec('git', ['log'], options);
+    });
+}
+exports.getLog = getLog;
 function getDiffs(dir, options) {
     return __awaiter(this, void 0, void 0, function* () {
-        const args = ['diff', '@{upstream}', '--numstat', `"${dir}"`];
+        const args = ['diff', '@{upstream}', '--numstat', `${dir}`];
         return exec_1.exec('git', args, options);
     });
 }

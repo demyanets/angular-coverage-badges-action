@@ -15,8 +15,7 @@ async function run(): Promise<void> {
       await updateRepository(
         inputs.badgesDirectory,
         inputs.protectedBranches,
-        inputs.gitSourceSettings,
-        inputs.githubWorkspace
+        inputs.gitSourceSettings
       )
     }
   } catch (error) {

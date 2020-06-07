@@ -1,11 +1,19 @@
 import {executeCommand} from './execute-command'
 import {exec, ExecOptions} from '@actions/exec'
 
+export async function getGitVersion(options: ExecOptions): Promise<number> {
+  return exec('git', ['--version'], options)
+}
+
+export async function getLog(options: ExecOptions): Promise<number> {
+  return exec('git', ['log'], options)
+}
+
 export async function getDiffs(
   dir: string,
-  options?: ExecOptions
+  options: ExecOptions
 ): Promise<number> {
-  const args = ['diff', '@{upstream}', '--numstat', `"${dir}"`]
+  const args = ['diff', '@{upstream}', '--numstat', `${dir}`]
   return exec('git', args, options)
 }
 
