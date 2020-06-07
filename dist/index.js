@@ -20388,12 +20388,16 @@ function updateRepository(badgesDirectory, protectedBranches, settings) {
         if (!isProtected && !settings.ref.startsWith('refs/pull/')) {
             core_1.info(`Working directory is '${settings.repositoryPath}'`);
             const badgeDir = path_1.join(settings.repositoryPath, badgesDirectory);
-            const stub = new exec_options_stub_1.ExecOptionsStub();
-            const exitCode = yield git_utilities_1.getDiffs(badgeDir, stub.options);
+            const stub = new exec_options_stub_1.ExecOptionsStub('q');
+            yield git_utilities_1.getLog(stub.options);
             core_1.debug(`Diff stdout: ${stub.stdout}`);
             core_1.debug(`Diff stder: ${stub.stderr}`);
+            const stub2 = new exec_options_stub_1.ExecOptionsStub();
+            const exitCode = yield git_utilities_1.getDiffs(badgeDir, stub2.options);
+            core_1.debug(`Diff stdout: ${stub2.stdout}`);
+            core_1.debug(`Diff stder: ${stub2.stderr}`);
             if (exitCode === 0) {
-                const matches = (stub.stdout.match(/\.svg/g) || []).length;
+                const matches = (stub2.stdout.match(/\.svg/g) || []).length;
                 // eslint-disable-next-line no-console
                 console.log(`SVG matches: ${matches}`);
                 if (matches > 0) {

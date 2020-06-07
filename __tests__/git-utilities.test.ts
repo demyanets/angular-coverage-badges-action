@@ -1,4 +1,4 @@
-import {normalize} from 'path'
+import {join, normalize} from 'path'
 import {getDiffs, getLog, getGitVersion} from '../src/git-utilities'
 import {ExecOptionsStub} from '../src/exec-options-stub'
 describe('Git helper tests', () => {
@@ -12,7 +12,8 @@ describe('Git helper tests', () => {
 
   test('should not find any differences', async () => {
     const stub = new ExecOptionsStub()
-    const dir = normalize('__tests__/assets')
+    let dir = normalize('__tests__/assets')
+    dir = join(__dirname, dir)
     const result = await getDiffs(dir, stub.options)
     expect(result).toEqual(0)
     expect(stub.stdout).toEqual('')
