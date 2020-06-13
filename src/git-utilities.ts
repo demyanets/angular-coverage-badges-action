@@ -6,7 +6,7 @@ export async function getGitVersion(options: ExecOptions): Promise<number> {
 }
 
 export async function getLog(options: ExecOptions): Promise<number> {
-  return exec('git', ['log'], options)
+  return exec('git', ['log', '--oneline'], options)
 }
 
 export async function getDiffs(

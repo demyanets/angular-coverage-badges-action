@@ -1,6 +1,6 @@
 import {getDiffs, commitAsAction, push, getLog} from './git-utilities'
 import {IGitSourceSettings} from './external/git-source-settings'
-import {info, debug} from '@actions/core'
+import {info} from '@actions/core'
 import {join} from 'path'
 import {ExecOptionsStub} from './exec-options-stub'
 

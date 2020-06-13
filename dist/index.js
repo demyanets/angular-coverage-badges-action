@@ -20390,12 +20390,12 @@ function updateRepository(badgesDirectory, protectedBranches, settings) {
             const badgeDir = path_1.join(settings.repositoryPath, badgesDirectory);
             const stub = new exec_options_stub_1.ExecOptionsStub('q');
             yield git_utilities_1.getLog(stub.options);
-            core_1.debug(`Diff stdout: ${stub.stdout}`);
-            core_1.debug(`Diff stder: ${stub.stderr}`);
+            core_1.info(`Log stdout: ${stub.stdout}`);
+            core_1.info(`Log stder: ${stub.stderr}`);
             const stub2 = new exec_options_stub_1.ExecOptionsStub();
             const exitCode = yield git_utilities_1.getDiffs(badgeDir, stub2.options);
-            core_1.debug(`Diff stdout: ${stub2.stdout}`);
-            core_1.debug(`Diff stder: ${stub2.stderr}`);
+            core_1.info(`Diff stdout: ${stub2.stdout}`);
+            core_1.info(`Diff stder: ${stub2.stderr}`);
             if (exitCode === 0) {
                 const matches = (stub2.stdout.match(/\.svg/g) || []).length;
                 // eslint-disable-next-line no-console
@@ -23514,7 +23514,7 @@ function getGitVersion(options) {
 exports.getGitVersion = getGitVersion;
 function getLog(options) {
     return __awaiter(this, void 0, void 0, function* () {
-        return exec_1.exec('git', ['log'], options);
+        return exec_1.exec('git', ['log', '--oneline'], options);
     });
 }
 exports.getLog = getLog;
