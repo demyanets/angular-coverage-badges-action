@@ -4007,6 +4007,8 @@ const core_1 = __webpack_require__(470);
 const inputs_1 = __webpack_require__(842);
 const generate_badges_1 = __webpack_require__(798);
 const update_repository_1 = __webpack_require__(395);
+const exec_options_stub_1 = __webpack_require__(662);
+const git_utilities_1 = __webpack_require__(741);
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -4015,8 +4017,11 @@ function run() {
             console.log(`coverageSummaryPath: ${inputs.coverageSummaryPath}`);
             console.log(`badgesDirectory: ${inputs.badgesDirectory}`);
             /* eslint-enable no-console */
-            yield generate_badges_1.generateBadges(inputs.coverageSummaryPath, inputs.badgesDirectory);
             if (inputs.gitSourceSettings) {
+                const stub = new exec_options_stub_1.ExecOptionsStub();
+                const branch = git_utilities_1.getBranch(inputs.gitSourceSettings.ref);
+                yield git_utilities_1.checkout(branch, stub.options);
+                yield generate_badges_1.generateBadges(inputs.coverageSummaryPath, inputs.badgesDirectory);
                 yield update_repository_1.updateRepository(inputs.badgesDirectory, inputs.protectedBranches, inputs.gitSourceSettings);
             }
         }
@@ -20388,12 +20393,6 @@ function updateRepository(badgesDirectory, protectedBranches, settings) {
         if (!isProtected && !settings.ref.startsWith('refs/pull/')) {
             core_1.info(`Working directory is '${settings.repositoryPath}'`);
             const badgeDir = path_1.join(settings.repositoryPath, badgesDirectory);
-            const branch = git_utilities_1.getBranch(settings.ref);
-            core_1.info(`Branch: ${branch}`);
-            const stub = new exec_options_stub_1.ExecOptionsStub();
-            yield git_utilities_1.checkout(branch, stub.options);
-            core_1.info(`Checkout stdout: ${stub.stdout}`);
-            core_1.info(`Checkout stder: ${stub.stderr}`);
             const stub2 = new exec_options_stub_1.ExecOptionsStub();
             const exitCode = yield git_utilities_1.getDiffs(badgeDir, stub2.options);
             core_1.info(`Diff stdout: ${stub2.stdout}`);

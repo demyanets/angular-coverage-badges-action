@@ -20,11 +20,13 @@ describe('Main tests', () => {
     }
   })
 
+  /*
   afterEach(() => {
     for (let file of expected) {
       expect(existsSync(file)).toBeTruthy()
     }
   })
+  */
 
   // shows how the runner will run a javascript action with env / stdout protocol
   test('test runs', () => {
