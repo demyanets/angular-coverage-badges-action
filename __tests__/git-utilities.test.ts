@@ -11,12 +11,9 @@ describe('Git helper tests', () => {
   })
 
   test('get HEAD branch', async () => {
-    const stub = new ExecOptionsStub()
-    const result = await getBranch(stub.options)
-    expect(result).toEqual(0)
-    expect(stub.stdout.length).toBeGreaterThan(0)
-    expect(stub.stderr).toEqual('')
-    console.log(stub.stdout)
+    const ref = 'REFS/HEADS/master'
+    const result = getBranch(ref)
+    expect(result).toEqual('master')
   })
 
   test('should not find any differences', async () => {

@@ -20388,10 +20388,12 @@ function updateRepository(badgesDirectory, protectedBranches, settings) {
         if (!isProtected && !settings.ref.startsWith('refs/pull/')) {
             core_1.info(`Working directory is '${settings.repositoryPath}'`);
             const badgeDir = path_1.join(settings.repositoryPath, badgesDirectory);
+            const branch = git_utilities_1.getBranch(settings.ref);
+            core_1.info(`Branch: ${branch}`);
             const stub = new exec_options_stub_1.ExecOptionsStub();
-            yield git_utilities_1.getBranch(stub.options);
-            core_1.info(`Branch stdout: ${stub.stdout}`);
-            core_1.info(`Branch stder: ${stub.stderr}`);
+            yield git_utilities_1.checkout(branch, stub.options);
+            core_1.info(`Checkout stdout: ${stub.stdout}`);
+            core_1.info(`Checkout stder: ${stub.stderr}`);
             const stub2 = new exec_options_stub_1.ExecOptionsStub();
             const exitCode = yield git_utilities_1.getDiffs(badgeDir, stub2.options);
             core_1.info(`Diff stdout: ${stub2.stdout}`);
@@ -23503,7 +23505,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.push = exports.commitAsAction = exports.getDiffs = exports.getBranch = exports.getLog = exports.getGitVersion = void 0;
+exports.push = exports.commitAsAction = exports.getDiffs = exports.checkout = exports.getBranch = exports.getLog = exports.getGitVersion = void 0;
 const execute_command_1 = __webpack_require__(33);
 const exec_1 = __webpack_require__(986);
 function getGitVersion(options) {
@@ -23518,12 +23520,36 @@ function getLog(options) {
     });
 }
 exports.getLog = getLog;
-function getBranch(options) {
-    return __awaiter(this, void 0, void 0, function* () {
-        return exec_1.exec('git', ['rev-parse', '--abbrev-ref', 'HEAD'], options);
-    });
+function getBranch(ref) {
+    // refs/heads/
+    const heads = 'REFS/HEADS/';
+    if (ref.startsWith(heads)) {
+        return ref.substring(heads.length);
+    }
+    // refs/pull/
+    const pull = 'REFS/PULL/';
+    if (ref.startsWith(pull)) {
+        return ref.substring(pull.length);
+    }
+    // refs/tags/
+    const tags = 'REFS/TAGS';
+    if (ref.startsWith(tags)) {
+        return ref.substring(tags.length);
+    }
+    // refs/
+    const refs = 'REFS/';
+    if (ref.startsWith(refs)) {
+        return ref.substring(refs.length);
+    }
+    throw new Error(`Unable to parse ref: ${ref}`);
 }
 exports.getBranch = getBranch;
+function checkout(branch, options) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return exec_1.exec('git', ['checkout', branch], options);
+    });
+}
+exports.checkout = checkout;
 function getDiffs(dir, options) {
     return __awaiter(this, void 0, void 0, function* () {
         const args = ['diff', '@{upstream}', '--numstat', `${dir}`];
