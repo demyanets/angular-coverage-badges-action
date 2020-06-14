@@ -1,5 +1,5 @@
 import {join, normalize} from 'path'
-import {getDiffs, getLog, getGitVersion} from '../src/git-utilities'
+import {getDiffs, getLog, getGitVersion, getBranch} from '../src/git-utilities'
 import {ExecOptionsStub} from '../src/exec-options-stub'
 describe('Git helper tests', () => {
   test('get git version', async () => {
@@ -8,6 +8,15 @@ describe('Git helper tests', () => {
     expect(result).toEqual(0)
     expect(stub.stdout.startsWith('git version')).toBeTruthy()
     expect(stub.stderr).toEqual('')
+  })
+
+  test('get HEAD branch', async () => {
+    const stub = new ExecOptionsStub()
+    const result = await getBranch(stub.options)
+    expect(result).toEqual(0)
+    expect(stub.stdout.length).toBeGreaterThan(0)
+    expect(stub.stderr).toEqual('')
+    console.log(stub.stdout)
   })
 
   test('should not find any differences', async () => {
@@ -28,6 +37,5 @@ describe('Git helper tests', () => {
     const result = await getLog(stub.options)
     expect(result).toEqual(0)
     expect(stub.stderr).toEqual('')
-    console.log(stub.stdout)
   })
 })

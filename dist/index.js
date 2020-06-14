@@ -23503,7 +23503,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.push = exports.commitAsAction = exports.getDiffs = exports.getLog = exports.getGitVersion = void 0;
+exports.push = exports.commitAsAction = exports.getDiffs = exports.getBranch = exports.getLog = exports.getGitVersion = void 0;
 const execute_command_1 = __webpack_require__(33);
 const exec_1 = __webpack_require__(986);
 function getGitVersion(options) {
@@ -23518,6 +23518,12 @@ function getLog(options) {
     });
 }
 exports.getLog = getLog;
+function getBranch(options) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return exec_1.exec('git', ['rev-parse', '--abbrev-ref', 'HEAD'], options);
+    });
+}
+exports.getBranch = getBranch;
 function getDiffs(dir, options) {
     return __awaiter(this, void 0, void 0, function* () {
         const args = ['diff', '@{upstream}', '--numstat', `${dir}`];

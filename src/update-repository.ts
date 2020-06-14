@@ -1,4 +1,4 @@
-import {getDiffs, commitAsAction, push, getLog} from './git-utilities'
+import {getBranch, getDiffs, commitAsAction, push, getLog} from './git-utilities'
 import {IGitSourceSettings} from './external/git-source-settings'
 import {info} from '@actions/core'
 import {join} from 'path'
@@ -24,10 +24,10 @@ export async function updateRepository(
     info(`Working directory is '${settings.repositoryPath}'`)
     const badgeDir = join(settings.repositoryPath, badgesDirectory)
 
-    const stub = new ExecOptionsStub('q')
-    await getLog(stub.options)
-    info(`Log stdout: ${stub.stdout}`)
-    info(`Log stder: ${stub.stderr}`)
+    const stub = new ExecOptionsStub()
+    await getBranch(stub.options)
+    info(`Branch stdout: ${stub.stdout}`)
+    info(`Branch stder: ${stub.stderr}`)
 
     const stub2 = new ExecOptionsStub()
     const exitCode = await getDiffs(badgeDir, stub2.options)

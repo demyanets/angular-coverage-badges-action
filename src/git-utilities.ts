@@ -9,6 +9,10 @@ export async function getLog(options: ExecOptions): Promise<number> {
   return exec('git', ['log', '--oneline'], options)
 }
 
+export async function getBranch(options: ExecOptions): Promise<number> {
+  return exec('git', ['rev-parse', '--abbrev-ref', 'HEAD'], options)
+}
+
 export async function getDiffs(
   dir: string,
   options: ExecOptions
