@@ -20388,10 +20388,10 @@ function updateRepository(badgesDirectory, protectedBranches, settings) {
         if (!isProtected && !settings.ref.startsWith('refs/pull/')) {
             core_1.info(`Working directory is '${settings.repositoryPath}'`);
             const badgeDir = path_1.join(settings.repositoryPath, badgesDirectory);
-            const stub = new exec_options_stub_1.ExecOptionsStub('q');
-            yield git_utilities_1.getLog(stub.options);
-            core_1.info(`Log stdout: ${stub.stdout}`);
-            core_1.info(`Log stder: ${stub.stderr}`);
+            const stub = new exec_options_stub_1.ExecOptionsStub();
+            yield git_utilities_1.getBranch(stub.options);
+            core_1.info(`Branch stdout: ${stub.stdout}`);
+            core_1.info(`Branch stder: ${stub.stderr}`);
             const stub2 = new exec_options_stub_1.ExecOptionsStub();
             const exitCode = yield git_utilities_1.getDiffs(badgeDir, stub2.options);
             core_1.info(`Diff stdout: ${stub2.stdout}`);

@@ -1,4 +1,4 @@
-import {getBranch, getDiffs, commitAsAction, push, getLog} from './git-utilities'
+import {getBranch, getDiffs, commitAsAction, push} from './git-utilities'
 import {IGitSourceSettings} from './external/git-source-settings'
 import {info} from '@actions/core'
 import {join} from 'path'
