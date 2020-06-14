@@ -4020,9 +4020,14 @@ function run() {
             if (inputs.gitSourceSettings) {
                 const stub = new exec_options_stub_1.ExecOptionsStub();
                 const branch = git_utilities_1.getBranch(inputs.gitSourceSettings.ref);
+                /* eslint-disable no-console */
+                console.log(`Main checkout: ${branch}`);
                 yield git_utilities_1.checkout(branch, stub.options);
+                console.log(`Main generateBadges: ${inputs.coverageSummaryPath}, ${inputs.badgesDirectory}`);
                 yield generate_badges_1.generateBadges(inputs.coverageSummaryPath, inputs.badgesDirectory);
+                console.log(`Main update repository: ${inputs.gitSourceSettings.ref}`);
                 yield update_repository_1.updateRepository(inputs.badgesDirectory, inputs.protectedBranches, inputs.gitSourceSettings);
+                /* eslint-enable no-console */
             }
         }
         catch (error) {
@@ -20706,6 +20711,8 @@ function persist(content, directory, label) {
         return new Promise((resolve, reject) => {
             const fileName = label ? `coverage-${label}.svg` : `coverage.svg`;
             const fullPath = path_1.default.join(directory, fileName);
+            // eslint-disable-next-line no-console
+            console.log(`Writing bandge: ${fullPath}`);
             fs_1.writeFile(fullPath, content, error => {
                 if (error === null) {
                     resolve();
