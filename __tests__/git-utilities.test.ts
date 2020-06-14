@@ -11,7 +11,7 @@ describe('Git helper tests', () => {
   })
 
   test('get HEAD branch', async () => {
-    const ref = 'REFS/HEADS/master'
+    const ref = 'refs/heads/master'
     const result = getBranch(ref)
     expect(result).toEqual('master')
   })
