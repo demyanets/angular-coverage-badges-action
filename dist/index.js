@@ -4018,19 +4018,21 @@ function run() {
             // eslint-disable-next-line no-console
             console.log(`badgesDirectory: ${inputs.badgesDirectory}`);
             if (inputs.gitSourceSettings) {
-                const stub = new exec_options_stub_1.ExecOptionsStub();
-                // eslint-disable-next-line no-console
-                console.log(`Checkout ref: ${inputs.gitSourceSettings.ref}`);
-                const branch = git_utilities_1.getBranch(inputs.gitSourceSettings.ref);
-                // eslint-disable-next-line no-console
-                console.log(`Checkout branch: ${branch}`);
-                yield git_utilities_1.checkout(branch, stub.options);
-                // eslint-disable-next-line no-console
-                console.log(`Main generateBadges: ${inputs.coverageSummaryPath}, ${inputs.badgesDirectory}`);
-                yield generate_badges_1.generateBadges(inputs.coverageSummaryPath, inputs.badgesDirectory);
-                // eslint-disable-next-line no-console
-                console.log(`Main update repository: ${inputs.gitSourceSettings.ref}`);
-                yield update_repository_1.updateRepository(inputs.badgesDirectory, inputs.protectedBranches, inputs.gitSourceSettings);
+                if (git_utilities_1.isBranchPushable(inputs.gitSourceSettings.ref, inputs.protectedBranches)) {
+                    const stub = new exec_options_stub_1.ExecOptionsStub();
+                    // eslint-disable-next-line no-console
+                    console.log(`Checkout ref: ${inputs.gitSourceSettings.ref}`);
+                    const branch = git_utilities_1.getBranch(inputs.gitSourceSettings.ref);
+                    // eslint-disable-next-line no-console
+                    console.log(`Checkout branch: ${branch}`);
+                    yield git_utilities_1.checkout(branch, stub.options);
+                    // eslint-disable-next-line no-console
+                    console.log(`Main generateBadges: ${inputs.coverageSummaryPath}, ${inputs.badgesDirectory}`);
+                    yield generate_badges_1.generateBadges(inputs.coverageSummaryPath, inputs.badgesDirectory);
+                    // eslint-disable-next-line no-console
+                    console.log(`Main update repository: ${inputs.gitSourceSettings.ref}`);
+                    yield update_repository_1.updateRepository(inputs.badgesDirectory, inputs.protectedBranches, inputs.gitSourceSettings);
+                }
             }
         }
         catch (error) {
@@ -23514,7 +23516,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.push = exports.commitAsAction = exports.getDiffs = exports.checkout = exports.getBranch = exports.getLog = exports.getGitVersion = void 0;
+exports.push = exports.commitAsAction = exports.getDiffs = exports.checkout = exports.isBranchPushable = exports.getBranch = exports.getLog = exports.getGitVersion = void 0;
 const execute_command_1 = __webpack_require__(33);
 const exec_1 = __webpack_require__(986);
 function getGitVersion(options) {
@@ -23553,6 +23555,18 @@ function getBranch(ref) {
     throw new Error(`Unable to parse ref: ${ref}`);
 }
 exports.getBranch = getBranch;
+function isBranchPushable(ref, protectedBranches) {
+    if (ref.startsWith('refs/pull/')) {
+        return false;
+    }
+    for (const branch of protectedBranches) {
+        if (ref.endsWith(branch)) {
+            return false;
+        }
+    }
+    return true;
+}
+exports.isBranchPushable = isBranchPushable;
 function checkout(branch, options) {
     return __awaiter(this, void 0, void 0, function* () {
         return exec_1.exec('git', ['checkout', branch], options);

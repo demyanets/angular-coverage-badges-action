@@ -36,6 +36,23 @@ export function getBranch(ref: string): string {
   throw new Error(`Unable to parse ref: ${ref}`)
 }
 
+export function isBranchPushable(
+  ref: string,
+  protectedBranches: string[]
+): boolean {
+  if (ref.startsWith('refs/pull/')) {
+    return false
+  }
+
+  for (const branch of protectedBranches) {
+    if (ref.endsWith(branch)) {
+      return false
+    }
+  }
+
+  return true
+}
+
 export async function checkout(
   branch: string,
   options: ExecOptions

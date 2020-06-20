@@ -1,5 +1,11 @@
 import {join, normalize} from 'path'
-import {getDiffs, getLog, getGitVersion, getBranch} from '../src/git-utilities'
+import {
+  getDiffs,
+  getLog,
+  getGitVersion,
+  getBranch,
+  isBranchPushable
+} from '../src/git-utilities'
 import {ExecOptionsStub} from '../src/exec-options-stub'
 describe('Git helper tests', () => {
   test('get git version', async () => {
@@ -34,5 +40,25 @@ describe('Git helper tests', () => {
     const result = await getLog(stub.options)
     expect(result).toEqual(0)
     expect(stub.stderr).toEqual('')
+  })
+
+  describe('isBranchPushable', () => {
+    test('feature should be pushable', () => {
+      const ref = 'refs/heads/feature/test'
+      const result = isBranchPushable(ref, ['master'])
+      expect(result).toBeTruthy()
+    })
+
+    test('do not push to pull branch', () => {
+      const ref = 'refs/pull/3/merge'
+      const result = isBranchPushable(ref, [])
+      expect(result).toBeFalsy()
+    })
+
+    test('do not push to master branch', () => {
+      const ref = 'refs/heads/master'
+      const result = isBranchPushable(ref, ['master'])
+      expect(result).toBeFalsy()
+    })
   })
 })
