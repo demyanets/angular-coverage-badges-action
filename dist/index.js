@@ -3993,7 +3993,7 @@ function run() {
                     yield generate_badges_1.generateBadges(inputs.coverageSummaryPath, inputs.badgesDirectory);
                     // eslint-disable-next-line no-console
                     console.log(`Main update repository: ${inputs.gitSourceSettings.ref}`);
-                    yield update_repository_1.updateRepository(inputs.badgesDirectory, inputs.protectedBranches, inputs.gitSourceSettings);
+                    yield update_repository_1.updateRepository(inputs.badgesDirectory, inputs.gitSourceSettings);
                 }
             }
         }
@@ -20350,34 +20350,22 @@ const git_utilities_1 = __webpack_require__(741);
 const core_1 = __webpack_require__(470);
 const path_1 = __webpack_require__(622);
 const exec_options_stub_1 = __webpack_require__(662);
-function updateRepository(badgesDirectory, protectedBranches, settings) {
+function updateRepository(badgesDirectory, settings) {
     return __awaiter(this, void 0, void 0, function* () {
-        // eslint-disable-next-line no-console
-        console.log(`Ref: ${settings.ref}`);
-        let isProtected = false;
-        for (const branch of protectedBranches) {
-            if (settings.ref.endsWith(branch)) {
-                isProtected = true;
-            }
-        }
-        // eslint-disable-next-line no-console
-        console.log(`Is protected?: ${isProtected}`);
-        if (!isProtected && !settings.ref.startsWith('refs/pull/')) {
-            core_1.info(`Working directory is '${settings.repositoryPath}'`);
-            const badgeDir = path_1.join(settings.repositoryPath, badgesDirectory);
-            const stub2 = new exec_options_stub_1.ExecOptionsStub();
-            const exitCode = yield git_utilities_1.getDiffs(badgeDir, stub2.options);
-            core_1.info(`Diff stdout: ${stub2.stdout}`);
-            core_1.info(`Diff stder: ${stub2.stderr}`);
-            if (exitCode === 0) {
-                const matches = (stub2.stdout.match(/\.svg/g) || []).length;
-                // eslint-disable-next-line no-console
-                console.log(`SVG matches: ${matches}`);
-                if (matches > 0) {
-                    const commitStub = new exec_options_stub_1.ExecOptionsStub();
-                    yield git_utilities_1.commitAsAction(badgesDirectory, commitStub.options);
-                    yield git_utilities_1.push(commitStub.options);
-                }
+        core_1.info(`Working directory is '${settings.repositoryPath}'`);
+        const badgeDir = path_1.join(settings.repositoryPath, badgesDirectory);
+        const stub2 = new exec_options_stub_1.ExecOptionsStub();
+        const exitCode = yield git_utilities_1.getDiffs(badgeDir, stub2.options);
+        core_1.info(`Diff stdout: ${stub2.stdout}`);
+        core_1.info(`Diff stder: ${stub2.stderr}`);
+        if (exitCode === 0) {
+            const matches = (stub2.stdout.match(/\.svg/g) || []).length;
+            // eslint-disable-next-line no-console
+            console.log(`SVG matches: ${matches}`);
+            if (matches > 0) {
+                const commitStub = new exec_options_stub_1.ExecOptionsStub();
+                yield git_utilities_1.commitAsAction(badgesDirectory, commitStub.options);
+                yield git_utilities_1.push(commitStub.options);
             }
         }
     });
@@ -23518,6 +23506,8 @@ function getBranch(ref) {
 }
 exports.getBranch = getBranch;
 function isBranchPushable(ref, protectedBranches) {
+    // eslint-disable-next-line no-console
+    console.log(`Is ref pushable?: ${ref}`);
     if (ref.startsWith('refs/pull/')) {
         return false;
     }

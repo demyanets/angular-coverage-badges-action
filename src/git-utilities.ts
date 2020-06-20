@@ -39,6 +39,9 @@ export function isBranchPushable(
   ref: string,
   protectedBranches: string[]
 ): boolean {
+  // eslint-disable-next-line no-console
+  console.log(`Is ref pushable?: ${ref}`)
+
   if (ref.startsWith('refs/pull/')) {
     return false
   }

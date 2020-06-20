@@ -33,11 +33,7 @@ async function run(): Promise<void> {
 
         // eslint-disable-next-line no-console
         console.log(`Main update repository: ${inputs.gitSourceSettings.ref}`)
-        await updateRepository(
-          inputs.badgesDirectory,
-          inputs.protectedBranches,
-          inputs.gitSourceSettings
-        )
+        await updateRepository(inputs.badgesDirectory, inputs.gitSourceSettings)
       }
     }
   } catch (error) {
