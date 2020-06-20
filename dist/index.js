@@ -4013,21 +4013,24 @@ function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const inputs = new inputs_1.Inputs();
-            /* eslint-disable no-console */
+            // eslint-disable-next-line no-console
             console.log(`coverageSummaryPath: ${inputs.coverageSummaryPath}`);
+            // eslint-disable-next-line no-console
             console.log(`badgesDirectory: ${inputs.badgesDirectory}`);
-            /* eslint-enable no-console */
             if (inputs.gitSourceSettings) {
                 const stub = new exec_options_stub_1.ExecOptionsStub();
+                // eslint-disable-next-line no-console
+                console.log(`Checkout ref: ${inputs.gitSourceSettings.ref}`);
                 const branch = git_utilities_1.getBranch(inputs.gitSourceSettings.ref);
-                /* eslint-disable no-console */
-                console.log(`Main checkout: ${branch}`);
+                // eslint-disable-next-line no-console
+                console.log(`Checkout branch: ${branch}`);
                 yield git_utilities_1.checkout(branch, stub.options);
+                // eslint-disable-next-line no-console
                 console.log(`Main generateBadges: ${inputs.coverageSummaryPath}, ${inputs.badgesDirectory}`);
                 yield generate_badges_1.generateBadges(inputs.coverageSummaryPath, inputs.badgesDirectory);
+                // eslint-disable-next-line no-console
                 console.log(`Main update repository: ${inputs.gitSourceSettings.ref}`);
                 yield update_repository_1.updateRepository(inputs.badgesDirectory, inputs.protectedBranches, inputs.gitSourceSettings);
-                /* eslint-enable no-console */
             }
         }
         catch (error) {

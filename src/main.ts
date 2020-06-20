@@ -8,30 +8,33 @@ import {getBranch, checkout} from './git-utilities'
 async function run(): Promise<void> {
   try {
     const inputs = new Inputs()
-    /* eslint-disable no-console */
+    // eslint-disable-next-line no-console
     console.log(`coverageSummaryPath: ${inputs.coverageSummaryPath}`)
+    // eslint-disable-next-line no-console
     console.log(`badgesDirectory: ${inputs.badgesDirectory}`)
-    /* eslint-enable no-console */
     if (inputs.gitSourceSettings) {
       const stub = new ExecOptionsStub()
+      // eslint-disable-next-line no-console
+      console.log(`Checkout ref: ${inputs.gitSourceSettings.ref}`)
       const branch = getBranch(inputs.gitSourceSettings.ref)
 
-      /* eslint-disable no-console */
-      console.log(`Main checkout: ${branch}`)
+      // eslint-disable-next-line no-console
+      console.log(`Checkout branch: ${branch}`)
       await checkout(branch, stub.options)
 
+      // eslint-disable-next-line no-console
       console.log(
         `Main generateBadges: ${inputs.coverageSummaryPath}, ${inputs.badgesDirectory}`
       )
       await generateBadges(inputs.coverageSummaryPath, inputs.badgesDirectory)
 
+      // eslint-disable-next-line no-console
       console.log(`Main update repository: ${inputs.gitSourceSettings.ref}`)
       await updateRepository(
         inputs.badgesDirectory,
         inputs.protectedBranches,
         inputs.gitSourceSettings
       )
-      /* eslint-enable no-console */
     }
   } catch (error) {
     setFailed(error.message)
