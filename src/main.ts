@@ -4,15 +4,22 @@ import {generateBadges} from './generate-badges'
 import {updateRepository} from './update-repository'
 import {ExecOptionsStub} from './exec-options-stub'
 import {getBranch, checkout, isBranchPushable} from './git-utilities'
+import {join} from 'path'
 
 async function run(): Promise<void> {
   try {
     const inputs = new Inputs()
     // eslint-disable-next-line no-console
     console.log(`coverageSummaryPath: ${inputs.coverageSummaryPath}`)
-    // eslint-disable-next-line no-console
-    console.log(`badgesDirectory: ${inputs.badgesDirectory}`)
     if (inputs.gitSourceSettings) {
+      const badgeDir = join(
+        inputs.gitSourceSettings.repositoryPath,
+        inputs.badgesDirectory
+      )
+
+      // eslint-disable-next-line no-console
+      console.log(`badgesDirectory: ${badgeDir}`)
+
       if (
         isBranchPushable(inputs.gitSourceSettings.ref, inputs.protectedBranches)
       ) {
@@ -27,13 +34,13 @@ async function run(): Promise<void> {
 
         // eslint-disable-next-line no-console
         console.log(
-          `Main generateBadges: ${inputs.coverageSummaryPath}, ${inputs.badgesDirectory}`
+          `Main generateBadges: ${inputs.coverageSummaryPath}, ${badgeDir}`
         )
-        await generateBadges(inputs.coverageSummaryPath, inputs.badgesDirectory)
+        await generateBadges(inputs.coverageSummaryPath, badgeDir)
 
         // eslint-disable-next-line no-console
         console.log(`Main update repository: ${inputs.gitSourceSettings.ref}`)
-        await updateRepository(inputs.badgesDirectory, inputs.gitSourceSettings)
+        await updateRepository(badgeDir)
       }
     }
   } catch (error) {

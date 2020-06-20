@@ -3971,15 +3971,17 @@ const generate_badges_1 = __webpack_require__(798);
 const update_repository_1 = __webpack_require__(395);
 const exec_options_stub_1 = __webpack_require__(662);
 const git_utilities_1 = __webpack_require__(741);
+const path_1 = __webpack_require__(622);
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const inputs = new inputs_1.Inputs();
             // eslint-disable-next-line no-console
             console.log(`coverageSummaryPath: ${inputs.coverageSummaryPath}`);
-            // eslint-disable-next-line no-console
-            console.log(`badgesDirectory: ${inputs.badgesDirectory}`);
             if (inputs.gitSourceSettings) {
+                const badgeDir = path_1.join(inputs.gitSourceSettings.repositoryPath, inputs.badgesDirectory);
+                // eslint-disable-next-line no-console
+                console.log(`badgesDirectory: ${badgeDir}`);
                 if (git_utilities_1.isBranchPushable(inputs.gitSourceSettings.ref, inputs.protectedBranches)) {
                     const stub = new exec_options_stub_1.ExecOptionsStub();
                     // eslint-disable-next-line no-console
@@ -3989,11 +3991,11 @@ function run() {
                     console.log(`Checkout branch: ${branch}`);
                     yield git_utilities_1.checkout(branch, stub.options);
                     // eslint-disable-next-line no-console
-                    console.log(`Main generateBadges: ${inputs.coverageSummaryPath}, ${inputs.badgesDirectory}`);
-                    yield generate_badges_1.generateBadges(inputs.coverageSummaryPath, inputs.badgesDirectory);
+                    console.log(`Main generateBadges: ${inputs.coverageSummaryPath}, ${badgeDir}`);
+                    yield generate_badges_1.generateBadges(inputs.coverageSummaryPath, badgeDir);
                     // eslint-disable-next-line no-console
                     console.log(`Main update repository: ${inputs.gitSourceSettings.ref}`);
-                    yield update_repository_1.updateRepository(inputs.badgesDirectory, inputs.gitSourceSettings);
+                    yield update_repository_1.updateRepository(badgeDir);
                 }
             }
         }
@@ -20348,12 +20350,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.updateRepository = void 0;
 const git_utilities_1 = __webpack_require__(741);
 const core_1 = __webpack_require__(470);
-const path_1 = __webpack_require__(622);
 const exec_options_stub_1 = __webpack_require__(662);
-function updateRepository(badgesDirectory, settings) {
+function updateRepository(badgeDir) {
     return __awaiter(this, void 0, void 0, function* () {
-        core_1.info(`Working directory is '${settings.repositoryPath}'`);
-        const badgeDir = path_1.join(settings.repositoryPath, badgesDirectory);
         const addStub = new exec_options_stub_1.ExecOptionsStub();
         yield git_utilities_1.addSvg(badgeDir, addStub.options);
         core_1.info(`Add stdout: ${addStub.stdout}`);
@@ -20368,7 +20367,7 @@ function updateRepository(badgesDirectory, settings) {
             console.log(`SVG matches: ${matches}`);
             if (matches > 0) {
                 const commitStub = new exec_options_stub_1.ExecOptionsStub();
-                yield git_utilities_1.commitAsAction(badgesDirectory, commitStub.options);
+                yield git_utilities_1.commitAsAction(badgeDir, commitStub.options);
                 yield git_utilities_1.push(commitStub.options);
             }
         }

@@ -1,15 +1,8 @@
 import {getDiffs, commitAsAction, push, addSvg} from './git-utilities'
-import {IGitSourceSettings} from './external/git-source-settings'
 import {info} from '@actions/core'
-import {join} from 'path'
 import {ExecOptionsStub} from './exec-options-stub'
 
-export async function updateRepository(
-  badgesDirectory: string,
-  settings: IGitSourceSettings
-): Promise<void> {
-  info(`Working directory is '${settings.repositoryPath}'`)
-  const badgeDir = join(settings.repositoryPath, badgesDirectory)
+export async function updateRepository(badgeDir: string): Promise<void> {
   const addStub = new ExecOptionsStub()
   await addSvg(badgeDir, addStub.options)
   info(`Add stdout: ${addStub.stdout}`)
@@ -24,7 +17,7 @@ export async function updateRepository(
     console.log(`SVG matches: ${matches}`)
     if (matches > 0) {
       const commitStub = new ExecOptionsStub()
-      await commitAsAction(badgesDirectory, commitStub.options)
+      await commitAsAction(badgeDir, commitStub.options)
       await push(commitStub.options)
     }
   }
