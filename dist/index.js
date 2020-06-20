@@ -685,44 +685,6 @@ module.exports._enoent = enoent;
 
 /***/ }),
 
-/***/ 33:
-/***/ (function(__unusedmodule, exports, __webpack_require__) {
-
-"use strict";
-
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.executeCommand = void 0;
-const child_process_1 = __webpack_require__(129);
-function executeCommand(cmd, options) {
-    return __awaiter(this, void 0, void 0, function* () {
-        return new Promise((resolve, reject) => {
-            // eslint-disable-next-line no-console
-            console.log(cmd);
-            child_process_1.exec(cmd, options, (error, stdout, stderr) => {
-                if (error === null) {
-                    resolve([stdout.toString(), stderr.toString()]);
-                }
-                else {
-                    reject(error);
-                }
-            });
-        });
-    });
-}
-exports.executeCommand = executeCommand;
-
-
-/***/ }),
-
 /***/ 39:
 /***/ (function(module) {
 
@@ -20412,8 +20374,9 @@ function updateRepository(badgesDirectory, protectedBranches, settings) {
                 // eslint-disable-next-line no-console
                 console.log(`SVG matches: ${matches}`);
                 if (matches > 0) {
-                    yield git_utilities_1.commitAsAction(badgesDirectory);
-                    yield git_utilities_1.push();
+                    const commitStub = new exec_options_stub_1.ExecOptionsStub();
+                    yield git_utilities_1.commitAsAction(badgesDirectory, commitStub.options);
+                    yield git_utilities_1.push(commitStub.options);
                 }
             }
         }
@@ -23517,7 +23480,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.push = exports.commitAsAction = exports.getDiffs = exports.checkout = exports.isBranchPushable = exports.getBranch = exports.getLog = exports.getGitVersion = void 0;
-const execute_command_1 = __webpack_require__(33);
 const exec_1 = __webpack_require__(986);
 function getGitVersion(options) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -23580,19 +23542,21 @@ function getDiffs(dir, options) {
     });
 }
 exports.getDiffs = getDiffs;
-function commitAsAction(dir) {
+function commitAsAction(dir, options) {
     return __awaiter(this, void 0, void 0, function* () {
-        const cmd = `git config --local user.email "action@github.com" && ` +
-            `git config --local user.name "GitHub Action" && ` +
-            `git commit --allow-empty -m "Coverage badge update" "${dir}"`;
-        return execute_command_1.executeCommand(cmd);
+        let args = ['config', '--local', 'user.email', 'action@github.com'];
+        yield exec_1.exec('git', args, options);
+        args = ['config', '--local', 'user.name', 'GitHub Action'];
+        yield exec_1.exec('git', args, options);
+        args = ['commit', '--allow-empty', '-m', 'Coverage badge update', `${dir}`];
+        return exec_1.exec('git', args, options);
     });
 }
 exports.commitAsAction = commitAsAction;
-function push() {
+function push(options) {
     return __awaiter(this, void 0, void 0, function* () {
-        const cmd = `git push`;
-        return execute_command_1.executeCommand(cmd);
+        const args = ['push'];
+        return exec_1.exec('git', args, options);
     });
 }
 exports.push = push;

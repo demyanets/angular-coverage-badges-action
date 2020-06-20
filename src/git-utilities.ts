@@ -1,4 +1,3 @@
-import {executeCommand} from './execute-command'
 import {exec, ExecOptions} from '@actions/exec'
 
 export async function getGitVersion(options: ExecOptions): Promise<number> {
@@ -68,15 +67,21 @@ export async function getDiffs(
   return exec('git', args, options)
 }
 
-export async function commitAsAction(dir: string): Promise<[string, string]> {
-  const cmd =
-    `git config --local user.email "action@github.com" && ` +
-    `git config --local user.name "GitHub Action" && ` +
-    `git commit --allow-empty -m "Coverage badge update" "${dir}"`
-  return executeCommand(cmd)
+export async function commitAsAction(
+  dir: string,
+  options: ExecOptions
+): Promise<number> {
+  let args = ['config', '--local', 'user.email', 'action@github.com']
+  await exec('git', args, options)
+
+  args = ['config', '--local', 'user.name', 'GitHub Action']
+  await exec('git', args, options)
+
+  args = ['commit', '--allow-empty', '-m', 'Coverage badge update', `${dir}`]
+  return exec('git', args, options)
 }
 
-export async function push(): Promise<[string, string]> {
-  const cmd = `git push`
-  return executeCommand(cmd)
+export async function push(options: ExecOptions): Promise<number> {
+  const args = ['push']
+  return exec('git', args, options)
 }

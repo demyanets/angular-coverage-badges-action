@@ -32,8 +32,9 @@ export async function updateRepository(
       // eslint-disable-next-line no-console
       console.log(`SVG matches: ${matches}`)
       if (matches > 0) {
-        await commitAsAction(badgesDirectory)
-        await push()
+        const commitStub = new ExecOptionsStub()
+        await commitAsAction(badgesDirectory, commitStub.options)
+        await push(commitStub.options)
       }
     }
   }
