@@ -20354,12 +20354,16 @@ function updateRepository(badgesDirectory, settings) {
     return __awaiter(this, void 0, void 0, function* () {
         core_1.info(`Working directory is '${settings.repositoryPath}'`);
         const badgeDir = path_1.join(settings.repositoryPath, badgesDirectory);
-        const stub2 = new exec_options_stub_1.ExecOptionsStub();
-        const exitCode = yield git_utilities_1.getDiffs(badgeDir, stub2.options);
-        core_1.info(`Diff stdout: ${stub2.stdout}`);
-        core_1.info(`Diff stder: ${stub2.stderr}`);
+        const addStub = new exec_options_stub_1.ExecOptionsStub();
+        yield git_utilities_1.addSvg(badgeDir, addStub.options);
+        core_1.info(`Add stdout: ${addStub.stdout}`);
+        core_1.info(`Add stder: ${addStub.stderr}`);
+        const diffStub = new exec_options_stub_1.ExecOptionsStub();
+        const exitCode = yield git_utilities_1.getDiffs(badgeDir, diffStub.options);
+        core_1.info(`Diff stdout: ${diffStub.stdout}`);
+        core_1.info(`Diff stder: ${diffStub.stderr}`);
         if (exitCode === 0) {
-            const matches = (stub2.stdout.match(/\.svg/g) || []).length;
+            const matches = (diffStub.stdout.match(/\.svg/g) || []).length;
             // eslint-disable-next-line no-console
             console.log(`SVG matches: ${matches}`);
             if (matches > 0) {
@@ -23467,7 +23471,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.push = exports.commitAsAction = exports.getDiffs = exports.checkout = exports.isBranchPushable = exports.getBranch = exports.getLog = exports.getGitVersion = void 0;
+exports.push = exports.commitAsAction = exports.addSvg = exports.getDiffs = exports.checkout = exports.isBranchPushable = exports.getBranch = exports.getLog = exports.getGitVersion = void 0;
 const exec_1 = __webpack_require__(986);
 function getGitVersion(options) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -23532,6 +23536,13 @@ function getDiffs(dir, options) {
     });
 }
 exports.getDiffs = getDiffs;
+function addSvg(dir, options) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const args = ['add', `${dir}/*.svg`];
+        return exec_1.exec('git', args, options);
+    });
+}
+exports.addSvg = addSvg;
 function commitAsAction(dir, options) {
     return __awaiter(this, void 0, void 0, function* () {
         let args = ['config', '--local', 'user.email', 'action@github.com'];

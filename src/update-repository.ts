@@ -1,4 +1,4 @@
-import {getDiffs, commitAsAction, push} from './git-utilities'
+import {getDiffs, commitAsAction, push, addSvg} from './git-utilities'
 import {IGitSourceSettings} from './external/git-source-settings'
 import {info} from '@actions/core'
 import {join} from 'path'
@@ -10,12 +10,16 @@ export async function updateRepository(
 ): Promise<void> {
   info(`Working directory is '${settings.repositoryPath}'`)
   const badgeDir = join(settings.repositoryPath, badgesDirectory)
-  const stub2 = new ExecOptionsStub()
-  const exitCode = await getDiffs(badgeDir, stub2.options)
-  info(`Diff stdout: ${stub2.stdout}`)
-  info(`Diff stder: ${stub2.stderr}`)
+  const addStub = new ExecOptionsStub()
+  await addSvg(badgeDir, addStub.options)
+  info(`Add stdout: ${addStub.stdout}`)
+  info(`Add stder: ${addStub.stderr}`)
+  const diffStub = new ExecOptionsStub()
+  const exitCode = await getDiffs(badgeDir, diffStub.options)
+  info(`Diff stdout: ${diffStub.stdout}`)
+  info(`Diff stder: ${diffStub.stderr}`)
   if (exitCode === 0) {
-    const matches = (stub2.stdout.match(/\.svg/g) || []).length
+    const matches = (diffStub.stdout.match(/\.svg/g) || []).length
     // eslint-disable-next-line no-console
     console.log(`SVG matches: ${matches}`)
     if (matches > 0) {

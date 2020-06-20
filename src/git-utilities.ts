@@ -70,6 +70,14 @@ export async function getDiffs(
   return exec('git', args, options)
 }
 
+export async function addSvg(
+  dir: string,
+  options: ExecOptions
+): Promise<number> {
+  const args = ['add', `${dir}/*.svg`]
+  return exec('git', args, options)
+}
+
 export async function commitAsAction(
   dir: string,
   options: ExecOptions
