@@ -20355,8 +20355,8 @@ function updateRepository(badgeDir) {
     return __awaiter(this, void 0, void 0, function* () {
         const addStub = new exec_options_stub_1.ExecOptionsStub();
         yield git_utilities_1.addSvg(badgeDir, addStub.options);
-        core_1.info(`Add stdout: ${addStub.stdout}`);
-        core_1.info(`Add stder: ${addStub.stderr}`);
+        core_1.info(`Add svg stdout: ${addStub.stdout}`);
+        core_1.info(`Add svg stder: ${addStub.stderr}`);
         const diffStub = new exec_options_stub_1.ExecOptionsStub();
         const exitCode = yield git_utilities_1.getDiffs(badgeDir, diffStub.options);
         core_1.info(`Diff stdout: ${diffStub.stdout}`);
@@ -23537,7 +23537,7 @@ function getDiffs(dir, options) {
 exports.getDiffs = getDiffs;
 function addSvg(dir, options) {
     return __awaiter(this, void 0, void 0, function* () {
-        const args = ['add', `${dir}/*.svg`];
+        const args = ['add', '--all', '*.svg'];
         return exec_1.exec('git', args, options);
     });
 }

@@ -5,8 +5,8 @@ import {ExecOptionsStub} from './exec-options-stub'
 export async function updateRepository(badgeDir: string): Promise<void> {
   const addStub = new ExecOptionsStub()
   await addSvg(badgeDir, addStub.options)
-  info(`Add stdout: ${addStub.stdout}`)
-  info(`Add stder: ${addStub.stderr}`)
+  info(`Add svg stdout: ${addStub.stdout}`)
+  info(`Add svg stder: ${addStub.stderr}`)
   const diffStub = new ExecOptionsStub()
   const exitCode = await getDiffs(badgeDir, diffStub.options)
   info(`Diff stdout: ${diffStub.stdout}`)

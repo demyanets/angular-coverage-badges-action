@@ -74,7 +74,7 @@ export async function addSvg(
   dir: string,
   options: ExecOptions
 ): Promise<number> {
-  const args = ['add', `${dir}/*.svg`]
+  const args = ['add', '--all', '*.svg']
   return exec('git', args, options)
 }
 
