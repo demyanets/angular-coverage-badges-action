@@ -7,6 +7,7 @@ export class Inputs {
   readonly coverageSummaryPath: string
   readonly badgesDirectory: string
   readonly protectedBranches: string[]
+  readonly writeDebugLogs: boolean
   readonly gitSourceSettings?: IGitSourceSettings
   readonly githubWorkspace: string = ''
 
@@ -21,6 +22,8 @@ export class Inputs {
     this.badgesDirectory = core.getInput('badges-directory')
     const branches = core.getInput('protected-branches')
     this.protectedBranches = parseArray(branches)
+    this.writeDebugLogs =
+      core.getInput('write-debug-logs') === 'true' ? true : false
     if (process.env['GITHUB_WORKSPACE']) {
       this.githubWorkspace = process.env['GITHUB_WORKSPACE']
     }

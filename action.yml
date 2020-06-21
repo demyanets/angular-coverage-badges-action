@@ -14,6 +14,10 @@ inputs:
     description: 'List of protected branches that require review for commit. Defaults to empty list ([])'
     default: '[]'
     required: false
+  write-debug-logs:
+    description: 'Writes extra debug logs to console if set to "true"'
+    default: ''
+    required: false
 runs:
   using: 'node12'
   main: 'dist/index.js'

@@ -1,24 +1,36 @@
-import {getDiffs, commitAsAction, push, addSvg} from './git-utilities'
 import {info} from '@actions/core'
+import {getDiffs, commitAsAction, push, addSvg} from './git-utilities'
 import {ExecOptionsStub} from './exec-options-stub'
+import {runAndLog} from './run-and-log'
 
-export async function updateRepository(badgeDir: string): Promise<void> {
-  const addStub = new ExecOptionsStub()
-  await addSvg(badgeDir, addStub.options)
-  info(`Add svg stdout: ${addStub.stdout}`)
-  info(`Add svg stder: ${addStub.stderr}`)
+export async function updateRepository(
+  badgeDir: string,
+  writeDebugLogs: boolean
+): Promise<void> {
+  let exitCode = await runAndLog('addSvg', writeDebugLogs, async stub =>
+    addSvg(badgeDir, stub.options)
+  )
+
   const diffStub = new ExecOptionsStub()
-  const exitCode = await getDiffs(badgeDir, diffStub.options)
-  info(`Diff stdout: ${diffStub.stdout}`)
-  info(`Diff stder: ${diffStub.stderr}`)
+  exitCode = await runAndLog(
+    'getDiffs',
+    writeDebugLogs,
+    async stub => getDiffs(badgeDir, stub.options),
+    diffStub
+  )
+
   if (exitCode === 0) {
     const matches = (diffStub.stdout.match(/\.svg/g) || []).length
-    // eslint-disable-next-line no-console
-    console.log(`SVG matches: ${matches}`)
+    if (writeDebugLogs) {
+      info(`SVG matches: ${matches}`)
+    }
     if (matches > 0) {
-      const commitStub = new ExecOptionsStub()
-      await commitAsAction(badgeDir, commitStub.options)
-      await push(commitStub.options)
+      exitCode = await runAndLog('commitAsAction', writeDebugLogs, async stub =>
+        commitAsAction(badgeDir, stub.options)
+      )
+      exitCode = await runAndLog('push', writeDebugLogs, async stub =>
+        push(stub.options)
+      )
     }
   }
 }

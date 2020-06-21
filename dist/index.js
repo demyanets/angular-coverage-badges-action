@@ -3966,36 +3966,29 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const core_1 = __webpack_require__(470);
+const path_1 = __webpack_require__(622);
 const inputs_1 = __webpack_require__(842);
 const generate_badges_1 = __webpack_require__(798);
 const update_repository_1 = __webpack_require__(395);
-const exec_options_stub_1 = __webpack_require__(662);
 const git_utilities_1 = __webpack_require__(741);
-const path_1 = __webpack_require__(622);
+const run_and_log_1 = __webpack_require__(285);
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const inputs = new inputs_1.Inputs();
-            // eslint-disable-next-line no-console
-            console.log(`coverageSummaryPath: ${inputs.coverageSummaryPath}`);
+            core_1.info(`coverageSummaryPath: ${inputs.coverageSummaryPath}`);
             if (inputs.gitSourceSettings) {
+                const ref = inputs.gitSourceSettings.ref;
                 const badgeDir = path_1.join(inputs.gitSourceSettings.repositoryPath, inputs.badgesDirectory);
-                // eslint-disable-next-line no-console
-                console.log(`badgesDirectory: ${badgeDir}`);
-                if (git_utilities_1.isBranchPushable(inputs.gitSourceSettings.ref, inputs.protectedBranches)) {
-                    const stub = new exec_options_stub_1.ExecOptionsStub();
-                    // eslint-disable-next-line no-console
-                    console.log(`Checkout ref: ${inputs.gitSourceSettings.ref}`);
-                    const branch = git_utilities_1.getBranch(inputs.gitSourceSettings.ref);
-                    // eslint-disable-next-line no-console
-                    console.log(`Checkout branch: ${branch}`);
-                    yield git_utilities_1.checkout(branch, stub.options);
-                    // eslint-disable-next-line no-console
-                    console.log(`Main generateBadges: ${inputs.coverageSummaryPath}, ${badgeDir}`);
+                core_1.info(`badgesDirectory: ${badgeDir}`);
+                if (git_utilities_1.isBranchPushable(ref, inputs.protectedBranches)) {
+                    core_1.info(`Checkout ref: ${ref}`);
+                    const branch = git_utilities_1.getBranch(ref);
+                    core_1.info(`Checkout branch: ${branch}`);
+                    yield run_and_log_1.runAndLog('checkout', inputs.writeDebugLogs, (stub) => __awaiter(this, void 0, void 0, function* () { return git_utilities_1.checkout(branch, stub.options); }));
+                    core_1.info(`Main generateBadges: ${inputs.coverageSummaryPath}, ${badgeDir}`);
                     yield generate_badges_1.generateBadges(inputs.coverageSummaryPath, badgeDir);
-                    // eslint-disable-next-line no-console
-                    console.log(`Main update repository: ${inputs.gitSourceSettings.ref}`);
-                    yield update_repository_1.updateRepository(badgeDir);
+                    yield update_repository_1.updateRepository(badgeDir, inputs.writeDebugLogs);
                 }
             }
         }
@@ -4409,6 +4402,45 @@ function register (state, name, method, options) {
       }, method)()
     })
 }
+
+
+/***/ }),
+
+/***/ 285:
+/***/ (function(__unusedmodule, exports, __webpack_require__) {
+
+"use strict";
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.runAndLog = void 0;
+const core_1 = __webpack_require__(470);
+const exec_options_stub_1 = __webpack_require__(662);
+function runAndLog(label, writeDebugLogs, foo, stub = new exec_options_stub_1.ExecOptionsStub()) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const exitCode = yield foo(stub);
+            return exitCode;
+        }
+        finally {
+            if (writeDebugLogs) {
+                core_1.startGroup(`${__filename}: ${label}`);
+                core_1.info(`Stdout: ${stub.stdout}`);
+                core_1.info(`Stderr: ${stub.stderr}`);
+                core_1.endGroup();
+            }
+        }
+    });
+}
+exports.runAndLog = runAndLog;
 
 
 /***/ }),
@@ -20348,27 +20380,23 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.updateRepository = void 0;
-const git_utilities_1 = __webpack_require__(741);
 const core_1 = __webpack_require__(470);
+const git_utilities_1 = __webpack_require__(741);
 const exec_options_stub_1 = __webpack_require__(662);
-function updateRepository(badgeDir) {
+const run_and_log_1 = __webpack_require__(285);
+function updateRepository(badgeDir, writeDebugLogs) {
     return __awaiter(this, void 0, void 0, function* () {
-        const addStub = new exec_options_stub_1.ExecOptionsStub();
-        yield git_utilities_1.addSvg(badgeDir, addStub.options);
-        core_1.info(`Add svg stdout: ${addStub.stdout}`);
-        core_1.info(`Add svg stder: ${addStub.stderr}`);
+        let exitCode = yield run_and_log_1.runAndLog('addSvg', writeDebugLogs, (stub) => __awaiter(this, void 0, void 0, function* () { return git_utilities_1.addSvg(badgeDir, stub.options); }));
         const diffStub = new exec_options_stub_1.ExecOptionsStub();
-        const exitCode = yield git_utilities_1.getDiffs(badgeDir, diffStub.options);
-        core_1.info(`Diff stdout: ${diffStub.stdout}`);
-        core_1.info(`Diff stder: ${diffStub.stderr}`);
+        exitCode = yield run_and_log_1.runAndLog('getDiffs', writeDebugLogs, (stub) => __awaiter(this, void 0, void 0, function* () { return git_utilities_1.getDiffs(badgeDir, stub.options); }), diffStub);
         if (exitCode === 0) {
             const matches = (diffStub.stdout.match(/\.svg/g) || []).length;
-            // eslint-disable-next-line no-console
-            console.log(`SVG matches: ${matches}`);
+            if (writeDebugLogs) {
+                core_1.info(`SVG matches: ${matches}`);
+            }
             if (matches > 0) {
-                const commitStub = new exec_options_stub_1.ExecOptionsStub();
-                yield git_utilities_1.commitAsAction(badgeDir, commitStub.options);
-                yield git_utilities_1.push(commitStub.options);
+                exitCode = yield run_and_log_1.runAndLog('commitAsAction', writeDebugLogs, (stub) => __awaiter(this, void 0, void 0, function* () { return git_utilities_1.commitAsAction(badgeDir, stub.options); }));
+                exitCode = yield run_and_log_1.runAndLog('push', writeDebugLogs, (stub) => __awaiter(this, void 0, void 0, function* () { return git_utilities_1.push(stub.options); }));
             }
         }
     });
@@ -24321,6 +24349,8 @@ class Inputs {
         this.badgesDirectory = core.getInput('badges-directory');
         const branches = core.getInput('protected-branches');
         this.protectedBranches = parse_array_1.parseArray(branches);
+        this.writeDebugLogs =
+            core.getInput('write-debug-logs') === 'true' ? true : false;
         if (process.env['GITHUB_WORKSPACE']) {
             this.githubWorkspace = process.env['GITHUB_WORKSPACE'];
         }

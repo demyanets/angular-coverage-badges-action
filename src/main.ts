@@ -1,46 +1,35 @@
-import {setFailed} from '@actions/core'
+import {info, setFailed} from '@actions/core'
+import {join} from 'path'
 import {Inputs} from './inputs'
 import {generateBadges} from './generate-badges'
 import {updateRepository} from './update-repository'
-import {ExecOptionsStub} from './exec-options-stub'
 import {getBranch, checkout, isBranchPushable} from './git-utilities'
-import {join} from 'path'
+import {runAndLog} from './run-and-log'
 
 async function run(): Promise<void> {
   try {
     const inputs = new Inputs()
-    // eslint-disable-next-line no-console
-    console.log(`coverageSummaryPath: ${inputs.coverageSummaryPath}`)
+    info(`coverageSummaryPath: ${inputs.coverageSummaryPath}`)
     if (inputs.gitSourceSettings) {
+      const ref = inputs.gitSourceSettings.ref
       const badgeDir = join(
         inputs.gitSourceSettings.repositoryPath,
         inputs.badgesDirectory
       )
 
-      // eslint-disable-next-line no-console
-      console.log(`badgesDirectory: ${badgeDir}`)
+      info(`badgesDirectory: ${badgeDir}`)
+      if (isBranchPushable(ref, inputs.protectedBranches)) {
+        info(`Checkout ref: ${ref}`)
+        const branch = getBranch(ref)
 
-      if (
-        isBranchPushable(inputs.gitSourceSettings.ref, inputs.protectedBranches)
-      ) {
-        const stub = new ExecOptionsStub()
-        // eslint-disable-next-line no-console
-        console.log(`Checkout ref: ${inputs.gitSourceSettings.ref}`)
-        const branch = getBranch(inputs.gitSourceSettings.ref)
-
-        // eslint-disable-next-line no-console
-        console.log(`Checkout branch: ${branch}`)
-        await checkout(branch, stub.options)
-
-        // eslint-disable-next-line no-console
-        console.log(
-          `Main generateBadges: ${inputs.coverageSummaryPath}, ${badgeDir}`
+        info(`Checkout branch: ${branch}`)
+        await runAndLog('checkout', inputs.writeDebugLogs, async stub =>
+          checkout(branch, stub.options)
         )
-        await generateBadges(inputs.coverageSummaryPath, badgeDir)
 
-        // eslint-disable-next-line no-console
-        console.log(`Main update repository: ${inputs.gitSourceSettings.ref}`)
-        await updateRepository(badgeDir)
+        info(`Main generateBadges: ${inputs.coverageSummaryPath}, ${badgeDir}`)
+        await generateBadges(inputs.coverageSummaryPath, badgeDir)
+        await updateRepository(badgeDir, inputs.writeDebugLogs)
       }
     }
   } catch (error) {
