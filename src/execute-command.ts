@@ -1,3 +1,4 @@
+import {info} from '@actions/core'
 import {ExecOptions, exec} from 'child_process'
 
 export async function executeCommand(
@@ -5,8 +6,7 @@ export async function executeCommand(
   options?: ExecOptions
 ): Promise<[string, string]> {
   return new Promise<[string, string]>((resolve, reject) => {
-    // eslint-disable-next-line no-console
-    console.log(cmd)
+    info(cmd)
     exec(cmd, options, (error, stdout, stderr) => {
       if (error === null) {
         resolve([stdout.toString(), stderr.toString()])

@@ -1,4 +1,5 @@
 import {exec, ExecOptions} from '@actions/exec'
+import {info} from '@actions/core'
 
 export async function getGitVersion(options: ExecOptions): Promise<number> {
   return exec('git', ['--version'], options)
@@ -39,8 +40,7 @@ export function isBranchPushable(
   ref: string,
   protectedBranches: string[]
 ): boolean {
-  // eslint-disable-next-line no-console
-  console.log(`Is ref pushable?: ${ref}`)
+  info(`Is ref pushable?: ${ref}`)
 
   if (ref.startsWith('refs/pull/')) {
     return false

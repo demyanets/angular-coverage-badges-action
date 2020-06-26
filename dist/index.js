@@ -4433,8 +4433,8 @@ function runAndLog(label, writeDebugLogs, foo, stub = new exec_options_stub_1.Ex
         finally {
             if (writeDebugLogs) {
                 core_1.startGroup(`${__filename}: ${label}`);
-                core_1.info(`Stdout: ${stub.stdout}`);
-                core_1.info(`Stderr: ${stub.stderr}`);
+                core_1.info(`Stdout: ${stub.stdout.trim()}`);
+                core_1.info(`Stderr: ${stub.stderr.trim()}`);
                 core_1.endGroup();
             }
         }
@@ -20691,6 +20691,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.persist = void 0;
+const core_1 = __webpack_require__(470);
 const fs_1 = __webpack_require__(747);
 const path_1 = __importDefault(__webpack_require__(622));
 function persist(content, directory, label) {
@@ -20698,8 +20699,7 @@ function persist(content, directory, label) {
         return new Promise((resolve, reject) => {
             const fileName = label ? `coverage-${label}.svg` : `coverage.svg`;
             const fullPath = path_1.default.join(directory, fileName);
-            // eslint-disable-next-line no-console
-            console.log(`Writing bandge: ${fullPath}`);
+            core_1.info(`Writing badge: ${fullPath}`);
             fs_1.writeFile(fullPath, content, error => {
                 if (error === null) {
                     resolve();
@@ -23500,6 +23500,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.push = exports.commitAsAction = exports.addSvg = exports.getDiffs = exports.checkout = exports.isBranchPushable = exports.getBranch = exports.getLog = exports.getGitVersion = void 0;
 const exec_1 = __webpack_require__(986);
+const core_1 = __webpack_require__(470);
 function getGitVersion(options) {
     return __awaiter(this, void 0, void 0, function* () {
         return exec_1.exec('git', ['--version'], options);
@@ -23537,8 +23538,7 @@ function getBranch(ref) {
 }
 exports.getBranch = getBranch;
 function isBranchPushable(ref, protectedBranches) {
-    // eslint-disable-next-line no-console
-    console.log(`Is ref pushable?: ${ref}`);
+    core_1.info(`Is ref pushable?: ${ref}`);
     if (ref.startsWith('refs/pull/')) {
         return false;
     }

@@ -13,8 +13,8 @@ export async function runAndLog(
   } finally {
     if (writeDebugLogs) {
       startGroup(`${__filename}: ${label}`)
-      info(`Stdout: ${stub.stdout}`)
-      info(`Stderr: ${stub.stderr}`)
+      info(`Stdout: ${stub.stdout.trim()}`)
+      info(`Stderr: ${stub.stderr.trim()}`)
       endGroup()
     }
   }
