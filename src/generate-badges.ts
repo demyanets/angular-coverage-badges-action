@@ -7,16 +7,18 @@ import {existsSync} from 'fs'
 async function generateBadge(
   coverage: number,
   badgesDirectory: string,
+  writeDebugLogs: boolean,
   label?: string
 ): Promise<void> {
   const url = getBadgePath(coverage, label)
   const badge = await download(url)
-  return persist(badge, badgesDirectory, label)
+  return persist(badge, badgesDirectory, writeDebugLogs, label)
 }
 
 export async function generateBadges(
   coverageSummaryPath: string,
-  badgesDirectory: string
+  badgesDirectory: string,
+  writeDebugLogs: boolean
 ): Promise<void> {
   return new Promise<void>(async (resolve, reject) => {
     try {
@@ -26,11 +28,31 @@ export async function generateBadges(
       const summary = await readSummary(coverageSummaryPath)
       const total = summary['total']
       await Promise.all([
-        generateBadge(total.statements.pct, badgesDirectory, 'statements'),
-        generateBadge(total.branches.pct, badgesDirectory, 'branches'),
-        generateBadge(total.functions.pct, badgesDirectory, 'functions'),
-        generateBadge(total.lines.pct, badgesDirectory, 'lines'),
-        generateBadge(total.statements.pct, badgesDirectory)
+        generateBadge(
+          total.statements.pct,
+          badgesDirectory,
+          writeDebugLogs,
+          'statements'
+        ),
+        generateBadge(
+          total.branches.pct,
+          badgesDirectory,
+          writeDebugLogs,
+          'branches'
+        ),
+        generateBadge(
+          total.functions.pct,
+          badgesDirectory,
+          writeDebugLogs,
+          'functions'
+        ),
+        generateBadge(
+          total.lines.pct,
+          badgesDirectory,
+          writeDebugLogs,
+          'lines'
+        ),
+        generateBadge(total.statements.pct, badgesDirectory, writeDebugLogs)
       ])
       resolve()
     } catch (error) {

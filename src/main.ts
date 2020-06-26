@@ -9,7 +9,9 @@ import {runAndLog} from './run-and-log'
 async function run(): Promise<void> {
   try {
     const inputs = new Inputs()
-    info(`coverageSummaryPath: ${inputs.coverageSummaryPath}`)
+    if (inputs.writeDebugLogs) {
+      info(`coverageSummaryPath: ${inputs.coverageSummaryPath}`)
+    }
     if (inputs.gitSourceSettings) {
       const ref = inputs.gitSourceSettings.ref
       const badgeDir = join(
@@ -17,18 +19,25 @@ async function run(): Promise<void> {
         inputs.badgesDirectory
       )
 
-      info(`badgesDirectory: ${badgeDir}`)
+      if (inputs.writeDebugLogs) {
+        info(`badgesDirectory: ${badgeDir}`)
+      }
       if (isBranchPushable(ref, inputs.protectedBranches)) {
-        info(`Checkout ref: ${ref}`)
         const branch = getBranch(ref)
-
-        info(`Checkout branch: ${branch}`)
+        if (inputs.writeDebugLogs) {
+          info(`Checkout ref: ${ref}`)
+          info(`Checkout branch: ${branch}`)
+        }
         await runAndLog('checkout', inputs.writeDebugLogs, async stub =>
           checkout(branch, stub.options)
         )
 
-        info(`Main generateBadges: ${inputs.coverageSummaryPath}, ${badgeDir}`)
-        await generateBadges(inputs.coverageSummaryPath, badgeDir)
+        info(`Generate badges: ${inputs.coverageSummaryPath}, ${badgeDir}`)
+        await generateBadges(
+          inputs.coverageSummaryPath,
+          badgeDir,
+          inputs.writeDebugLogs
+        )
         await updateRepository(badgeDir, inputs.writeDebugLogs)
       }
     }

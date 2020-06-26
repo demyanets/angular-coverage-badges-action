@@ -3976,18 +3976,24 @@ function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const inputs = new inputs_1.Inputs();
-            core_1.info(`coverageSummaryPath: ${inputs.coverageSummaryPath}`);
+            if (inputs.writeDebugLogs) {
+                core_1.info(`coverageSummaryPath: ${inputs.coverageSummaryPath}`);
+            }
             if (inputs.gitSourceSettings) {
                 const ref = inputs.gitSourceSettings.ref;
                 const badgeDir = path_1.join(inputs.gitSourceSettings.repositoryPath, inputs.badgesDirectory);
-                core_1.info(`badgesDirectory: ${badgeDir}`);
+                if (inputs.writeDebugLogs) {
+                    core_1.info(`badgesDirectory: ${badgeDir}`);
+                }
                 if (git_utilities_1.isBranchPushable(ref, inputs.protectedBranches)) {
-                    core_1.info(`Checkout ref: ${ref}`);
                     const branch = git_utilities_1.getBranch(ref);
-                    core_1.info(`Checkout branch: ${branch}`);
+                    if (inputs.writeDebugLogs) {
+                        core_1.info(`Checkout ref: ${ref}`);
+                        core_1.info(`Checkout branch: ${branch}`);
+                    }
                     yield run_and_log_1.runAndLog('checkout', inputs.writeDebugLogs, (stub) => __awaiter(this, void 0, void 0, function* () { return git_utilities_1.checkout(branch, stub.options); }));
-                    core_1.info(`Main generateBadges: ${inputs.coverageSummaryPath}, ${badgeDir}`);
-                    yield generate_badges_1.generateBadges(inputs.coverageSummaryPath, badgeDir);
+                    core_1.info(`Generate badges: ${inputs.coverageSummaryPath}, ${badgeDir}`);
+                    yield generate_badges_1.generateBadges(inputs.coverageSummaryPath, badgeDir, inputs.writeDebugLogs);
                     yield update_repository_1.updateRepository(badgeDir, inputs.writeDebugLogs);
                 }
             }
@@ -4426,8 +4432,9 @@ const core_1 = __webpack_require__(470);
 const exec_options_stub_1 = __webpack_require__(662);
 function runAndLog(label, writeDebugLogs, foo, stub = new exec_options_stub_1.ExecOptionsStub()) {
     return __awaiter(this, void 0, void 0, function* () {
+        let exitCode = undefined;
         try {
-            const exitCode = yield foo(stub);
+            exitCode = yield foo(stub);
             return exitCode;
         }
         finally {
@@ -4435,6 +4442,7 @@ function runAndLog(label, writeDebugLogs, foo, stub = new exec_options_stub_1.Ex
                 core_1.startGroup(`${__filename}: ${label}`);
                 core_1.info(`Stdout: ${stub.stdout.trim()}`);
                 core_1.info(`Stderr: ${stub.stderr.trim()}`);
+                core_1.info(`Exit code: ${undefined}`);
                 core_1.endGroup();
             }
         }
@@ -20694,12 +20702,14 @@ exports.persist = void 0;
 const core_1 = __webpack_require__(470);
 const fs_1 = __webpack_require__(747);
 const path_1 = __importDefault(__webpack_require__(622));
-function persist(content, directory, label) {
+function persist(content, directory, writeDebugLogs, label) {
     return __awaiter(this, void 0, void 0, function* () {
         return new Promise((resolve, reject) => {
             const fileName = label ? `coverage-${label}.svg` : `coverage.svg`;
             const fullPath = path_1.default.join(directory, fileName);
-            core_1.info(`Writing badge: ${fullPath}`);
+            if (writeDebugLogs) {
+                core_1.info(`Writing badge: ${fullPath}`);
+            }
             fs_1.writeFile(fullPath, content, error => {
                 if (error === null) {
                     resolve();
@@ -23978,14 +23988,14 @@ const get_badge_path_1 = __webpack_require__(116);
 const download_1 = __webpack_require__(851);
 const persist_1 = __webpack_require__(458);
 const fs_1 = __webpack_require__(747);
-function generateBadge(coverage, badgesDirectory, label) {
+function generateBadge(coverage, badgesDirectory, writeDebugLogs, label) {
     return __awaiter(this, void 0, void 0, function* () {
         const url = get_badge_path_1.getBadgePath(coverage, label);
         const badge = yield download_1.download(url);
-        return persist_1.persist(badge, badgesDirectory, label);
+        return persist_1.persist(badge, badgesDirectory, writeDebugLogs, label);
     });
 }
-function generateBadges(coverageSummaryPath, badgesDirectory) {
+function generateBadges(coverageSummaryPath, badgesDirectory, writeDebugLogs) {
     return __awaiter(this, void 0, void 0, function* () {
         return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
             try {
@@ -23995,11 +24005,11 @@ function generateBadges(coverageSummaryPath, badgesDirectory) {
                 const summary = yield read_summary_1.readSummary(coverageSummaryPath);
                 const total = summary['total'];
                 yield Promise.all([
-                    generateBadge(total.statements.pct, badgesDirectory, 'statements'),
-                    generateBadge(total.branches.pct, badgesDirectory, 'branches'),
-                    generateBadge(total.functions.pct, badgesDirectory, 'functions'),
-                    generateBadge(total.lines.pct, badgesDirectory, 'lines'),
-                    generateBadge(total.statements.pct, badgesDirectory)
+                    generateBadge(total.statements.pct, badgesDirectory, writeDebugLogs, 'statements'),
+                    generateBadge(total.branches.pct, badgesDirectory, writeDebugLogs, 'branches'),
+                    generateBadge(total.functions.pct, badgesDirectory, writeDebugLogs, 'functions'),
+                    generateBadge(total.lines.pct, badgesDirectory, writeDebugLogs, 'lines'),
+                    generateBadge(total.statements.pct, badgesDirectory, writeDebugLogs)
                 ]);
                 resolve();
             }

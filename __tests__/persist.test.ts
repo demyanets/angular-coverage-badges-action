@@ -10,12 +10,12 @@ describe('Persist tests', () => {
       '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="106" height="20"></svg>'
     const expectedFilePath = normalize('__tests__/temp/coverage-badge.svg')
     expect(existsSync(expectedFilePath)).toBeFalsy()
-    await persist(content, path, name)
+    await persist(content, path, true, name)
     expect(existsSync(expectedFilePath)).toBeTruthy()
     unlinkSync(expectedFilePath)
   })
 
   test('throws on invalid directory', async () => {
-    await expect(persist(':', ':', ':')).rejects.toThrow()
+    await expect(persist(':', ':', true, ':')).rejects.toThrow()
   })
 })

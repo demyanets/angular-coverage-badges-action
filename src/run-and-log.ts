@@ -7,14 +7,16 @@ export async function runAndLog(
   foo: (ExecOptionsStub) => Promise<number>,
   stub: ExecOptionsStub = new ExecOptionsStub()
 ): Promise<number> {
+  let exitCode: number | undefined = undefined
   try {
-    const exitCode = await foo(stub)
+    exitCode = await foo(stub)
     return exitCode
   } finally {
     if (writeDebugLogs) {
       startGroup(`${__filename}: ${label}`)
       info(`Stdout: ${stub.stdout.trim()}`)
       info(`Stderr: ${stub.stderr.trim()}`)
+      info(`Exit code: ${undefined}`)
       endGroup()
     }
   }
