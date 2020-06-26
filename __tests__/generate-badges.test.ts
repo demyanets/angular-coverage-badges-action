@@ -1,14 +1,14 @@
 import fs from 'fs'
 import {generateBadges} from '../src/generate-badges'
-import {normalize} from 'path'
+import {normalize, join} from 'path'
 
 describe('Generate badges tests', () => {
   const expected = [
-    normalize('__tests__/temp/coverage.svg'),
-    normalize('__tests__/temp/coverage-lines.svg'),
-    normalize('__tests__/temp/coverage-statements.svg'),
-    normalize('__tests__/temp/coverage-branches.svg'),
-    normalize('__tests__/temp/coverage-functions.svg')
+    normalize(join(__dirname, 'temp/coverage.svg')),
+    normalize(join(__dirname, 'temp/coverage-lines.svg')),
+    normalize(join(__dirname, 'temp/coverage-statements.svg')),
+    normalize(join(__dirname, 'temp/coverage-branches.svg')),
+    normalize(join(__dirname, 'temp/coverage-functions.svg'))
   ]
 
   test('should generate', async () => {
@@ -21,8 +21,10 @@ describe('Generate badges tests', () => {
       }
     })
 
-    const badgesPath = normalize('__tests__/temp')
-    const summaryPath = normalize('__tests__/assets/coverage-summary.json')
-    await generateBadges(summaryPath, badgesPath)
+    const badgesPath = normalize(join(__dirname, 'temp'))
+    const summaryPath = normalize(
+      join(__dirname, 'assets/coverage-summary.json')
+    )
+    await generateBadges(summaryPath, badgesPath, true)
   })
 })

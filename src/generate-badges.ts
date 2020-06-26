@@ -1,3 +1,5 @@
+import * as io from '@actions/io'
+import {info} from '@actions/core'
 import {readSummary} from './read-summary'
 import {getBadgePath} from './get-badge-path'
 import {download} from './download'
@@ -23,7 +25,10 @@ export async function generateBadges(
   return new Promise<void>(async (resolve, reject) => {
     try {
       if (!existsSync(badgesDirectory)) {
-        reject(new Error(`Badges directory does not exist: ${badgesDirectory}`))
+        info(
+          `Badges directory does not exist, try to create one: ${badgesDirectory}`
+        )
+        await io.mkdirP(badgesDirectory)
       }
       const summary = await readSummary(coverageSummaryPath)
       const total = summary['total']

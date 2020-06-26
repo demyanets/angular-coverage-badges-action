@@ -23972,6 +23972,25 @@ exports.getUserAgent = getUserAgent;
 
 "use strict";
 
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -23983,6 +24002,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.generateBadges = void 0;
+const io = __importStar(__webpack_require__(1));
+const core_1 = __webpack_require__(470);
 const read_summary_1 = __webpack_require__(754);
 const get_badge_path_1 = __webpack_require__(116);
 const download_1 = __webpack_require__(851);
@@ -24000,7 +24021,8 @@ function generateBadges(coverageSummaryPath, badgesDirectory, writeDebugLogs) {
         return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
             try {
                 if (!fs_1.existsSync(badgesDirectory)) {
-                    reject(new Error(`Badges directory does not exist: ${badgesDirectory}`));
+                    core_1.info(`Badges directory does not exist, try to create one: ${badgesDirectory}`);
+                    yield io.mkdirP(badgesDirectory);
                 }
                 const summary = yield read_summary_1.readSummary(coverageSummaryPath);
                 const total = summary['total'];
