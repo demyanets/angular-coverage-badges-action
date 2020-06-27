@@ -7,7 +7,7 @@ inputs:
     default: './coverage/coverage-summary.json'
     required: false
   badges-directory:
-    description: 'Writes the coverage badges to the given directory. Defaults to "./badges" for root "src" project or ./badges/<libray' for a library
+    description: 'Writes the coverage badges to the given directory. Defaults to "./badges" for root "src" project or ./badges/<libray' for a library'
     default: ''
     required: false
   protected-branches:
