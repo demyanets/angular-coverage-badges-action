@@ -3966,24 +3966,22 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const core_1 = __webpack_require__(470);
-const path_1 = __webpack_require__(622);
+const io_1 = __webpack_require__(1);
 const inputs_1 = __webpack_require__(842);
 const generate_badges_1 = __webpack_require__(798);
 const update_repository_1 = __webpack_require__(395);
 const git_utilities_1 = __webpack_require__(741);
 const run_and_log_1 = __webpack_require__(285);
+const badges_directory_helper_1 = __webpack_require__(914);
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const inputs = new inputs_1.Inputs();
-            if (inputs.writeDebugLogs) {
-                core_1.info(`coverageSummaryPath: ${inputs.coverageSummaryPath}`);
-            }
             if (inputs.gitSourceSettings) {
                 const ref = inputs.gitSourceSettings.ref;
-                const badgeDir = path_1.join(inputs.gitSourceSettings.repositoryPath, inputs.badgesDirectory);
+                const badgeDir = yield badges_directory_helper_1.getBadgesDir(inputs.badgesDirectory, inputs.gitSourceSettings.repositoryPath, inputs.coverageSummaryPath, (path) => __awaiter(this, void 0, void 0, function* () { return yield io_1.mkdirP(path); }));
                 if (inputs.writeDebugLogs) {
-                    core_1.info(`badgesDirectory: ${badgeDir}`);
+                    core_1.info(`Full badges directory: ${badgeDir}`);
                 }
                 if (git_utilities_1.isBranchPushable(ref, inputs.protectedBranches)) {
                     const branch = git_utilities_1.getBranch(ref);
@@ -23972,25 +23970,6 @@ exports.getUserAgent = getUserAgent;
 
 "use strict";
 
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -24002,8 +23981,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.generateBadges = void 0;
-const io = __importStar(__webpack_require__(1));
-const core_1 = __webpack_require__(470);
 const read_summary_1 = __webpack_require__(754);
 const get_badge_path_1 = __webpack_require__(116);
 const download_1 = __webpack_require__(851);
@@ -24018,27 +23995,24 @@ function generateBadge(coverage, badgesDirectory, writeDebugLogs, label) {
 }
 function generateBadges(coverageSummaryPath, badgesDirectory, writeDebugLogs) {
     return __awaiter(this, void 0, void 0, function* () {
-        return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
-            try {
-                if (!fs_1.existsSync(badgesDirectory)) {
-                    core_1.info(`Badges directory does not exist, try to create one: ${badgesDirectory}`);
-                    yield io.mkdirP(badgesDirectory);
-                }
-                const summary = yield read_summary_1.readSummary(coverageSummaryPath);
-                const total = summary['total'];
-                yield Promise.all([
-                    generateBadge(total.statements.pct, badgesDirectory, writeDebugLogs, 'statements'),
-                    generateBadge(total.branches.pct, badgesDirectory, writeDebugLogs, 'branches'),
-                    generateBadge(total.functions.pct, badgesDirectory, writeDebugLogs, 'functions'),
-                    generateBadge(total.lines.pct, badgesDirectory, writeDebugLogs, 'lines'),
-                    generateBadge(total.statements.pct, badgesDirectory, writeDebugLogs)
-                ]);
-                resolve();
+        try {
+            if (!fs_1.existsSync(badgesDirectory)) {
+                Promise.reject(new Error(`Badges directory does not exist, try to create one: ${badgesDirectory}`));
             }
-            catch (error) {
-                reject(error);
-            }
-        }));
+            const summary = yield read_summary_1.readSummary(coverageSummaryPath);
+            const total = summary['total'];
+            yield Promise.all([
+                generateBadge(total.statements.pct, badgesDirectory, writeDebugLogs, 'statements'),
+                generateBadge(total.branches.pct, badgesDirectory, writeDebugLogs, 'branches'),
+                generateBadge(total.functions.pct, badgesDirectory, writeDebugLogs, 'functions'),
+                generateBadge(total.lines.pct, badgesDirectory, writeDebugLogs, 'lines'),
+                generateBadge(total.statements.pct, badgesDirectory, writeDebugLogs)
+            ]);
+            return Promise.resolve();
+        }
+        catch (error) {
+            return Promise.reject(error);
+        }
     });
 }
 exports.generateBadges = generateBadges;
@@ -26651,6 +26625,77 @@ function withCustomRequest(customRequest) {
 exports.graphql = graphql$1;
 exports.withCustomRequest = withCustomRequest;
 //# sourceMappingURL=index.js.map
+
+
+/***/ }),
+
+/***/ 914:
+/***/ (function(__unusedmodule, exports, __webpack_require__) {
+
+"use strict";
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.getBadgesDir = void 0;
+const core_1 = __webpack_require__(470);
+const path_1 = __webpack_require__(622);
+const fs_1 = __webpack_require__(747);
+function getBadgesDir(badgesDirectoryInput, repositoryPath, coverageSummaryPath, dirMaker) {
+    return __awaiter(this, void 0, void 0, function* () {
+        // Reject if invalid path was set in configuration
+        if (badgesDirectoryInput !== '') {
+            const fullBadgeDir = path_1.join(repositoryPath, badgesDirectoryInput);
+            if (fs_1.existsSync(fullBadgeDir)) {
+                core_1.info(`Using existing badges directory: ${fullBadgeDir}`);
+                return Promise.resolve(fullBadgeDir);
+            }
+            else {
+                return Promise.reject(new Error(`Badges directory does not exist: ${fullBadgeDir}`));
+            }
+        }
+        else {
+            // No path was set; try to create one
+            const badgesDir = getBadgeDirName(coverageSummaryPath);
+            const fullBadgeDir = path_1.join(repositoryPath, badgesDir);
+            if (fs_1.existsSync(fullBadgeDir)) {
+                core_1.info(`Using existing badges directory: ${fullBadgeDir}`);
+            }
+            else {
+                yield dirMaker(fullBadgeDir);
+                core_1.info(`Created new badges directory: ${fullBadgeDir}`);
+            }
+            return Promise.resolve(fullBadgeDir);
+        }
+    });
+}
+exports.getBadgesDir = getBadgesDir;
+function getBadgeDirName(coverageSummaryPath) {
+    let badgesDir = 'badges';
+    const summaryDir = path_1.dirname(coverageSummaryPath);
+    const lastForwardSlashIndex = summaryDir.lastIndexOf('/');
+    const lastBackwardSlashIndex = summaryDir.lastIndexOf('\\');
+    if (lastForwardSlashIndex !== -1 || lastBackwardSlashIndex !== -1) {
+        let lastSummaryDirPart = '';
+        lastSummaryDirPart =
+            lastForwardSlashIndex !== -1
+                ? summaryDir.substr(lastForwardSlashIndex + 1)
+                : lastSummaryDirPart;
+        lastSummaryDirPart =
+            lastBackwardSlashIndex !== -1
+                ? summaryDir.substr(lastBackwardSlashIndex + 1)
+                : lastSummaryDirPart;
+        badgesDir = path_1.join(badgesDir, lastSummaryDirPart);
+    }
+    return badgesDir;
+}
 
 
 /***/ }),

@@ -1,27 +1,27 @@
 import {info, setFailed} from '@actions/core'
-import {join} from 'path'
+import {mkdirP} from '@actions/io'
 import {Inputs} from './inputs'
 import {generateBadges} from './generate-badges'
 import {updateRepository} from './update-repository'
 import {getBranch, checkout, isBranchPushable} from './git-utilities'
 import {runAndLog} from './run-and-log'
+import {getBadgesDir} from './badges-directory-helper'
 
 async function run(): Promise<void> {
   try {
     const inputs = new Inputs()
-    if (inputs.writeDebugLogs) {
-      info(`coverageSummaryPath: ${inputs.coverageSummaryPath}`)
-    }
     if (inputs.gitSourceSettings) {
       const ref = inputs.gitSourceSettings.ref
-      const badgeDir = join(
+      const badgeDir = await getBadgesDir(
+        inputs.badgesDirectory,
         inputs.gitSourceSettings.repositoryPath,
-        inputs.badgesDirectory
+        inputs.coverageSummaryPath,
+        async path => await mkdirP(path)
       )
-
       if (inputs.writeDebugLogs) {
-        info(`badgesDirectory: ${badgeDir}`)
+        info(`Full badges directory: ${badgeDir}`)
       }
+
       if (isBranchPushable(ref, inputs.protectedBranches)) {
         const branch = getBranch(ref)
         if (inputs.writeDebugLogs) {
