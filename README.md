@@ -8,7 +8,7 @@ When running with Angular repositories containing multiple projects, Angular Cov
 
 ## Usage
 
-The action's step needs to run after your test suite has outputted an LCOV file. Angular comes with Karma test runner already preconfigured to generate the LCOV file. Please make sure that the 'coverageIstanbulReporter' in **'karma.config.js'** contains the **'json-summary'** reporter:
+The action's step needs to run after your test suite has outputted an LCOV file. Angular comes with Karma test runner already preconfigured to generate the LCOV file. Please make sure that the **'coverageIstanbulReporter'** in **'karma.config.js'** contains the **'json-summary'** reporter:
 ```JavaScript
 coverageIstanbulReporter: {
       dir: require('path').join(__dirname, '../../coverage'),
@@ -74,13 +74,17 @@ jobs:
 
 ## Troubleshooting:
 
-### Angular Coverage Badges Github Action fails on protected branches
+### Action fails on protected branches
 
 Ensure that you configured your protected branches completely:
 
 ```yaml
 protected-branches: '["master",  "develop"]'
 ```
+### Badges get generated only for one project
+
+Make sure that you added this action multiple times for every single **coverage-summary.json** file. 
+The action will respect project structure and will automatically generate the badges in separate directories. 
 
 ## [MIT License](LICENSE.md)
 
