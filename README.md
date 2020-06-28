@@ -8,11 +8,11 @@ When running with Angular repositories containing multiple projects, Angular Cov
 
 ## Usage
 
-The action's step needs to run after your test suite has outputted an LCOV file. Angular comes with Karma test runner already preconfigured to generate the LCOV file. Please make sure that the 'coverageIstanbulReporter' in 'karma.config.js' contains the 'json-summary' reporter:
+The action's step needs to run after your test suite has outputted an LCOV file. Angular comes with Karma test runner already preconfigured to generate the LCOV file. Please make sure that the 'coverageIstanbulReporter' in **'karma.config.js'** contains the **'json-summary'** reporter:
 ```JavaScript
 coverageIstanbulReporter: {
       dir: require('path').join(__dirname, '../../coverage'),
-      reports: ['html', 'lcovonly', 'text-summary', **'json-summary'**],
+      reports: ['html', 'lcovonly', 'text-summary', 'json-summary'],
       fixWebpackSourcePaths: true
     },
 ```
@@ -22,13 +22,13 @@ coverageIstanbulReporter: {
 | Name                  | Requirement | Description |
 | --------------------- | ----------- | ----------- |
 | `coverage-summary-path` | _optional_ | Path to a "coverage-summary.json" file. Default: `./coverage/coverage-summary.json`. |
-| `badges-directory` | _optional_ | Writes the coverage badges to the given directory. Default: `./badges" for root "src` project or `./badges/<library-name>` for a library. |
-| `protected-branches` | _optional_ | List of protected branches that require review for commit and should be excluded from badge generation therefore. Default: `[]`. |
-| `write-debug-logs` | _optional_ | Writes extra debug logs to console if set to "true". Default: ``. |
+| `badges-directory` | _optional_ | Writes coverage badges to the given directory. Default: `./badges` for root "src" project or `./badges/<library-name>` for a library. |
+| `protected-branches` | _optional_ | List of the protected branches that require review for commit and should be excluded from the badge generation therefore. Default: `[]`. |
+| `write-debug-logs` | _optional_ | Writes extra debug logs to console if set to "true". Default: `<empty>`. |
 
 ### Standard Example:
 
-* This example assumes you're building your Angular project using the command `npm run test:ci`, demo here: [demyanets/stslib](https://github.com/demyanets/stslib/blob/feature/coverage-badges/.github/workflows/test.yml)
+This example assumes you're building your Angular project using the command `npm run test:ci`, demo here: [demyanets/stslib](https://github.com/demyanets/stslib/blob/feature/coverage-badges/.github/workflows/test.yml)
 
 ```yaml
 # This workflow will do a clean install of node dependencies and run tests
