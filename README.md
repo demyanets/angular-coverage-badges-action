@@ -1,101 +1,88 @@
-<p align="center">
-  <a href="https://github.com/actions/typescript-action/actions"><img alt="typescript-action status" src="https://github.com/actions/typescript-action/workflows/build-test/badge.svg"></a>
-</p>
+[![build](https://github.com/demyanets//angular-coverage-badges-action/workflows/build/badge.svg)](https://github.com/demyanets/angular-coverage-badges-action/actions?query=workflow%3Abuild)
+[![test](https://github.com/demyanets//angular-coverage-badges-action/workflows/test/badge.svg)](https://github.com/demyanets/angular-coverage-badges-action/actions?query=workflow%3Atest)
 
-# Create a JavaScript Action using TypeScript
+# Angular Coverage Badges Github Action
 
-Use this template to bootstrap the creation of a JavaScript action.:rocket:
+This GitHub Action converts your Angular test suite's LCOV coverage data into the set of coverage badges that you can use in your README.md file locally. There is no need to create an accout or give your coverage data to any external service provider like [codecov.io](https://www.codecov.io) or [coveralls.io](https://coveralls.io/) for analysis.
 
-This template includes compilication support, tests, a validation workflow, publishing, and versioning guidance.  
+When running with Angular repositories containing multiple projects, Angular Coverage Badges Github Action is able to generate badges for every single project preseving the structure of your solution.
 
-If you are new, there's also a simpler introduction.  See the [Hello World JavaScript Action](https://github.com/actions/hello-world-javascript-action)
+## Usage
 
-## Create an action from this template
-
-Click the `Use this Template` and provide the new repo details for your action
-
-## Code in Master
-
-Install the dependencies  
-```bash
-$ npm install
+The action's step needs to run after your test suite has outputted an LCOV file. Angular comes with Karma test runner already preconfigured to generate the LCOV file. Please make sure that the 'coverageIstanbulReporter' in 'karma.config.js' contains the 'json-summary' reporter:
+```JavaScript
+coverageIstanbulReporter: {
+      dir: require('path').join(__dirname, '../../coverage'),
+      reports: ['html', 'lcovonly', 'text-summary', **'json-summary'**],
+      fixWebpackSourcePaths: true
+    },
 ```
 
-Build the typescript and package it for distribution
-```bash
-$ npm run build && npm run pack
-```
+### Inputs:
 
-Run the tests :heavy_check_mark:  
-```bash
-$ npm test
+| Name                  | Requirement | Description |
+| --------------------- | ----------- | ----------- |
+| `coverage-summary-path` | _optional_ | Default: "./coverage/coverage-summary.json". Path to a "coverage-summary.json" file.|
+| `badges-directory` | _optional_ | Default: "./badges" for root "src" project or "./badges/<library-name> for a library. Writes the coverage badges to the given directory. |
+| `protected-branches` | _optional | Default: "[]". List of protected branches that require review for commit and should be excluded from badge generation therefore. |
+| `write-debug-logs` | _optional_ | Default: "[]".  Writes extra debug logs to console if set to "true". |
 
- PASS  ./index.test.js
-  ✓ throws invalid number (3ms)
-  ✓ wait 500 ms (504ms)
-  ✓ test runs (95ms)
+### Standard Example:
 
-...
-```
-
-## Change action.yml
-
-The action.yml contains defines the inputs and output for your action.
-
-Update the action.yml with your name, description, inputs and outputs for your action.
-
-See the [documentation](https://help.github.com/en/articles/metadata-syntax-for-github-actions)
-
-## Change the Code
-
-Most toolkit and CI/CD operations involve async operations so the action is run in an async function.
-
-```javascript
-import * as core from '@actions/core';
-...
-
-async function run() {
-  try { 
-      ...
-  } 
-  catch (error) {
-    core.setFailed(error.message);
-  }
-}
-
-run()
-```
-
-See the [toolkit documentation](https://github.com/actions/toolkit/blob/master/README.md#packages) for the various packages.
-
-## Publish to a distribution branch
-
-Actions are run from GitHub repos so we will checkin the packed dist folder. 
-
-Then run [ncc](https://github.com/zeit/ncc) and push the results:
-```bash
-$ npm run pack
-$ git add dist
-$ git commit -a -m "prod dependencies"
-$ git push origin releases/v1
-```
-
-Your action is now published! :rocket: 
-
-See the [versioning documentation](https://github.com/actions/toolkit/blob/master/docs/action-versioning.md)
-
-## Validate
-
-You can now validate the action by referencing `./` in a workflow in your repo (see [test.yml](.github/workflows/test.yml)])
+* This example assumes you're building your Angular project using the command `npm run test:ci`, demo here: [demyanets/stslib](https://github.com/demyanets/stslib/blob/feature/coverage-badges/.github/workflows/test.yml)
 
 ```yaml
-uses: ./
-with:
-  milliseconds: 1000
+# This workflow will do a clean install of node dependencies and run tests
+name: test
+
+on:
+  push:
+    branches:
+      - '**'
+
+  pull_request:
+    branches:
+      - master
+      - develop
+
+jobs:
+  test:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [12.x]
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+
+    - run: npm ci
+    - run: npm run test:ci
+
+    # Coverage badges will be updated on any branch except protected
+    # branches 'develop' and 'master' and on a pull requests
+    - name: Test angular action
+      uses:  demyanets/angular-coverage-badges-action@master
+      with:
+        coverage-summary-path: coverage/stslib/coverage-summary.json
+        protected-branches: '["master",  "develop"]'
 ```
 
-See the [actions tab](https://github.com/actions/javascript-action/actions) for runs of this action! :rocket:
+## Troubleshooting:
 
-## Usage:
+### Angular Coverage Badges Github Action fails on protected branches
 
-After testing you can [create a v1 tag](https://github.com/actions/toolkit/blob/master/docs/action-versioning.md) to reference the stable and latest V1 action
+Ensure that you configured your protected branches completely:
+
+```yaml
+protected-branches: '["master",  "develop"]'
+```
+
+## [MIT License](LICENSE.md)
+
+## [Contributing](CONTRIBUTING.md)
