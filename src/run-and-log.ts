@@ -13,10 +13,10 @@ export async function runAndLog(
     return exitCode
   } finally {
     if (writeDebugLogs) {
-      startGroup(`${__filename}: ${label}`)
+      startGroup(`${label}`)
       info(`Stdout: ${stub.stdout.trim()}`)
       info(`Stderr: ${stub.stderr.trim()}`)
-      info(`Exit code: ${undefined}`)
+      info(`Exit code: ${exitCode}`)
       endGroup()
     }
   }
