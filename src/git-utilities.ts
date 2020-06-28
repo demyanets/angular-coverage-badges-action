@@ -1,5 +1,4 @@
 import {exec, ExecOptions} from '@actions/exec'
-import {info} from '@actions/core'
 
 export async function getGitVersion(options: ExecOptions): Promise<number> {
   return exec('git', ['--version'], options)
@@ -36,8 +35,6 @@ export function isBranchPushable(
   ref: string,
   protectedBranches: string[]
 ): boolean {
-  info(`Is ref pushable?: ${ref}`)
-
   if (ref.startsWith('refs/pull/')) {
     return false
   }
@@ -85,7 +82,7 @@ export async function commitAsAction(
   args = ['config', '--local', 'user.name', 'GitHub Action']
   await exec('git', args, options)
 
-  args = ['commit', '--allow-empty', '-m', 'Coverage badge update', `${dir}`]
+  args = ['commit', '--allow-empty', '-m', 'Coverage badges update', `${dir}`]
   return exec('git', args, options)
 }
 

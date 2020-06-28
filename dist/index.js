@@ -23543,7 +23543,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.push = exports.commitAsAction = exports.add = exports.getDiffs = exports.checkout = exports.isBranchPushable = exports.getBranch = exports.getGitVersion = void 0;
 const exec_1 = __webpack_require__(986);
-const core_1 = __webpack_require__(470);
 function getGitVersion(options) {
     return __awaiter(this, void 0, void 0, function* () {
         return exec_1.exec('git', ['--version'], options);
@@ -23575,7 +23574,6 @@ function getBranch(ref) {
 }
 exports.getBranch = getBranch;
 function isBranchPushable(ref, protectedBranches) {
-    core_1.info(`Is ref pushable?: ${ref}`);
     if (ref.startsWith('refs/pull/')) {
         return false;
     }
@@ -23613,7 +23611,7 @@ function commitAsAction(dir, options) {
         yield exec_1.exec('git', args, options);
         args = ['config', '--local', 'user.name', 'GitHub Action'];
         yield exec_1.exec('git', args, options);
-        args = ['commit', '--allow-empty', '-m', 'Coverage badge update', `${dir}`];
+        args = ['commit', '--allow-empty', '-m', 'Coverage badges update', `${dir}`];
         return exec_1.exec('git', args, options);
     });
 }
