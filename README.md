@@ -1,5 +1,4 @@
-[![build](https://github.com/demyanets//angular-coverage-badges-action/workflows/build/badge.svg)](https://github.com/demyanets/angular-coverage-badges-action/actions?query=workflow%3Abuild)
-[![test](https://github.com/demyanets//angular-coverage-badges-action/workflows/test/badge.svg)](https://github.com/demyanets/angular-coverage-badges-action/actions?query=workflow%3Atest)
+[![build-test](https://github.com/demyanets/angular-coverage-badges-action/workflows/build-test/badge.svg)](https://github.com/demyanets/angular-coverage-badges-action/actions?query=workflow%3Abuild-test)
 
 # Angular Coverage Badges Github Action
 
@@ -22,10 +21,10 @@ coverageIstanbulReporter: {
 
 | Name                  | Requirement | Description |
 | --------------------- | ----------- | ----------- |
-| `coverage-summary-path` | _optional_ | Default: "./coverage/coverage-summary.json". Path to a "coverage-summary.json" file.|
-| `badges-directory` | _optional_ | Default: "./badges" for root "src" project or "./badges/<library-name> for a library. Writes the coverage badges to the given directory. |
-| `protected-branches` | _optional | Default: "[]". List of protected branches that require review for commit and should be excluded from badge generation therefore. |
-| `write-debug-logs` | _optional_ | Default: "[]".  Writes extra debug logs to console if set to "true". |
+| `coverage-summary-path` | _optional_ | Path to a "coverage-summary.json" file. Default: `./coverage/coverage-summary.json`. |
+| `badges-directory` | _optional_ | Writes the coverage badges to the given directory. Default: `./badges" for root "src` project or `./badges/<library-name>` for a library. |
+| `protected-branches` | _optional_ | List of protected branches that require review for commit and should be excluded from badge generation therefore. Default: `[]`. |
+| `write-debug-logs` | _optional_ | Writes extra debug logs to console if set to "true". Default: ``. |
 
 ### Standard Example:
 
