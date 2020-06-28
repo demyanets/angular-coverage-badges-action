@@ -1,5 +1,5 @@
 import {info} from '@actions/core'
-import {getDiffs, commitAsAction, push, addSvg} from './git-utilities'
+import {getDiffs, commitAsAction, push, add} from './git-utilities'
 import {ExecOptionsStub} from './exec-options-stub'
 import {runAndLog} from './run-and-log'
 
@@ -7,8 +7,12 @@ export async function updateRepository(
   badgeDir: string,
   writeDebugLogs: boolean
 ): Promise<void> {
-  let exitCode = await runAndLog('addSvg', writeDebugLogs, async stub =>
-    addSvg(badgeDir, stub.options)
+  let exitCode = await runAndLog('Add SVGs', writeDebugLogs, async stub =>
+    add(badgeDir, '*.svg', stub.options)
+  )
+
+  exitCode = await runAndLog('Add .gitignore', writeDebugLogs, async stub =>
+    add(badgeDir, '.gitignore', stub.options)
   )
 
   const diffStub = new ExecOptionsStub()

@@ -20427,7 +20427,8 @@ const exec_options_stub_1 = __webpack_require__(662);
 const run_and_log_1 = __webpack_require__(285);
 function updateRepository(badgeDir, writeDebugLogs) {
     return __awaiter(this, void 0, void 0, function* () {
-        let exitCode = yield run_and_log_1.runAndLog('addSvg', writeDebugLogs, (stub) => __awaiter(this, void 0, void 0, function* () { return git_utilities_1.addSvg(badgeDir, stub.options); }));
+        let exitCode = yield run_and_log_1.runAndLog('Add SVGs', writeDebugLogs, (stub) => __awaiter(this, void 0, void 0, function* () { return git_utilities_1.add(badgeDir, '*.svg', stub.options); }));
+        exitCode = yield run_and_log_1.runAndLog('Add .gitignore', writeDebugLogs, (stub) => __awaiter(this, void 0, void 0, function* () { return git_utilities_1.add(badgeDir, '.gitignore', stub.options); }));
         const diffStub = new exec_options_stub_1.ExecOptionsStub();
         exitCode = yield run_and_log_1.runAndLog('getDiffs', writeDebugLogs, (stub) => __awaiter(this, void 0, void 0, function* () { return git_utilities_1.getDiffs(badgeDir, stub.options); }), diffStub);
         if (exitCode === 0) {
@@ -23540,7 +23541,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.push = exports.commitAsAction = exports.addSvg = exports.getDiffs = exports.checkout = exports.isBranchPushable = exports.getBranch = exports.getLog = exports.getGitVersion = void 0;
+exports.push = exports.commitAsAction = exports.add = exports.getDiffs = exports.checkout = exports.isBranchPushable = exports.getBranch = exports.getGitVersion = void 0;
 const exec_1 = __webpack_require__(986);
 const core_1 = __webpack_require__(470);
 function getGitVersion(options) {
@@ -23549,12 +23550,6 @@ function getGitVersion(options) {
     });
 }
 exports.getGitVersion = getGitVersion;
-function getLog(options) {
-    return __awaiter(this, void 0, void 0, function* () {
-        return exec_1.exec('git', ['log', '--oneline'], options);
-    });
-}
-exports.getLog = getLog;
 function getBranch(ref) {
     // refs/heads/
     const heads = 'refs/heads/';
@@ -23605,13 +23600,13 @@ function getDiffs(dir, options) {
     });
 }
 exports.getDiffs = getDiffs;
-function addSvg(dir, options) {
+function add(dir, file, options) {
     return __awaiter(this, void 0, void 0, function* () {
-        const args = ['add', '--all', '*.svg', '.gitignore'];
+        const args = ['add', '--all', file];
         return exec_1.exec('git', args, options);
     });
 }
-exports.addSvg = addSvg;
+exports.add = add;
 function commitAsAction(dir, options) {
     return __awaiter(this, void 0, void 0, function* () {
         let args = ['config', '--local', 'user.email', 'action@github.com'];

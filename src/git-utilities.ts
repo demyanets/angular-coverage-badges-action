@@ -5,10 +5,6 @@ export async function getGitVersion(options: ExecOptions): Promise<number> {
   return exec('git', ['--version'], options)
 }
 
-export async function getLog(options: ExecOptions): Promise<number> {
-  return exec('git', ['log', '--oneline'], options)
-}
-
 export function getBranch(ref: string): string {
   // refs/heads/
   const heads = 'refs/heads/'
@@ -70,11 +66,12 @@ export async function getDiffs(
   return exec('git', args, options)
 }
 
-export async function addSvg(
+export async function add(
   dir: string,
+  file: string,
   options: ExecOptions
 ): Promise<number> {
-  const args = ['add', '--all', '*.svg', '.gitignore']
+  const args = ['add', '--all', file]
   return exec('git', args, options)
 }
 

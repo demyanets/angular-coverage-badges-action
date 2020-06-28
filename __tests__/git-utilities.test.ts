@@ -1,7 +1,6 @@
 import {join, normalize} from 'path'
 import {
   getDiffs,
-  getLog,
   getGitVersion,
   getBranch,
   isBranchPushable
@@ -32,14 +31,6 @@ describe('Git helper tests', () => {
     expect(stub.stderr).toEqual('')
     //const matches = (result[0].match(/\.svg/g) || []).length
     //console.log(`SVG matches: ${matches}`)
-  })
-
-  test('should log', async () => {
-    const stub = new ExecOptionsStub('q')
-    const dir = normalize('__tests__/assets')
-    const result = await getLog(stub.options)
-    expect(result).toEqual(0)
-    expect(stub.stderr).toEqual('')
   })
 
   describe('isBranchPushable', () => {
