@@ -23607,7 +23607,7 @@ function getDiffs(dir, options) {
 exports.getDiffs = getDiffs;
 function addSvg(dir, options) {
     return __awaiter(this, void 0, void 0, function* () {
-        const args = ['add', '--all', '*.svg'];
+        const args = ['add', '--all', '*.svg', '.gitignore'];
         return exec_1.exec('git', args, options);
     });
 }
