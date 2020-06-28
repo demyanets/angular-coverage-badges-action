@@ -3980,9 +3980,6 @@ function run() {
             if (inputs.gitSourceSettings) {
                 const ref = inputs.gitSourceSettings.ref;
                 const badgeDir = yield badges_directory_helper_1.getBadgesDir(inputs.badgesDirectory, inputs.gitSourceSettings.repositoryPath, inputs.coverageSummaryPath, (path) => __awaiter(this, void 0, void 0, function* () { return yield io_1.mkdirP(path); }));
-                if (inputs.writeDebugLogs) {
-                    core_1.info(`Full badges directory: ${badgeDir}`);
-                }
                 if (git_utilities_1.isBranchPushable(ref, inputs.protectedBranches)) {
                     const branch = git_utilities_1.getBranch(ref);
                     if (inputs.writeDebugLogs) {
@@ -4437,10 +4434,10 @@ function runAndLog(label, writeDebugLogs, foo, stub = new exec_options_stub_1.Ex
         }
         finally {
             if (writeDebugLogs) {
-                core_1.startGroup(`${__filename}: ${label}`);
+                core_1.startGroup(`${label}`);
                 core_1.info(`Stdout: ${stub.stdout.trim()}`);
                 core_1.info(`Stderr: ${stub.stderr.trim()}`);
-                core_1.info(`Exit code: ${undefined}`);
+                core_1.info(`Exit code: ${exitCode}`);
                 core_1.endGroup();
             }
         }
@@ -23997,7 +23994,7 @@ function generateBadges(coverageSummaryPath, badgesDirectory, writeDebugLogs) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             if (!fs_1.existsSync(badgesDirectory)) {
-                Promise.reject(new Error(`Badges directory does not exist, try to create one: ${badgesDirectory}`));
+                return Promise.reject(new Error(`Badges directory does not exist, try to create one: ${badgesDirectory}`));
             }
             const summary = yield read_summary_1.readSummary(coverageSummaryPath);
             const total = summary['total'];

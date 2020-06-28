@@ -18,7 +18,7 @@ async function run(): Promise<void> {
         inputs.coverageSummaryPath,
         async path => await mkdirP(path)
       )
-      
+
       if (isBranchPushable(ref, inputs.protectedBranches)) {
         const branch = getBranch(ref)
         if (inputs.writeDebugLogs) {
