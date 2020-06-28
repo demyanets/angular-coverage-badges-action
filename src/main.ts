@@ -18,6 +18,9 @@ async function run(): Promise<void> {
         inputs.gitSourceSettings.repositoryPath,
         inputs.coverageSummaryPath,
         async path => {
+          if (inputs.writeDebugLogs) {
+            info(`Try to create new directory: ${path}`)
+          }
           await mkdirP(path)
           await writeGitIgnore(path, inputs.writeDebugLogs)
           Promise.resolve()

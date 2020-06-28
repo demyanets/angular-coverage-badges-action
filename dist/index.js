@@ -4011,6 +4011,9 @@ function run() {
             if (inputs.gitSourceSettings) {
                 const ref = inputs.gitSourceSettings.ref;
                 const badgeDir = yield badges_directory_helper_1.getBadgesDir(inputs.badgesDirectory, inputs.gitSourceSettings.repositoryPath, inputs.coverageSummaryPath, (path) => __awaiter(this, void 0, void 0, function* () {
+                    if (inputs.writeDebugLogs) {
+                        core_1.info(`Try to create new directory: ${path}`);
+                    }
                     yield io_1.mkdirP(path);
                     yield write_git_ignore_1.writeGitIgnore(path, inputs.writeDebugLogs);
                     Promise.resolve();
