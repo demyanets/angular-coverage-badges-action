@@ -20,6 +20,7 @@ async function run(): Promise<void> {
         async path => {
           await mkdirP(path)
           await writeGitIgnore(path, inputs.writeDebugLogs)
+          Promise.resolve()
         },
         inputs.writeDebugLogs
       )

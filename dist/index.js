@@ -4013,6 +4013,7 @@ function run() {
                 const badgeDir = yield badges_directory_helper_1.getBadgesDir(inputs.badgesDirectory, inputs.gitSourceSettings.repositoryPath, inputs.coverageSummaryPath, (path) => __awaiter(this, void 0, void 0, function* () {
                     yield io_1.mkdirP(path);
                     yield write_git_ignore_1.writeGitIgnore(path, inputs.writeDebugLogs);
+                    Promise.resolve();
                 }), inputs.writeDebugLogs);
                 if (git_utilities_1.isBranchPushable(ref, inputs.protectedBranches)) {
                     const branch = git_utilities_1.getBranch(ref);
