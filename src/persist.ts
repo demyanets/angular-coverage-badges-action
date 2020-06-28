@@ -5,18 +5,17 @@ import path from 'path'
 export async function persist(
   content: string,
   directory: string,
-  writeDebugLogs: boolean,
-  label?: string
-): Promise<void> {
-  return new Promise<void>((resolve, reject) => {
-    const fileName = label ? `coverage-${label}.svg` : `coverage.svg`
+  fileName: string,
+  writeDebugLogs: boolean
+): Promise<string> {
+  return new Promise<string>((resolve, reject) => {
     const fullPath = path.join(directory, fileName)
     if (writeDebugLogs) {
-      info(`Writing badge: ${fullPath}`)
+      info(`Writing file: ${fullPath}`)
     }
     writeFile(fullPath, content, error => {
       if (error === null) {
-        resolve()
+        resolve(fullPath)
       } else {
         reject(error)
       }

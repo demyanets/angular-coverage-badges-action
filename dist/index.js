@@ -706,6 +706,36 @@ module.exports = opts => {
 
 /***/ }),
 
+/***/ 45:
+/***/ (function(__unusedmodule, exports, __webpack_require__) {
+
+"use strict";
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.writeGitIgnore = void 0;
+const persist_1 = __webpack_require__(458);
+function writeGitIgnore(path, writeDebugLogs) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const content = `# Ignore everything in this directory\n*\n# Except this file, badges and subdirectories\n!.gitignore\n!*.svg\n!/**`;
+        const fileName = '.gitignore';
+        const fullPath = yield persist_1.persist(content, path, fileName, writeDebugLogs);
+        return Promise.resolve(fullPath);
+    });
+}
+exports.writeGitIgnore = writeGitIgnore;
+
+
+/***/ }),
+
 /***/ 47:
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
@@ -3973,13 +4003,17 @@ const update_repository_1 = __webpack_require__(395);
 const git_utilities_1 = __webpack_require__(741);
 const run_and_log_1 = __webpack_require__(285);
 const badges_directory_helper_1 = __webpack_require__(914);
+const write_git_ignore_1 = __webpack_require__(45);
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const inputs = new inputs_1.Inputs();
             if (inputs.gitSourceSettings) {
                 const ref = inputs.gitSourceSettings.ref;
-                const badgeDir = yield badges_directory_helper_1.getBadgesDir(inputs.badgesDirectory, inputs.gitSourceSettings.repositoryPath, inputs.coverageSummaryPath, (path) => __awaiter(this, void 0, void 0, function* () { return yield io_1.mkdirP(path); }));
+                const badgeDir = yield badges_directory_helper_1.getBadgesDir(inputs.badgesDirectory, inputs.gitSourceSettings.repositoryPath, inputs.coverageSummaryPath, (path) => __awaiter(this, void 0, void 0, function* () {
+                    yield io_1.mkdirP(path);
+                    yield write_git_ignore_1.writeGitIgnore(path, inputs.writeDebugLogs);
+                }), inputs.writeDebugLogs);
                 if (git_utilities_1.isBranchPushable(ref, inputs.protectedBranches)) {
                     const branch = git_utilities_1.getBranch(ref);
                     if (inputs.writeDebugLogs) {
@@ -20697,17 +20731,16 @@ exports.persist = void 0;
 const core_1 = __webpack_require__(470);
 const fs_1 = __webpack_require__(747);
 const path_1 = __importDefault(__webpack_require__(622));
-function persist(content, directory, writeDebugLogs, label) {
+function persist(content, directory, fileName, writeDebugLogs) {
     return __awaiter(this, void 0, void 0, function* () {
         return new Promise((resolve, reject) => {
-            const fileName = label ? `coverage-${label}.svg` : `coverage.svg`;
             const fullPath = path_1.default.join(directory, fileName);
             if (writeDebugLogs) {
-                core_1.info(`Writing badge: ${fullPath}`);
+                core_1.info(`Writing file: ${fullPath}`);
             }
             fs_1.writeFile(fullPath, content, error => {
                 if (error === null) {
-                    resolve();
+                    resolve(fullPath);
                 }
                 else {
                     reject(error);
@@ -23987,7 +24020,8 @@ function generateBadge(coverage, badgesDirectory, writeDebugLogs, label) {
     return __awaiter(this, void 0, void 0, function* () {
         const url = get_badge_path_1.getBadgePath(coverage, label);
         const badge = yield download_1.download(url);
-        return persist_1.persist(badge, badgesDirectory, writeDebugLogs, label);
+        const fileName = label ? `coverage-${label}.svg` : `coverage.svg`;
+        return persist_1.persist(badge, badgesDirectory, fileName, writeDebugLogs);
     });
 }
 function generateBadges(coverageSummaryPath, badgesDirectory, writeDebugLogs) {
@@ -26645,7 +26679,7 @@ exports.getBadgesDir = void 0;
 const core_1 = __webpack_require__(470);
 const path_1 = __webpack_require__(622);
 const fs_1 = __webpack_require__(747);
-function getBadgesDir(badgesDirectoryInput, repositoryPath, coverageSummaryPath, dirMaker) {
+function getBadgesDir(badgesDirectoryInput, repositoryPath, coverageSummaryPath, dirMaker, writeDebugLogs) {
     return __awaiter(this, void 0, void 0, function* () {
         // Reject if invalid path was set in configuration
         if (badgesDirectoryInput !== '') {
@@ -26660,7 +26694,7 @@ function getBadgesDir(badgesDirectoryInput, repositoryPath, coverageSummaryPath,
         }
         else {
             // No path was set; try to create one
-            const badgesDir = getBadgeDirName(coverageSummaryPath);
+            const badgesDir = getBadgeDirName(coverageSummaryPath, writeDebugLogs);
             const fullBadgeDir = path_1.join(repositoryPath, badgesDir);
             if (fs_1.existsSync(fullBadgeDir)) {
                 core_1.info(`Using existing badges directory: ${fullBadgeDir}`);
@@ -26674,21 +26708,17 @@ function getBadgesDir(badgesDirectoryInput, repositoryPath, coverageSummaryPath,
     });
 }
 exports.getBadgesDir = getBadgesDir;
-function getBadgeDirName(coverageSummaryPath) {
+function getBadgeDirName(coverageSummaryPath, writeDebugLogs) {
     let badgesDir = 'badges';
     const summaryDir = path_1.dirname(coverageSummaryPath);
-    const lastForwardSlashIndex = summaryDir.lastIndexOf('/');
-    const lastBackwardSlashIndex = summaryDir.lastIndexOf('\\');
-    if (lastForwardSlashIndex !== -1 || lastBackwardSlashIndex !== -1) {
-        let lastSummaryDirPart = '';
-        lastSummaryDirPart =
-            lastForwardSlashIndex !== -1
-                ? summaryDir.substr(lastForwardSlashIndex + 1)
-                : lastSummaryDirPart;
-        lastSummaryDirPart =
-            lastBackwardSlashIndex !== -1
-                ? summaryDir.substr(lastBackwardSlashIndex + 1)
-                : lastSummaryDirPart;
+    const lastForwardIdx = summaryDir.lastIndexOf('/');
+    const lastBackwardIdx = summaryDir.lastIndexOf('\\');
+    const lastIdx = lastForwardIdx > lastBackwardIdx ? lastForwardIdx : lastBackwardIdx;
+    if (lastIdx !== -1) {
+        const lastSummaryDirPart = summaryDir.substr(lastIdx + 1);
+        if (writeDebugLogs) {
+            core_1.info(`Library name: ${lastSummaryDirPart}`);
+        }
         badgesDir = path_1.join(badgesDir, lastSummaryDirPart);
     }
     return badgesDir;

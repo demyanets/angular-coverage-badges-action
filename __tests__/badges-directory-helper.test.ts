@@ -28,7 +28,8 @@ describe('Get badges directory', () => {
         'temp',
         __dirname,
         summaryPath,
-        makeDirMock
+        makeDirMock,
+        true
       )
       expect(dir).toEqual(expected)
       expect(makeDirMockCalled).toBeFalsy()
@@ -40,7 +41,7 @@ describe('Get badges directory', () => {
       })
 
       await expect(
-        getBadgesDir('missing', __dirname, summaryPath, makeDirMock)
+        getBadgesDir('missing', __dirname, summaryPath, makeDirMock, true)
       ).rejects.toThrow()
 
       expect(spy).toHaveBeenCalled()
@@ -55,7 +56,13 @@ describe('Get badges directory', () => {
       })
       const summaryPath = 'assets/coverage-summary.json'
       const expected = join(__dirname, 'badges')
-      const dir = await getBadgesDir('', __dirname, summaryPath, makeDirMock)
+      const dir = await getBadgesDir(
+        '',
+        __dirname,
+        summaryPath,
+        makeDirMock,
+        true
+      )
       expect(spy).toHaveBeenCalled()
       expect(dir).toEqual(expected)
       expect(makeDirMockCalled).toBeFalsy
@@ -67,7 +74,13 @@ describe('Get badges directory', () => {
       })
       const summaryPath = 'assets/testlib/coverage-summary.json'
       const expected = join(__dirname, 'badges/testlib')
-      const dir = await getBadgesDir('', __dirname, summaryPath, makeDirMock)
+      const dir = await getBadgesDir(
+        '',
+        __dirname,
+        summaryPath,
+        makeDirMock,
+        true
+      )
       expect(spy).toHaveBeenCalled()
       expect(dir).toEqual(expected)
       expect(makeDirMockCalled).toBeTruthy()

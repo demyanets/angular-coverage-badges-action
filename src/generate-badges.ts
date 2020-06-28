@@ -9,10 +9,11 @@ async function generateBadge(
   badgesDirectory: string,
   writeDebugLogs: boolean,
   label?: string
-): Promise<void> {
+): Promise<string> {
   const url = getBadgePath(coverage, label)
   const badge = await download(url)
-  return persist(badge, badgesDirectory, writeDebugLogs, label)
+  const fileName = label ? `coverage-${label}.svg` : `coverage.svg`
+  return persist(badge, badgesDirectory, fileName, writeDebugLogs)
 }
 
 export async function generateBadges(

@@ -6,6 +6,7 @@ import {updateRepository} from './update-repository'
 import {getBranch, checkout, isBranchPushable} from './git-utilities'
 import {runAndLog} from './run-and-log'
 import {getBadgesDir} from './badges-directory-helper'
+import {writeGitIgnore} from './write-git-ignore'
 
 async function run(): Promise<void> {
   try {
@@ -16,7 +17,11 @@ async function run(): Promise<void> {
         inputs.badgesDirectory,
         inputs.gitSourceSettings.repositoryPath,
         inputs.coverageSummaryPath,
-        async path => await mkdirP(path)
+        async path => {
+          await mkdirP(path)
+          await writeGitIgnore(path, inputs.writeDebugLogs)
+        },
+        inputs.writeDebugLogs
       )
 
       if (isBranchPushable(ref, inputs.protectedBranches)) {
