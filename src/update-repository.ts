@@ -7,17 +7,21 @@ export async function updateRepository(
   badgeDir: string,
   writeDebugLogs: boolean
 ): Promise<void> {
-  let exitCode = await runAndLog('Add SVGs', writeDebugLogs, async stub =>
-    add(badgeDir, '*.svg', stub.options)
+  let exitCode = await runAndLog(
+    'Add all SVG files',
+    writeDebugLogs,
+    async stub => add(badgeDir, '*.svg', stub.options)
   )
 
-  exitCode = await runAndLog('Add .gitignore', writeDebugLogs, async stub =>
-    add(badgeDir, '.gitignore', stub.options)
+  exitCode = await runAndLog(
+    'Add .gitignore file',
+    writeDebugLogs,
+    async stub => add(badgeDir, '*.gitignore', stub.options)
   )
 
   const diffStub = new ExecOptionsStub()
   exitCode = await runAndLog(
-    'getDiffs',
+    'Get all differences',
     writeDebugLogs,
     async stub => getDiffs(badgeDir, stub.options),
     diffStub
@@ -29,11 +33,15 @@ export async function updateRepository(
       info(`SVG matches: ${matches}`)
     }
     if (matches > 0) {
-      exitCode = await runAndLog('commitAsAction', writeDebugLogs, async stub =>
-        commitAsAction(badgeDir, stub.options)
+      exitCode = await runAndLog(
+        'Commit with GitHub action user',
+        writeDebugLogs,
+        async stub => commitAsAction(badgeDir, stub.options)
       )
-      exitCode = await runAndLog('push', writeDebugLogs, async stub =>
-        push(stub.options)
+      exitCode = await runAndLog(
+        'Push changes to repository',
+        writeDebugLogs,
+        async stub => push(stub.options)
       )
     }
   }

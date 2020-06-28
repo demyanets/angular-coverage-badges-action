@@ -20427,18 +20427,18 @@ const exec_options_stub_1 = __webpack_require__(662);
 const run_and_log_1 = __webpack_require__(285);
 function updateRepository(badgeDir, writeDebugLogs) {
     return __awaiter(this, void 0, void 0, function* () {
-        let exitCode = yield run_and_log_1.runAndLog('Add SVGs', writeDebugLogs, (stub) => __awaiter(this, void 0, void 0, function* () { return git_utilities_1.add(badgeDir, '*.svg', stub.options); }));
-        exitCode = yield run_and_log_1.runAndLog('Add .gitignore', writeDebugLogs, (stub) => __awaiter(this, void 0, void 0, function* () { return git_utilities_1.add(badgeDir, '.gitignore', stub.options); }));
+        let exitCode = yield run_and_log_1.runAndLog('Add all SVG files', writeDebugLogs, (stub) => __awaiter(this, void 0, void 0, function* () { return git_utilities_1.add(badgeDir, '*.svg', stub.options); }));
+        exitCode = yield run_and_log_1.runAndLog('Add .gitignore file', writeDebugLogs, (stub) => __awaiter(this, void 0, void 0, function* () { return git_utilities_1.add(badgeDir, '*.gitignore', stub.options); }));
         const diffStub = new exec_options_stub_1.ExecOptionsStub();
-        exitCode = yield run_and_log_1.runAndLog('getDiffs', writeDebugLogs, (stub) => __awaiter(this, void 0, void 0, function* () { return git_utilities_1.getDiffs(badgeDir, stub.options); }), diffStub);
+        exitCode = yield run_and_log_1.runAndLog('Get all differences', writeDebugLogs, (stub) => __awaiter(this, void 0, void 0, function* () { return git_utilities_1.getDiffs(badgeDir, stub.options); }), diffStub);
         if (exitCode === 0) {
             const matches = (diffStub.stdout.match(/\.svg/g) || []).length;
             if (writeDebugLogs) {
                 core_1.info(`SVG matches: ${matches}`);
             }
             if (matches > 0) {
-                exitCode = yield run_and_log_1.runAndLog('commitAsAction', writeDebugLogs, (stub) => __awaiter(this, void 0, void 0, function* () { return git_utilities_1.commitAsAction(badgeDir, stub.options); }));
-                exitCode = yield run_and_log_1.runAndLog('push', writeDebugLogs, (stub) => __awaiter(this, void 0, void 0, function* () { return git_utilities_1.push(stub.options); }));
+                exitCode = yield run_and_log_1.runAndLog('Commit with GitHub action user', writeDebugLogs, (stub) => __awaiter(this, void 0, void 0, function* () { return git_utilities_1.commitAsAction(badgeDir, stub.options); }));
+                exitCode = yield run_and_log_1.runAndLog('Push changes to repository', writeDebugLogs, (stub) => __awaiter(this, void 0, void 0, function* () { return git_utilities_1.push(stub.options); }));
             }
         }
     });
