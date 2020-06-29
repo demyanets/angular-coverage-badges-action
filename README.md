@@ -68,7 +68,7 @@ jobs:
     # Coverage badges will be updated on any branch except protected
     # branches 'develop' and 'master' and on a pull requests
     - name: Test angular action
-      uses:  demyanets/angular-coverage-badges-action@master
+      uses:  demyanets/angular-coverage-badges-action@v1
       with:
         coverage-summary-path: coverage/stslib/coverage-summary.json
         protected-branches: '["master",  "develop"]'
