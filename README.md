@@ -2,13 +2,15 @@
 
 # Angular Coverage Badges Github Action
 
-This GitHub Action converts your Angular test suite's LCOV coverage data into the set of coverage badges that you can use in your README.md file locally. There is no need to create an accout or give your coverage data to any external service provider like [codecov.io](https://www.codecov.io) or [coveralls.io](https://coveralls.io/) for analysis.
+This GitHub Action converts your Angular test suite's LCOV coverage data into the set of coverage badges that you can use in your README.md file locally. There is no need to create an accout or give your coverage data to any external service provider for analysis.
+
+Angular Coverage Badges Github Action is not only generating the badges but also commits them into the local repository automatically.
 
 When running with Angular repositories containing multiple projects, Angular Coverage Badges Github Action is able to generate badges for every single project preseving the structure of your solution.
 
 ## Usage
 
-The action's step needs to run after your test suite has outputted an LCOV file. Angular comes with Karma test runner already preconfigured to generate the LCOV file. Please make sure that the **'coverageIstanbulReporter'** in **'karma.config.js'** contains the **'json-summary'** reporter:
+The action's step needs to run after your test suite has outputted an LCOV file. Angular comes with Karma test runner already preconfigured to generate the LCOV file. Please make sure that the `coverageIstanbulReporter` in `karma.config.js` contains the `json-summary` reporter:
 ```JavaScript
 coverageIstanbulReporter: {
       dir: require('path').join(__dirname, '../../coverage'),
@@ -83,7 +85,7 @@ protected-branches: '["master",  "develop"]'
 ```
 ### Badges get generated only for one project
 
-Make sure that you added this action multiple times for every single **coverage-summary.json** file. 
+Make sure that you added this action multiple times for every single `coverage-summary.json` file. 
 The action will respect project structure and will automatically generate the badges in separate directories. 
 
 ## [MIT License](LICENSE.md)
