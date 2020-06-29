@@ -1,5 +1,5 @@
 name: 'Angular coverage badges'
-description: 'GitHub action that generates coverage badges for Angular projects without external providers and updates a GitHub repository automatically'
+description: 'Converts your Angular coverage data into the coverage badges for the local README.md and commits them into your repository'
 author: 'Taras Demyanets'
 inputs:
   coverage-summary-path:
