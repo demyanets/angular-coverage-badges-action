@@ -18,6 +18,9 @@ inputs:
     description: 'Writes extra debug logs to console if set to "true"'
     default: ''
     required: false
+branding:
+  color: 'red'
+  icon: 'shield'
 runs:
   using: 'node12'
   main: 'dist/index.js'
