@@ -36,6 +36,7 @@ describe('Main tests', () => {
     env['INPUT_BADGES-DIRECTORY'] = normalize('__tests__/temp/')
     env['INPUT_PROTECTED-BRANCHES'] = '["master", "develop"]'
     env['INPUT_ANGULAR-COVERAGE-BADGES-CI-RUN'] = 'true'
+    env['INPUT_REPO-TOKEN'] = '12345678'
     const options: ExecSyncOptions = {
       env: env
     }

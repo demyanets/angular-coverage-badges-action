@@ -13,6 +13,7 @@ describe('Inputs tests', () => {
     inputs['coverage-summary-path'] = './coverage/coverage-summary.json'
     inputs['badges-directory'] = './badges'
     inputs['protected-branches'] = '["master", "develop"]'
+    inputs['repo-token'] = '12345678'
 
     // Mock getInput
     jest.spyOn(core, 'getInput').mockImplementation((name: string) => {

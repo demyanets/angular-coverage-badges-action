@@ -44,7 +44,11 @@ async function run(): Promise<void> {
           badgeDir,
           inputs.writeDebugLogs
         )
-        await updateRepository(badgeDir, inputs.writeDebugLogs)
+        await updateRepository(
+          badgeDir,
+          inputs.remoteRepo,
+          inputs.writeDebugLogs
+        )
       }
     }
   } catch (error) {

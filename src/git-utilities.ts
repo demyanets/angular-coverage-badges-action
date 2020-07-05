@@ -86,7 +86,10 @@ export async function commitAsAction(
   return exec('git', args, options)
 }
 
-export async function push(options: ExecOptions): Promise<number> {
-  const args = ['push']
+export async function push(
+  remoteRepo: string,
+  options: ExecOptions
+): Promise<number> {
+  const args = [remoteRepo, 'push']
   return exec('git', args, options)
 }

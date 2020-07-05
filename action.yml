@@ -2,6 +2,9 @@ name: 'Angular coverage badges'
 description: 'Converts your Angular coverage data into the coverage badges for the local README.md and commits them into your repository'
 author: 'Taras Demyanets'
 inputs:
+  repo-token:
+    description: 'Token for the repository. Can be passed in using $\{{ secrets.GITHUB_TOKEN }}'
+    required: true
   coverage-summary-path:
     description: 'Path to a "coverage-summary.json" file. Defaults to "./coverage/coverage-summary.json"'
     default: './coverage/coverage-summary.json'
