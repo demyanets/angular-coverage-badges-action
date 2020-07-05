@@ -4027,7 +4027,7 @@ function run() {
                     yield run_and_log_1.runAndLog('checkout', inputs.writeDebugLogs, (stub) => __awaiter(this, void 0, void 0, function* () { return git_utilities_1.checkout(branch, stub.options); }));
                     core_1.info(`Generate badges: ${inputs.coverageSummaryPath}, ${badgeDir}`);
                     yield generate_badges_1.generateBadges(inputs.coverageSummaryPath, badgeDir, inputs.writeDebugLogs);
-                    yield update_repository_1.updateRepository(badgeDir, inputs.remoteRepo, inputs.writeDebugLogs);
+                    yield update_repository_1.updateRepository(badgeDir, inputs.remoteRepo, branch, inputs.writeDebugLogs);
                 }
             }
         }
@@ -20425,7 +20425,7 @@ const core_1 = __webpack_require__(470);
 const git_utilities_1 = __webpack_require__(741);
 const exec_options_stub_1 = __webpack_require__(662);
 const run_and_log_1 = __webpack_require__(285);
-function updateRepository(badgeDir, remoteRepo, writeDebugLogs) {
+function updateRepository(badgeDir, remoteRepo, branch, writeDebugLogs) {
     return __awaiter(this, void 0, void 0, function* () {
         let exitCode = yield run_and_log_1.runAndLog('Add all SVG files', writeDebugLogs, (stub) => __awaiter(this, void 0, void 0, function* () { return git_utilities_1.add(badgeDir, '*.svg', stub.options); }));
         exitCode = yield run_and_log_1.runAndLog('Add .gitignore file', writeDebugLogs, (stub) => __awaiter(this, void 0, void 0, function* () { return git_utilities_1.add(badgeDir, '*.gitignore', stub.options); }));
@@ -20438,7 +20438,7 @@ function updateRepository(badgeDir, remoteRepo, writeDebugLogs) {
             }
             if (matches > 0) {
                 exitCode = yield run_and_log_1.runAndLog('Commit with GitHub action user', writeDebugLogs, (stub) => __awaiter(this, void 0, void 0, function* () { return git_utilities_1.commitAsAction(badgeDir, stub.options); }));
-                exitCode = yield run_and_log_1.runAndLog('Push changes to repository', writeDebugLogs, (stub) => __awaiter(this, void 0, void 0, function* () { return git_utilities_1.push(remoteRepo, stub.options); }));
+                exitCode = yield run_and_log_1.runAndLog('Push changes to repository', writeDebugLogs, (stub) => __awaiter(this, void 0, void 0, function* () { return git_utilities_1.push(remoteRepo, branch, stub.options); }));
             }
         }
     });
@@ -23616,9 +23616,9 @@ function commitAsAction(dir, options) {
     });
 }
 exports.commitAsAction = commitAsAction;
-function push(remoteRepo, options) {
+function push(remoteRepo, branch, options) {
     return __awaiter(this, void 0, void 0, function* () {
-        const args = [remoteRepo, 'push'];
+        const args = ['push', remoteRepo, branch];
         return exec_1.exec('git', args, options);
     });
 }
