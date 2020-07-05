@@ -89,6 +89,11 @@ protected-branches: '["master",  "develop"]'
 Make sure that you added this action multiple times for every single `coverage-summary.json` file. 
 The action will respect project structure and will automatically generate the badges in separate directories. 
 
+
+## No affiliation with GitHub Inc.
+
+GitHub are registered trademarks of GitHub, Inc. GitHub name used in this project are for identification purposes only. The project is not associated in any way with GitHub Inc. and is not an official solution of GitHub Inc. It was made available in order to facilitate the use of the site GitHub.
+
 ## [MIT License](LICENSE.md)
 
 ## [Contributing](CONTRIBUTING.md)
