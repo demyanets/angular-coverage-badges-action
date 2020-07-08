@@ -23623,8 +23623,6 @@ function push(branch, options) {
         // GitHub actions do not support calling other actions cuurently.
         // Use modified script from https://github.com/ad-m/github-push-action directly
         process_1.env['PUSH_INPUT_BRANCH'] = branch;
-        process_1.env['PUSH_INPUT_FORCE'] = 'false';
-        process_1.env['PUSH_INPUT_TAGS'] = 'false';
         process_1.env['PUSH_INPUT_DIRECTORY'] = '.';
         const args = [path_1.join(__dirname, './push.sh')];
         return exec_1.exec('bash', args, options);

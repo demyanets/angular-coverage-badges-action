@@ -23,9 +23,9 @@ coverageIstanbulReporter: {
 
 | Name                  | Requirement | Description |
 | --------------------- | ----------- | ----------- |
-| `github_token` | _required_ | Token for the repository. Can be passed in using ${{ secrets.GITHUB_TOKEN }}. |
+| `github-token` | _required_ | Token for the repository. No badges could be pushed without this token. Can be passed using ${{ secrets.GITHUB_TOKEN }}. |
 | `coverage-summary-path` | _optional_ | Path to a "coverage-summary.json" file. Default: `./coverage/coverage-summary.json`. |
-| `badges-directory` | _optional_ | Writes coverage badges to the given directory. Default: `./badges` for root "src" project or `./badges/<library-name>` for a library. |
+| `badges-directory` | _optional_ | Writes coverage badges to the given directory. Make sure that directory exists otherwise the action will fail. Omit this setting if you expect auto-creation of the directory. Default: `./badges` for root "src" project or `./badges/<library-name>` for a library. |
 | `protected-branches` | _optional_ | List of the protected branches that require review for commit and should be excluded from the badge generation therefore. Default: `[]`. |
 | `write-debug-logs` | _optional_ | Writes extra debug logs to console if set to "true". Default: `<empty>`. |
 
@@ -71,6 +71,7 @@ jobs:
     - name: Test angular action
       uses:  demyanets/angular-coverage-badges-action@v1
       with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
         coverage-summary-path: coverage/stslib/coverage-summary.json
         protected-branches: '["master",  "develop"]'
 ```
