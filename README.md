@@ -23,7 +23,7 @@ coverageIstanbulReporter: {
 
 | Name                  | Requirement | Description |
 | --------------------- | ----------- | ----------- |
-| `repo-token` | _required_ | Token for the repository. Can be passed in using ${{ secrets.GITHUB_TOKEN }}. |
+| `github_token` | _required_ | Token for the repository. Can be passed in using ${{ secrets.GITHUB_TOKEN }}. |
 | `coverage-summary-path` | _optional_ | Path to a "coverage-summary.json" file. Default: `./coverage/coverage-summary.json`. |
 | `badges-directory` | _optional_ | Writes coverage badges to the given directory. Default: `./badges` for root "src" project or `./badges/<library-name>` for a library. |
 | `protected-branches` | _optional_ | List of the protected branches that require review for commit and should be excluded from the badge generation therefore. Default: `[]`. |

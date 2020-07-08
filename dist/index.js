@@ -4027,7 +4027,7 @@ function run() {
                     yield run_and_log_1.runAndLog('checkout', inputs.writeDebugLogs, (stub) => __awaiter(this, void 0, void 0, function* () { return git_utilities_1.checkout(branch, stub.options); }));
                     core_1.info(`Generate badges: ${inputs.coverageSummaryPath}, ${badgeDir}`);
                     yield generate_badges_1.generateBadges(inputs.coverageSummaryPath, badgeDir, inputs.writeDebugLogs);
-                    yield update_repository_1.updateRepository(badgeDir, inputs.token, branch, inputs.writeDebugLogs);
+                    yield update_repository_1.updateRepository(badgeDir, branch, inputs.writeDebugLogs);
                 }
             }
         }
@@ -20425,7 +20425,7 @@ const core_1 = __webpack_require__(470);
 const git_utilities_1 = __webpack_require__(741);
 const exec_options_stub_1 = __webpack_require__(662);
 const run_and_log_1 = __webpack_require__(285);
-function updateRepository(badgeDir, token, branch, writeDebugLogs) {
+function updateRepository(badgeDir, branch, writeDebugLogs) {
     return __awaiter(this, void 0, void 0, function* () {
         let exitCode = yield run_and_log_1.runAndLog('Add all SVG files', writeDebugLogs, (stub) => __awaiter(this, void 0, void 0, function* () { return git_utilities_1.add(badgeDir, '*.svg', stub.options); }));
         exitCode = yield run_and_log_1.runAndLog('Add .gitignore file', writeDebugLogs, (stub) => __awaiter(this, void 0, void 0, function* () { return git_utilities_1.add(badgeDir, '*.gitignore', stub.options); }));
@@ -20438,7 +20438,7 @@ function updateRepository(badgeDir, token, branch, writeDebugLogs) {
             }
             if (matches > 0) {
                 exitCode = yield run_and_log_1.runAndLog('Commit with GitHub action user', writeDebugLogs, (stub) => __awaiter(this, void 0, void 0, function* () { return git_utilities_1.commitAsAction(badgeDir, stub.options); }));
-                exitCode = yield run_and_log_1.runAndLog('Push changes to repository', writeDebugLogs, (stub) => __awaiter(this, void 0, void 0, function* () { return git_utilities_1.push(token, branch, stub.options); }));
+                exitCode = yield run_and_log_1.runAndLog('Push changes to repository', writeDebugLogs, (stub) => __awaiter(this, void 0, void 0, function* () { return git_utilities_1.push(branch, stub.options); }));
             }
         }
     });
@@ -23618,7 +23618,7 @@ function commitAsAction(dir, options) {
     });
 }
 exports.commitAsAction = commitAsAction;
-function push(token, branch, options) {
+function push(branch, options) {
     return __awaiter(this, void 0, void 0, function* () {
         // GitHub actions do not support calling other actions cuurently.
         // Use modified script from https://github.com/ad-m/github-push-action directly
@@ -23626,7 +23626,6 @@ function push(token, branch, options) {
         process_1.env['PUSH_INPUT_FORCE'] = 'false';
         process_1.env['PUSH_INPUT_TAGS'] = 'false';
         process_1.env['PUSH_INPUT_DIRECTORY'] = '.';
-        process_1.env['PUSH_INPUT_GITHUB_TOKEN'] = token;
         const args = [path_1.join(__dirname, './push.sh')];
         return exec_1.exec('bash', args, options);
     });
@@ -24391,15 +24390,12 @@ const input_helper_1 = __webpack_require__(183);
 class Inputs {
     constructor() {
         this.githubWorkspace = '';
-        this.remoteRepo = '';
         this.actor = '';
-        this.token = '';
         this.repository = '';
         const prodRun = core.getInput('angular-coverage-badges-ci-run') === 'true' ? false : true;
         if (prodRun) {
             this.gitSourceSettings = input_helper_1.getInputs();
         }
-        this.token = core.getInput('repo-token');
         this.coverageSummaryPath = core.getInput('coverage-summary-path');
         this.badgesDirectory = core.getInput('badges-directory');
         const branches = core.getInput('protected-branches');
@@ -24415,7 +24411,6 @@ class Inputs {
         if (process.env['GITHUB_REPOSITORY']) {
             this.repository = process.env['GITHUB_REPOSITORY'];
         }
-        this.remoteRepo = `https://${this.actor}:${this.token}@github.com/${this.repository}.git`;
     }
 }
 exports.Inputs = Inputs;

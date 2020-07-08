@@ -89,7 +89,6 @@ export async function commitAsAction(
 }
 
 export async function push(
-  token: string,
   branch: string,
   options: ExecOptions
 ): Promise<number> {
@@ -99,7 +98,6 @@ export async function push(
   env['PUSH_INPUT_FORCE'] = 'false'
   env['PUSH_INPUT_TAGS'] = 'false'
   env['PUSH_INPUT_DIRECTORY'] = '.'
-  env['PUSH_INPUT_GITHUB_TOKEN'] = token
   const args = [join(__dirname, './push.sh')]
   return exec('bash', args, options)
 }

@@ -10,9 +10,7 @@ export class Inputs {
   readonly writeDebugLogs: boolean
   readonly gitSourceSettings?: IGitSourceSettings
   readonly githubWorkspace: string = ''
-  readonly remoteRepo: string = ''
   readonly actor: string = ''
-  readonly token: string = ''
   readonly repository: string = ''
 
   constructor() {
@@ -22,7 +20,6 @@ export class Inputs {
     if (prodRun) {
       this.gitSourceSettings = getInputs()
     }
-    this.token = core.getInput('repo-token')
     this.coverageSummaryPath = core.getInput('coverage-summary-path')
     this.badgesDirectory = core.getInput('badges-directory')
     const branches = core.getInput('protected-branches')
@@ -38,7 +35,5 @@ export class Inputs {
     if (process.env['GITHUB_REPOSITORY']) {
       this.repository = process.env['GITHUB_REPOSITORY']
     }
-
-    this.remoteRepo = `https://${this.actor}:${this.token}@github.com/${this.repository}.git`
   }
 }
