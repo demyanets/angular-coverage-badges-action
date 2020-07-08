@@ -4027,7 +4027,7 @@ function run() {
                     yield run_and_log_1.runAndLog('checkout', inputs.writeDebugLogs, (stub) => __awaiter(this, void 0, void 0, function* () { return git_utilities_1.checkout(branch, stub.options); }));
                     core_1.info(`Generate badges: ${inputs.coverageSummaryPath}, ${badgeDir}`);
                     yield generate_badges_1.generateBadges(inputs.coverageSummaryPath, badgeDir, inputs.writeDebugLogs);
-                    yield update_repository_1.updateRepository(badgeDir, inputs.remoteRepo, branch, inputs.writeDebugLogs);
+                    yield update_repository_1.updateRepository(badgeDir, inputs.token, branch, inputs.writeDebugLogs);
                 }
             }
         }
@@ -20425,7 +20425,7 @@ const core_1 = __webpack_require__(470);
 const git_utilities_1 = __webpack_require__(741);
 const exec_options_stub_1 = __webpack_require__(662);
 const run_and_log_1 = __webpack_require__(285);
-function updateRepository(badgeDir, remoteRepo, branch, writeDebugLogs) {
+function updateRepository(badgeDir, token, branch, writeDebugLogs) {
     return __awaiter(this, void 0, void 0, function* () {
         let exitCode = yield run_and_log_1.runAndLog('Add all SVG files', writeDebugLogs, (stub) => __awaiter(this, void 0, void 0, function* () { return git_utilities_1.add(badgeDir, '*.svg', stub.options); }));
         exitCode = yield run_and_log_1.runAndLog('Add .gitignore file', writeDebugLogs, (stub) => __awaiter(this, void 0, void 0, function* () { return git_utilities_1.add(badgeDir, '*.gitignore', stub.options); }));
@@ -20438,7 +20438,7 @@ function updateRepository(badgeDir, remoteRepo, branch, writeDebugLogs) {
             }
             if (matches > 0) {
                 exitCode = yield run_and_log_1.runAndLog('Commit with GitHub action user', writeDebugLogs, (stub) => __awaiter(this, void 0, void 0, function* () { return git_utilities_1.commitAsAction(badgeDir, stub.options); }));
-                exitCode = yield run_and_log_1.runAndLog('Push changes to repository', writeDebugLogs, (stub) => __awaiter(this, void 0, void 0, function* () { return git_utilities_1.push(remoteRepo, branch, stub.options); }));
+                exitCode = yield run_and_log_1.runAndLog('Push changes to repository', writeDebugLogs, (stub) => __awaiter(this, void 0, void 0, function* () { return git_utilities_1.push(token, branch, stub.options); }));
             }
         }
     });
@@ -23543,6 +23543,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.push = exports.commitAsAction = exports.add = exports.getDiffs = exports.checkout = exports.isBranchPushable = exports.getBranch = exports.getGitVersion = void 0;
 const exec_1 = __webpack_require__(986);
+const process_1 = __webpack_require__(765);
+const path_1 = __webpack_require__(622);
 function getGitVersion(options) {
     return __awaiter(this, void 0, void 0, function* () {
         return exec_1.exec('git', ['--version'], options);
@@ -23616,10 +23618,17 @@ function commitAsAction(dir, options) {
     });
 }
 exports.commitAsAction = commitAsAction;
-function push(remoteRepo, branch, options) {
+function push(token, branch, options) {
     return __awaiter(this, void 0, void 0, function* () {
-        const args = ['push', remoteRepo, branch];
-        return exec_1.exec('git', args, options);
+        // GitHub actions do not support calling other actions cuurently.
+        // Use modified script from https://github.com/ad-m/github-push-action directly
+        process_1.env['PUSH_INPUT_BRANCH'] = branch;
+        process_1.env['PUSH_INPUT_FORCE'] = 'false';
+        process_1.env['PUSH_INPUT_TAGS'] = 'false';
+        process_1.env['PUSH_INPUT_DIRECTORY'] = '.';
+        process_1.env['PUSH_INPUT_GITHUB_TOKEN'] = token;
+        const args = [path_1.join(__dirname, './push.sh')];
+        return exec_1.exec('bash', args, options);
     });
 }
 exports.push = push;
@@ -23922,6 +23931,13 @@ function removeHook (state, name, method) {
   state.registry[name].splice(index, 1)
 }
 
+
+/***/ }),
+
+/***/ 765:
+/***/ (function(module) {
+
+module.exports = require("process");
 
 /***/ }),
 

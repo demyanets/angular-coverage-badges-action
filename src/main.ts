@@ -46,7 +46,7 @@ async function run(): Promise<void> {
         )
         await updateRepository(
           badgeDir,
-          inputs.remoteRepo,
+          inputs.token,
           branch,
           inputs.writeDebugLogs
         )

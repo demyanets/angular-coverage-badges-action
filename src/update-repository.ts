@@ -5,7 +5,7 @@ import {runAndLog} from './run-and-log'
 
 export async function updateRepository(
   badgeDir: string,
-  remoteRepo: string,
+  token: string,
   branch: string,
   writeDebugLogs: boolean
 ): Promise<void> {
@@ -43,7 +43,7 @@ export async function updateRepository(
       exitCode = await runAndLog(
         'Push changes to repository',
         writeDebugLogs,
-        async stub => push(remoteRepo, branch, stub.options)
+        async stub => push(token, branch, stub.options)
       )
     }
   }

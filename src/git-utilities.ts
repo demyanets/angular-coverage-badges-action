@@ -1,4 +1,6 @@
 import {exec, ExecOptions} from '@actions/exec'
+import {env} from 'process'
+import {join} from 'path'
 
 export async function getGitVersion(options: ExecOptions): Promise<number> {
   return exec('git', ['--version'], options)
@@ -87,10 +89,17 @@ export async function commitAsAction(
 }
 
 export async function push(
-  remoteRepo: string,
+  token: string,
   branch: string,
   options: ExecOptions
 ): Promise<number> {
-  const args = ['push', remoteRepo, branch]
-  return exec('git', args, options)
+  // GitHub actions do not support calling other actions cuurently.
+  // Use modified script from https://github.com/ad-m/github-push-action directly
+  env['PUSH_INPUT_BRANCH'] = branch
+  env['PUSH_INPUT_FORCE'] = 'false'
+  env['PUSH_INPUT_TAGS'] = 'false'
+  env['PUSH_INPUT_DIRECTORY'] = '.'
+  env['PUSH_INPUT_GITHUB_TOKEN'] = token
+  const args = [join(__dirname, './push.sh')]
+  return exec('bash', args, options)
 }
