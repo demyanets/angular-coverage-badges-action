@@ -95,6 +95,8 @@ export async function push(
   // GitHub actions do not support calling other actions cuurently.
   // Use modified script from https://github.com/ad-m/github-push-action directly
   env['PUSH_INPUT_BRANCH'] = branch
+  env['PUSH_INPUT_FORCE'] = 'false'
+  env['PUSH_INPUT_TAGS'] = 'false'
   env['PUSH_INPUT_DIRECTORY'] = '.'
   const args = [join(__dirname, './push.sh')]
   return exec('bash', args, options)
