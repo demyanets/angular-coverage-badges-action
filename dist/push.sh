@@ -15,4 +15,4 @@ cd ${PUSH_INPUT_DIRECTORY}
 
 remote_repo="https://${GITHUB_ACTOR}:${INPUT_GITHUB-TOKEN}@github.com/${REPOSITORY}.git"
 
-git push "${remote_repo}" HEAD:${PUSH_INPUT_BRANCH} --follow-tags;
+git push "${remote_repo}" HEAD:${PUSH_INPUT_BRANCH} --follow-tags $_FORCE_OPTION $_TAGS;
