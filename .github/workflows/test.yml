@@ -28,10 +28,11 @@ jobs:
         npm ci
         npm run build
         npm run pack
+        npm test -- --coverage || true
     - uses: ./
       with: 
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        coverage-summary-path: __tests__/assets/clover.xml
+        coverage-summary-path: coverage/clover.xml
         badges-directory: __tests__/temp
         protected-branches: '[]'
         write-debug-logs: true
