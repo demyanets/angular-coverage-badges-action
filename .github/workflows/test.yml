@@ -23,7 +23,10 @@ jobs:
     needs: build
     steps:
     - uses: actions/checkout@v1
-    - run: npm run pack
+    - run: |
+      ls -la
+      alias ncc=./node_modules/.bin/ncc
+      npm run pack
     - uses: ./
       with: 
         github_token: ${{ secrets.GITHUB_TOKEN }}
