@@ -31,7 +31,7 @@ coverageIstanbulReporter: {
 
 ### Standard Example:
 
-This example assumes you're building your Angular project using the command `npm run test:ci`, demo here: [demyanets/stslib](https://github.com/demyanets/stslib/blob/feature/coverage-badges/.github/workflows/test.yml)
+This example assumes you're building your Angular project using the command `npm run test:ci` or some other method to obtain a `clover.xml` file, demo here: [demyanets/stslib](https://github.com/demyanets/stslib/blob/feature/coverage-badges/.github/workflows/test.yml)
 
 ```yaml
 # This workflow will do a clean install of node dependencies and run tests
