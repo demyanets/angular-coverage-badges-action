@@ -23,16 +23,17 @@ jobs:
     needs: build
     steps:
     - uses: actions/checkout@v1
-    - run: |
-        ls -la
+    - name: Prepare project
+      run: |
         npm ci
         npm run build
         npm run pack
         npm test -- --coverage || true
+        mkdir .github/badges
     - uses: ./
       with: 
         github_token: ${{ secrets.GITHUB_TOKEN }}
         coverage-summary-path: coverage/clover.xml
-        badges-directory: __tests__/temp
+        badges-directory: .github/badges
         protected-branches: '[]'
         write-debug-logs: true
