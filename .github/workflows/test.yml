@@ -26,7 +26,7 @@ jobs:
     - uses: ./
       with: 
         repo-token: ${{ secrets.GITHUB_TOKEN }}
-        coverage-summary-path: __tests__/assets/coverage-summary.json
+        coverage-summary-path: __tests__/assets/clover.xml
         badges-directory: __tests__/temp
         protected-branches: '[]'
         write-debug-logs: true
