@@ -25,7 +25,8 @@ jobs:
     - uses: actions/checkout@v1
     - run: |
         ls -la
-        alias ncc=./node_modules/.bin/ncc
+        npm ci
+        npm build
         npm run pack
     - uses: ./
       with: 
