@@ -16,24 +16,14 @@ jobs:
       with:
         name: .git
         path: .git/
-    - run: sudo apt-get install build-essential python3
     - run: npm ci
     - run: npm run build
-    - name: Upload node_expat
-      uses: actions/upload-artifact@v2
-      with:
-        name: node_expat
-        path: dist/build/Release/
   test: # make sure the action works on a clean machine without building
     runs-on: ubuntu-latest
     needs: build
     steps:
     - uses: actions/checkout@v1
-    - name: Download node_expat
-      uses: actions/download-artifact@v2
-      with:
-        name: node_expat
-        path: dist/build/Release/
+    - run: npm ci
     - uses: ./
       with: 
         github_token: ${{ secrets.GITHUB_TOKEN }}
