@@ -1,4 +1,5 @@
 [![build-test](https://github.com/emibcn/clover-coverage-badges-action/workflows/build-test/badge.svg)](https://github.com/emibcn/clover-coverage-badges-action/actions?query=workflow%3Abuild-test)
+[![build-test](https://raw.githubusercontent.com/emibcn/clover-coverage-badges-action/master/.github/badges/coverage.svg)](https://raw.githubusercontent.com/emibcn/clover-coverage-badges-action/master/.github/badges/coverage.svg)
 
 # Clover Coverage Badges Github Action
 
