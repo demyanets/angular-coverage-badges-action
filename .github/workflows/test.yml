@@ -29,7 +29,7 @@ jobs:
         npm run build
         npm run pack
         npm test -- --coverage || true
-        mkdir .github/badges
+        mkdir -p .github/badges
     - uses: ./
       with: 
         github_token: ${{ secrets.GITHUB_TOKEN }}
