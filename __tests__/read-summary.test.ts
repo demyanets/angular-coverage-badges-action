@@ -2,7 +2,16 @@ import {readSummary} from '../src/read-summary'
 import {normalize} from 'path'
 
 describe('Coverage summary tests', () => {
-  test('should parse', async () => {
+  test('should parse XML', async () => {
+    const summary = await readSummary(normalize('__tests__/assets/clover.xml'))
+    expect(summary).toBeDefined()
+    const total = summary['total']
+    expect(total).toBeDefined()
+    expect(total.lines).toBeDefined()
+    expect(total.lines.pct).toEqual(80)
+  })
+
+  test('should parse JSON', async () => {
     const summary = await readSummary(
       normalize('__tests__/assets/coverage-summary.json')
     )
@@ -13,7 +22,7 @@ describe('Coverage summary tests', () => {
     expect(total.lines.pct).toEqual(80)
   })
 
-  test('should parse extended', async () => {
+  test('should parse extended JSON', async () => {
     const summary = await readSummary(
       normalize('__tests__/assets/extended-summary.json')
     )

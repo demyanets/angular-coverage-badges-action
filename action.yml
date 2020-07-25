@@ -1,13 +1,13 @@
-name: 'Angular coverage badges'
-description: 'Converts your Angular coverage data into the coverage badges for the local README.md and commits them into your repository'
-author: 'Taras Demyanets'
+name: 'Clover coverage badges'
+description: 'Converts your `coverage-summary.json` or `clover.xml` coverage data into the coverage badges for the local README.md and commits them into your repository'
+author: 'Taras Demyanets - emibcn'
 inputs:
   github_token:
     description: 'Token for the repository. Can be passed in using $\{{ secrets.GITHUB_TOKEN }}'
     required: true
   coverage-summary-path:
-    description: 'Path to a "coverage-summary.json" file. Defaults to "./coverage/coverage-summary.json"'
-    default: './coverage/coverage-summary.json'
+    description: 'Path to a "coverage-summary.json" or "clover.xml" file. Defaults to "./coverage/clover.xml"'
+    default: './coverage/clover.xml'
     required: false
   badges-directory:
     description: 'Writes the coverage badges to the given directory. Defaults to "./badges" for root "src" project or "./badges/<library> for a library'

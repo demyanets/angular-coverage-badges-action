@@ -1,8 +1,8 @@
 {
-  "name": "angular-coverage-badges-action",
+  "name": "clover-coverage-badges-action",
   "version": "0.0.0",
   "private": true,
-  "description": "GitHub action that generates coverage badges for Angular projects without external providers and updates a GitHub repository automatically",
+  "description": "GitHub action that generates coverage badges for clover.xml or Angular projects without external providers and updates a GitHub repository automatically",
   "main": "lib/main.js",
   "scripts": {
     "build": "tsc",
@@ -15,7 +15,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/demyanets/angular-coverage-badges-action.git"
+    "url": "git+https://github.com/emibcn/clover-coverage-badges-action.git"
   },
   "keywords": [
     "github",
@@ -29,13 +29,14 @@
     "generate",
     "standalone"
   ],
-  "author": "Taras Demyanets",
+  "author": "Taras Demyanets - emibcn",
   "license": "MIT",
   "dependencies": {
     "@actions/core": "^1.2.0",
     "@actions/exec": "^1.0.4",
     "@actions/github": "^2.2.0",
-    "@actions/io": "^1.0.2"
+    "@actions/io": "^1.0.2",
+    "xml2json": "^0.12.0"
   },
   "devDependencies": {
     "@types/jest": "^24.0.23",
