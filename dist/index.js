@@ -32867,6 +32867,8 @@ const xml2json_1 = __webpack_require__(120);
 function convertCloverToSummary(clover) {
     const metrics = clover.coverage.project.metrics;
     const [total, covered, skipped] = [0, 0, 0];
+    const get_pct = (kind) => Math.round((parseInt(metrics[`covered${kind}`]) * 100 * 100) /
+        parseInt(metrics[kind])) / 100;
     // Used in generate-badges.ts
     return {
         total: {
@@ -32874,27 +32876,25 @@ function convertCloverToSummary(clover) {
                 total,
                 covered,
                 skipped,
-                pct: (parseInt(metrics.coveredstatements) * 100) /
-                    parseInt(metrics.statements)
+                pct: get_pct('statements')
             },
             branches: {
                 total,
                 covered,
                 skipped,
-                pct: (parseInt(metrics.coveredconditionals) * 100) /
-                    parseInt(metrics.conditionals)
+                pct: get_pct('conditionals')
             },
             functions: {
                 total,
                 covered,
                 skipped,
-                pct: (parseInt(metrics.coveredmethods) * 100) / parseInt(metrics.methods)
+                pct: get_pct('methods')
             },
             lines: {
                 total,
                 covered,
                 skipped,
-                pct: (parseInt(metrics.coveredelements) * 100) / parseInt(metrics.elements)
+                pct: get_pct('elements')
             }
         }
     };
