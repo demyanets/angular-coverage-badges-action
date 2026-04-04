@@ -5,7 +5,7 @@ import * as path from 'path'
 import {IGitSourceSettings} from './git-source-settings'
 
 export function getInputs(): IGitSourceSettings {
-  const result = ({} as unknown) as IGitSourceSettings
+  const result = {} as unknown as IGitSourceSettings
 
   // GitHub workspace
   let githubWorkspacePath = process.env['GITHUB_WORKSPACE']

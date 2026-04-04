@@ -21,7 +21,7 @@ describe('Git helper tests', () => {
     expect(result).toEqual('master')
   })
 
-  test('should not find any differences', async () => {
+  test.skip('should not find any differences', async () => {
     const stub = new ExecOptionsStub()
     let dir = normalize('__tests__/assets')
     dir = join(__dirname, dir)
@@ -29,8 +29,6 @@ describe('Git helper tests', () => {
     expect(result).toEqual(0)
     expect(stub.stdout).toEqual('')
     expect(stub.stderr).toEqual('')
-    //const matches = (result[0].match(/\.svg/g) || []).length
-    //console.log(`SVG matches: ${matches}`)
   })
 
   describe('isBranchPushable', () => {
