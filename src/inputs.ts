@@ -1,7 +1,7 @@
 import * as core from '@actions/core'
-import {parseArray} from './parse-array'
-import {getInputs} from './external/input-helper'
-import {IGitSourceSettings} from './external/git-source-settings'
+import {parseArray} from './parse-array.js'
+import {getInputs} from './external/input-helper.js'
+import {IGitSourceSettings} from './external/git-source-settings.js'
 
 export class Inputs {
   readonly coverageSummaryPath: string

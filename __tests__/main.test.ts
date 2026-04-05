@@ -1,7 +1,10 @@
 import {env} from 'process'
 import {ExecSyncOptions, execSync} from 'child_process'
-import {join, normalize} from 'path'
+import {join, normalize, dirname} from 'path'
 import {unlinkSync, existsSync} from 'fs'
+import {fileURLToPath} from 'url'
+
+const __dirname = dirname(fileURLToPath(import.meta.url))
 
 describe('Main tests', () => {
   const expected = [
@@ -19,14 +22,6 @@ describe('Main tests', () => {
       }
     }
   })
-
-  /*
-  afterEach(() => {
-    for (let file of expected) {
-      expect(existsSync(file)).toBeTruthy()
-    }
-  })
-  */
 
   // shows how the runner will run a javascript action with env / stdout protocol
   test('test runs', () => {

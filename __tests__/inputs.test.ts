@@ -1,5 +1,23 @@
-import * as core from '@actions/core'
-import {Inputs} from '../src/inputs'
+import {jest} from '@jest/globals'
+
+// Mock @actions/core before importing modules that use it
+const mockGetInput = jest.fn<(name: string) => string>()
+jest.unstable_mockModule('@actions/core', () => ({
+  getInput: mockGetInput,
+  debug: jest.fn(),
+  info: jest.fn(),
+  warning: jest.fn(),
+  error: jest.fn(),
+  setFailed: jest.fn(),
+  setOutput: jest.fn(),
+  startGroup: jest.fn(),
+  endGroup: jest.fn(),
+  setSecret: jest.fn(),
+  addPath: jest.fn(),
+  exportVariable: jest.fn()
+}))
+
+const {Inputs} = await import('../src/inputs.js')
 
 interface IMap<T> {
   [index: string]: T
@@ -15,15 +33,13 @@ describe('Inputs tests', () => {
     inputs['protected-branches'] = '["master", "develop"]'
     inputs['repo-token'] = '12345678'
 
-    // Mock getInput
-    jest.spyOn(core, 'getInput').mockImplementation((name: string) => {
+    mockGetInput.mockImplementation((name: string) => {
       return inputs[name]
     })
   })
 
   test('should recognize CI run', () => {
-    // Mock getInput
-    jest.spyOn(core, 'getInput').mockImplementation((name: string) => {
+    mockGetInput.mockImplementation((name: string) => {
       if (name === 'angular-coverage-badges-ci-run') {
         return 'true'
       } else {

@@ -1,7 +1,7 @@
 import {info} from '@actions/core'
-import {getDiffs, commitAsAction, push, add} from './git-utilities'
-import {ExecOptionsStub} from './exec-options-stub'
-import {runAndLog} from './run-and-log'
+import {getDiffs, commitAsAction, push, add} from './git-utilities.js'
+import {ExecOptionsStub} from './exec-options-stub.js'
+import {runAndLog} from './run-and-log.js'
 
 export async function updateRepository(
   badgeDir: string,

@@ -1,5 +1,5 @@
 import {info, startGroup, endGroup} from '@actions/core'
-import {ExecOptionsStub} from './exec-options-stub'
+import {ExecOptionsStub} from './exec-options-stub.js'
 
 export async function runAndLog(
   label: string,

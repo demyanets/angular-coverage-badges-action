@@ -2,8 +2,7 @@ import {download} from '../src/download'
 
 describe('Download tests', () => {
   test('should download', async () => {
-    const path =
-      'https://upload.wikimedia.org/wikipedia/en/8/80/Wikipedia-logo-v2.svg'
+    const path = 'https://img.shields.io/badge/test-100%25-brightgreen.svg'
     const logo = await download(path)
     expect(logo).toBeDefined()
     expect(logo.length).toBeGreaterThan(0)

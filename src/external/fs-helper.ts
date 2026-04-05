@@ -8,8 +8,11 @@ export function directoryExistsSync(path: string, required?: boolean): boolean {
   let stats: fs.Stats
   try {
     stats = fs.statSync(path)
-  } catch (error) {
-    if (error.code === 'ENOENT') {
+  } catch (error: unknown) {
+    if (
+      error instanceof Error &&
+      (error as NodeJS.ErrnoException).code === 'ENOENT'
+    ) {
       if (!required) {
         return false
       }
@@ -18,7 +21,7 @@ export function directoryExistsSync(path: string, required?: boolean): boolean {
     }
 
     throw new Error(
-      `Encountered an error when checking whether path '${path}' exists: ${error.message}`
+      `Encountered an error when checking whether path '${path}' exists: ${error instanceof Error ? error.message : String(error)}`
     )
   }
 
@@ -38,13 +41,16 @@ export function existsSync(path: string): boolean {
 
   try {
     fs.statSync(path)
-  } catch (error) {
-    if (error.code === 'ENOENT') {
+  } catch (error: unknown) {
+    if (
+      error instanceof Error &&
+      (error as NodeJS.ErrnoException).code === 'ENOENT'
+    ) {
       return false
     }
 
     throw new Error(
-      `Encountered an error when checking whether path '${path}' exists: ${error.message}`
+      `Encountered an error when checking whether path '${path}' exists: ${error instanceof Error ? error.message : String(error)}`
     )
   }
 
@@ -59,13 +65,16 @@ export function fileExistsSync(path: string): boolean {
   let stats: fs.Stats
   try {
     stats = fs.statSync(path)
-  } catch (error) {
-    if (error.code === 'ENOENT') {
+  } catch (error: unknown) {
+    if (
+      error instanceof Error &&
+      (error as NodeJS.ErrnoException).code === 'ENOENT'
+    ) {
       return false
     }
 
     throw new Error(
-      `Encountered an error when checking whether path '${path}' exists: ${error.message}`
+      `Encountered an error when checking whether path '${path}' exists: ${error instanceof Error ? error.message : String(error)}`
     )
   }
 

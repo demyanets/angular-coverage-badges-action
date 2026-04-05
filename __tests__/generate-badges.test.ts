@@ -1,6 +1,10 @@
+import {jest} from '@jest/globals'
 import fs from 'fs'
-import {generateBadges} from '../src/generate-badges'
-import {normalize, join} from 'path'
+import {generateBadges} from '../src/generate-badges.js'
+import {normalize, join, dirname} from 'path'
+import {fileURLToPath} from 'url'
+
+const __dirname = dirname(fileURLToPath(import.meta.url))
 
 describe('Generate badges tests', () => {
   const expected = [
@@ -12,14 +16,18 @@ describe('Generate badges tests', () => {
   ]
 
   test('should generate', async () => {
-    jest.spyOn(fs, 'writeFile').mockImplementation((path, data, cb) => {
+    jest.spyOn(fs, 'writeFile').mockImplementation(((
+      path: any,
+      data: any,
+      cb: any
+    ) => {
       console.log(`Generate badges tests spy on: writeFile('${path}')`)
       if (expected.includes(path.toString())) {
         cb(null)
       } else {
         cb(new Error(`Unexpected path: ${path}`))
       }
-    })
+    }) as any)
 
     const badgesPath = normalize(join(__dirname, 'temp'))
     const summaryPath = normalize(

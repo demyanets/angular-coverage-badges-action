@@ -45,7 +45,7 @@ function getBadgeDirName(
   const lastIdx =
     lastForwardIdx > lastBackwardIdx ? lastForwardIdx : lastBackwardIdx
   if (lastIdx !== -1) {
-    const lastSummaryDirPart = summaryDir.substr(lastIdx + 1)
+    const lastSummaryDirPart = summaryDir.substring(lastIdx + 1)
     if (writeDebugLogs) {
       info(`Library name: ${lastSummaryDirPart}`)
     }
