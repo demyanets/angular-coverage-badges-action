@@ -10,7 +10,7 @@
     "format": "prettier --write **/*.ts",
     "format-check": "prettier --check **/*.ts",
     "lint": "eslint src/**/*.ts",
-    "pack": "esbuild lib/main.js --bundle --platform=node --target=node24 --format=esm --outfile=dist/index.js",
+    "pack": "esbuild lib/main.js --bundle --platform=node --target=node24 --format=esm --banner:js=\"import{createRequire}from'module';const require=createRequire(import.meta.url);\" --outfile=dist/index.js",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
     "all": "npm run build && npm run format && npm run lint && npm run pack && npm test"
   },
