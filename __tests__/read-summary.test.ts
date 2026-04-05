@@ -10,7 +10,7 @@ describe('Coverage summary tests', () => {
     const total = summary['total']
     expect(total).toBeDefined()
     expect(total.lines).toBeDefined()
-    expect(total.lines.pct).toEqual(80)
+    expect(total.lines.pct).toEqual(100)
   })
 
   test('should parse extended', async () => {
