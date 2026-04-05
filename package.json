@@ -10,7 +10,7 @@
     "format": "prettier --write **/*.ts",
     "format-check": "prettier --check **/*.ts",
     "lint": "eslint src/**/*.ts",
-    "pack": "ncc build",
+    "pack": "ncc build && node -e \"import('fs').then(f=>f.writeFileSync('dist/package.json','{\\\"type\\\":\\\"commonjs\\\"}\\n'))\"",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
     "all": "npm run build && npm run format && npm run lint && npm run pack && npm test"
   },
