@@ -1,4 +1,4 @@
-import {ExecSyncOptions, execSync} from 'child_process'
+import {spawnSync} from 'child_process'
 import {join, normalize} from 'path'
 import {unlinkSync, existsSync} from 'fs'
 
@@ -29,11 +29,11 @@ describe('Main tests', () => {
 
   // shows how the runner will run a javascript action with env / stdout protocol
   test('test runs', () => {
-    // Build a clean environment: keep system vars but strip GITHUB_* CI
-    // variables that leak into child process and cause failures on CI runners
+    // Build a clean environment: strip GITHUB_* and INPUT_* CI variables
+    // that leak into child process and cause failures on CI runners
     const testEnv: NodeJS.ProcessEnv = {}
     for (const [key, value] of Object.entries(process.env)) {
-      if (!key.startsWith('GITHUB_')) {
+      if (!key.startsWith('GITHUB_') && !key.startsWith('INPUT_')) {
         testEnv[key] = value
       }
     }
@@ -44,13 +44,16 @@ describe('Main tests', () => {
     testEnv['INPUT_PROTECTED-BRANCHES'] = '["master", "develop"]'
     testEnv['INPUT_ANGULAR-COVERAGE-BADGES-CI-RUN'] = 'true'
     testEnv['INPUT_REPO-TOKEN'] = '12345678'
-    const options: ExecSyncOptions = {
-      env: testEnv
-    }
     const ip = join(__dirname, '..', 'lib', 'main.js')
-    const cmd = `node "${ip}"`
-    console.log(cmd)
-    var output = execSync(cmd, options)
-    console.log(output.toString())
+    console.log(`node "${ip}"`)
+    const result = spawnSync('node', [ip], {
+      env: testEnv,
+      encoding: 'utf-8'
+    })
+    if (result.stdout) console.log(result.stdout)
+    if (result.status !== 0) {
+      console.error('stderr:', result.stderr)
+    }
+    expect(result.status).toBe(0)
   })
 })

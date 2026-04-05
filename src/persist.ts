@@ -14,7 +14,7 @@ export async function persist(
       info(`Writing file: ${fullPath}`)
     }
     writeFile(fullPath, content, error => {
-      if (error === null) {
+      if (!error) {
         resolve(fullPath)
       } else {
         reject(error)
