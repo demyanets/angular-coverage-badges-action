@@ -1,7 +1,10 @@
 import {existsSync, unlinkSync} from 'fs'
-import {writeGitIgnore} from '../src/write-git-ignore'
-import {normalize, join} from 'path'
+import {writeGitIgnore} from '../src/write-git-ignore.js'
+import {normalize, join, dirname} from 'path'
 import {mkdirP, rmRF} from '@actions/io'
+import {fileURLToPath} from 'url'
+
+const __dirname = dirname(fileURLToPath(import.meta.url))
 
 describe('writeGitIgnore tests', () => {
   test('should persist', async () => {

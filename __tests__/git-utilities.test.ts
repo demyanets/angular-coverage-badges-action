@@ -1,11 +1,12 @@
-import {join, normalize} from 'path'
+import {join} from 'path'
 import {
   getDiffs,
   getGitVersion,
   getBranch,
   isBranchPushable
-} from '../src/git-utilities'
-import {ExecOptionsStub} from '../src/exec-options-stub'
+} from '../src/git-utilities.js'
+import {ExecOptionsStub} from '../src/exec-options-stub.js'
+
 describe('Git helper tests', () => {
   test('get git version', async () => {
     const stub = new ExecOptionsStub()
@@ -23,14 +24,11 @@ describe('Git helper tests', () => {
 
   test('should not find any differences', async () => {
     const stub = new ExecOptionsStub()
-    let dir = normalize('__tests__/assets')
-    dir = join(__dirname, dir)
+    const dir = join('__tests__', 'assets')
     const result = await getDiffs(dir, stub.options)
     expect(result).toEqual(0)
     expect(stub.stdout).toEqual('')
     expect(stub.stderr).toEqual('')
-    //const matches = (result[0].match(/\.svg/g) || []).length
-    //console.log(`SVG matches: ${matches}`)
   })
 
   describe('isBranchPushable', () => {

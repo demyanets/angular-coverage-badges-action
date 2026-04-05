@@ -25,11 +25,11 @@ describe('Coverage summary tests', () => {
   })
 
   test('throws if wrong path', async () => {
-    expect(readSummary('wrong')).rejects.toThrow()
+    await expect(readSummary('wrong')).rejects.toThrow()
   })
 
   test('throws if broken file', async () => {
-    expect(
+    await expect(
       readSummary(normalize('__tests__/assets/broken-summary.json'))
     ).rejects.toThrow()
   })

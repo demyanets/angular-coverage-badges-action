@@ -1,12 +1,12 @@
 import {info, setFailed} from '@actions/core'
 import {mkdirP} from '@actions/io'
-import {Inputs} from './inputs'
-import {generateBadges} from './generate-badges'
-import {updateRepository} from './update-repository'
-import {getBranch, checkout, isBranchPushable} from './git-utilities'
-import {runAndLog} from './run-and-log'
-import {getBadgesDir} from './badges-directory-helper'
-import {writeGitIgnore} from './write-git-ignore'
+import {Inputs} from './inputs.js'
+import {generateBadges} from './generate-badges.js'
+import {updateRepository} from './update-repository.js'
+import {getBranch, checkout, isBranchPushable} from './git-utilities.js'
+import {runAndLog} from './run-and-log.js'
+import {getBadgesDir} from './badges-directory-helper.js'
+import {writeGitIgnore} from './write-git-ignore.js'
 
 async function run(): Promise<void> {
   try {
@@ -48,7 +48,7 @@ async function run(): Promise<void> {
       }
     }
   } catch (error) {
-    setFailed(error.message)
+    setFailed(error instanceof Error ? error.message : String(error))
   }
 }
 

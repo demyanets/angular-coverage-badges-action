@@ -1,7 +1,7 @@
-import {readSummary} from './read-summary'
-import {getBadgePath} from './get-badge-path'
-import {download} from './download'
-import {persist} from './persist'
+import {readSummary} from './read-summary.js'
+import {getBadgePath} from './get-badge-path.js'
+import {download} from './download.js'
+import {persist} from './persist.js'
 import {existsSync} from 'fs'
 
 async function generateBadge(

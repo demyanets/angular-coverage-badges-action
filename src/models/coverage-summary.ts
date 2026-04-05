@@ -1,4 +1,4 @@
-import {CoverageRecord} from './coverage-record'
+import {CoverageRecord} from './coverage-record.js'
 
 export interface CoverageSummary {
   [index: string]: CoverageRecord
