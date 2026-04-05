@@ -1,4 +1,3 @@
-import {env} from 'process'
 import {ExecSyncOptions, execSync} from 'child_process'
 import {join, normalize} from 'path'
 import {unlinkSync, existsSync} from 'fs'
@@ -30,15 +29,23 @@ describe('Main tests', () => {
 
   // shows how the runner will run a javascript action with env / stdout protocol
   test('test runs', () => {
-    env['INPUT_COVERAGE-SUMMARY-PATH'] = normalize(
+    // Build a clean environment: keep system vars but strip GITHUB_* CI
+    // variables that leak into child process and cause failures on CI runners
+    const testEnv: NodeJS.ProcessEnv = {}
+    for (const [key, value] of Object.entries(process.env)) {
+      if (!key.startsWith('GITHUB_')) {
+        testEnv[key] = value
+      }
+    }
+    testEnv['INPUT_COVERAGE-SUMMARY-PATH'] = normalize(
       '__tests__/assets/coverage-summary.json'
     )
-    env['INPUT_BADGES-DIRECTORY'] = normalize('__tests__/temp/')
-    env['INPUT_PROTECTED-BRANCHES'] = '["master", "develop"]'
-    env['INPUT_ANGULAR-COVERAGE-BADGES-CI-RUN'] = 'true'
-    env['INPUT_REPO-TOKEN'] = '12345678'
+    testEnv['INPUT_BADGES-DIRECTORY'] = normalize('__tests__/temp/')
+    testEnv['INPUT_PROTECTED-BRANCHES'] = '["master", "develop"]'
+    testEnv['INPUT_ANGULAR-COVERAGE-BADGES-CI-RUN'] = 'true'
+    testEnv['INPUT_REPO-TOKEN'] = '12345678'
     const options: ExecSyncOptions = {
-      env: env
+      env: testEnv
     }
     const ip = join(__dirname, '..', 'lib', 'main.js')
     const cmd = `node "${ip}"`
